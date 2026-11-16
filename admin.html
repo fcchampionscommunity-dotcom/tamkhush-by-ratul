@@ -200,7 +200,6 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
 
 <body>
 
-<!-- LOGIN -->
 <div id="loginScreen" class="login-wrap">
   <div class="login-card">
     <div class="brand">
@@ -224,9 +223,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
   </div>
 </div>
 
-<!-- ADMIN APP -->
 <div id="adminApp" class="app hidden">
-
   <aside class="sidebar">
     <div class="side-brand">
       <strong>TAMKHUSH BY RATUL</strong>
@@ -252,7 +249,6 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
       </div>
     </div>
 
-    <!-- DASHBOARD -->
     <section id="overviewSection" class="content-section active">
       <div class="stats">
         <div class="stat">
@@ -279,9 +275,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
       </div>
     </section>
 
-    <!-- PRODUCTS -->
     <section id="productsSection" class="content-section">
-
       <div class="panel">
         <h3 id="formHeading">Add New Product</h3>
 
@@ -289,7 +283,6 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
           <input type="hidden" id="productId">
 
           <div class="form-grid">
-
             <div class="field">
               <label>Product Name *</label>
               <input id="productName" required placeholder="Product name">
@@ -401,7 +394,6 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
                 <label for="lowStockAlert">Enable Low Stock Alert</label>
               </div>
             </div>
-
           </div>
 
           <div id="formMessage" class="message"></div>
@@ -439,14 +431,16 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
           </table>
         </div>
       </div>
-
     </section>
   </main>
 </div>
 
 <script>
+/* সব Admin JavaScript আলাদা scope-এ রাখা হয়েছে */
+(function () {
 "use strict";
 
+/* config.js থেকে তৈরি Client ব্যবহার করবে; নতুন Client তৈরি করবে না */
 const supabaseClient = window.supabaseClient;
 
 let currentUser = null;
@@ -538,11 +532,10 @@ async function startApp(user) {
     $("loginScreen").classList.add("hidden");
     $("adminApp").classList.remove("hidden");
 
-    await loadAdminProducts();
     showSection("overview");
+    await loadAdminProducts();
 
   } catch (error) {
-    await supabaseClient.auth.signOut();
     $("adminApp").classList.add("hidden");
     $("loginScreen").classList.remove("hidden");
     showMessage($("loginMessage"), error.message);
@@ -552,6 +545,11 @@ async function startApp(user) {
 $("loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   clearMessage($("loginMessage"));
+
+  if (!supabaseClient) {
+    showMessage($("loginMessage"), "Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");
+    return;
+  }
 
   const button = $("loginButton");
   button.disabled = true;
@@ -568,7 +566,7 @@ $("loginForm").addEventListener("submit", async (event) => {
     await startApp(data.user);
 
   } catch (error) {
-    showMessage($("loginMessage"), error.message);
+    showMessage($("loginMessage"), error.message || "Login failed.");
   } finally {
     button.disabled = false;
     button.textContent = "LOGIN TO DASHBOARD";
@@ -576,7 +574,12 @@ $("loginForm").addEventListener("submit", async (event) => {
 });
 
 $("logoutButton").addEventListener("click", async () => {
-  await supabaseClient.auth.signOut();
+  try {
+    await supabaseClient.auth.signOut();
+  } catch (error) {
+    alert("Sign out error: " + error.message);
+  }
+
   currentUser = null;
   currentProfile = null;
   $("adminApp").classList.add("hidden");
@@ -590,6 +593,7 @@ async function loadAdminProducts() {
     adminProducts = await window.store.getAllProducts();
     renderProducts();
     updateDashboardStats();
+
     $("loadingText").textContent = adminProducts.length
       ? ""
       : "No products found.";
@@ -604,7 +608,9 @@ function updateDashboardStats() {
 
   const lowStock = adminProducts.filter(product => {
     if (!product.is_active || !product.low_stock_alert) return false;
-    return Number(product.stock || 0) <= Number(product.low_stock_threshold ?? 5);
+
+    return Number(product.stock || 0) <=
+      Number(product.low_stock_threshold ?? 5);
   });
 
   $("totalProducts").textContent = adminProducts.length;
@@ -637,9 +643,18 @@ function renderProducts() {
     const image = images[0] || "";
 
     const labels = [];
-    if (product.is_new_arrival) labels.push('<span class="badge silver">NEW</span>');
-    if (product.is_best_seller) labels.push('<span class="badge silver">BEST SELLER</span>');
-    if (product.is_featured) labels.push('<span class="badge">FEATURED</span>');
+
+    if (product.is_new_arrival) {
+      labels.push('<span class="badge silver">NEW</span>');
+    }
+
+    if (product.is_best_seller) {
+      labels.push('<span class="badge silver">BEST SELLER</span>');
+    }
+
+    if (product.is_featured) {
+      labels.push('<span class="badge">FEATURED</span>');
+    }
 
     const low = product.low_stock_alert &&
       Number(product.stock || 0) <= Number(product.low_stock_threshold ?? 5);
@@ -675,12 +690,20 @@ function renderProducts() {
             : '<span class="badge red">INACTIVE</span>'}
         </td>
         <td>
-          <button class="btn btn-small" onclick="editProduct('${product.id}')">Edit</button>
-          <button class="btn btn-small btn-danger" onclick="deleteProduct('${product.id}')">Delete</button>
+          <button class="btn btn-small" data-edit-id="${escapeHTML(product.id)}">Edit</button>
+          <button class="btn btn-small btn-danger" data-delete-id="${escapeHTML(product.id)}">Delete</button>
         </td>
       </tr>
     `;
   }).join("");
+
+  tbody.querySelectorAll("[data-edit-id]").forEach(button => {
+    button.addEventListener("click", () => editProduct(button.dataset.editId));
+  });
+
+  tbody.querySelectorAll("[data-delete-id]").forEach(button => {
+    button.addEventListener("click", () => deleteProduct(button.dataset.deleteId));
+  });
 }
 
 $("productSearch").addEventListener("input", renderProducts);
@@ -699,33 +722,38 @@ function renderImagePreview() {
   const allImages = [];
 
   existingImages.forEach((url, index) => {
-    allImages.push({
-      url,
-      existing: true,
-      index
-    });
+    allImages.push({url, existing:true, index});
   });
 
   selectedImageFiles.forEach((file, index) => {
     const url = URL.createObjectURL(file);
     previewUrls.push(url);
-
-    allImages.push({
-      url,
-      existing: false,
-      index
-    });
+    allImages.push({url, existing:false, index});
   });
 
   container.innerHTML = allImages.map(item => `
     <div class="preview-item">
       <img src="${item.url}" alt="Product image">
-      <button type="button"
-        onclick="${item.existing
-          ? `removeExistingImage(${item.index})`
-          : `removeSelectedImage(${item.index})`}">×</button>
+      <button type="button" data-remove-existing="${item.existing ? item.index : ""}"
+        data-remove-selected="${item.existing ? "" : item.index}">×</button>
     </div>
   `).join("");
+
+  container.querySelectorAll("[data-remove-existing]").forEach(button => {
+    if (button.dataset.removeExisting !== "") {
+      button.addEventListener("click", () => {
+        removeExistingImage(Number(button.dataset.removeExisting));
+      });
+    }
+  });
+
+  container.querySelectorAll("[data-remove-selected]").forEach(button => {
+    if (button.dataset.removeSelected !== "") {
+      button.addEventListener("click", () => {
+        removeSelectedImage(Number(button.dataset.removeSelected));
+      });
+    }
+  });
 }
 
 $("productImages").addEventListener("change", event => {
@@ -788,7 +816,7 @@ async function uploadSelectedImages() {
   return uploadedUrls;
 }
 
-/* FORM */
+/* PRODUCT FORM */
 
 function resetProductForm() {
   $("productForm").reset();
@@ -802,6 +830,7 @@ function resetProductForm() {
 
   existingImages = [];
   selectedImageFiles = [];
+
   clearPreviewUrls();
   $("imagePreview").innerHTML = "";
   clearMessage($("formMessage"));
@@ -857,20 +886,21 @@ $("productForm").addEventListener("submit", async event => {
     const uploadedImages = await uploadSelectedImages();
 
     const manualImage = $("imageUrl").value.trim();
-    const imageList = [
-      ...existingImages,
-      ...uploadedImages
-    ];
+    const imageList = [...existingImages, ...uploadedImages];
 
     if (manualImage && !imageList.includes(manualImage)) {
       imageList.push(manualImage);
     }
 
+    const currentProductId = $("productId").value;
+    const oldProduct = currentProductId
+      ? adminProducts.find(p => p.id === currentProductId)
+      : null;
+
     const productData = {
       name,
-      slug: $("productId").value
-        ? (adminProducts.find(p => p.id === $("productId").value)?.slug || "")
-        : name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now(),
+      slug: oldProduct?.slug ||
+        name.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now(),
 
       category,
       sku: $("productSku").value.trim() || null,
@@ -893,10 +923,8 @@ $("productForm").addEventListener("submit", async event => {
       updated_at: new Date().toISOString()
     };
 
-    const productId = $("productId").value;
-
-    if (productId) {
-      await window.store.updateProduct(productId, productData);
+    if (currentProductId) {
+      await window.store.updateProduct(currentProductId, productData);
       showMessage($("formMessage"), "Product updated successfully!", "success");
     } else {
       await window.store.addProduct(productData);
@@ -921,7 +949,7 @@ $("productForm").addEventListener("submit", async event => {
 
 /* EDIT PRODUCT */
 
-window.editProduct = function(id) {
+function editProduct(id) {
   const product = adminProducts.find(item => item.id === id);
   if (!product) return;
 
@@ -939,11 +967,13 @@ window.editProduct = function(id) {
   $("productSizes").value = Array.isArray(product.sizes) ? product.sizes.join(", ") : "";
   $("productColors").value = Array.isArray(product.colors) ? product.colors.join(", ") : "";
   $("productDescription").value = product.description || "";
+
   $("isFeatured").checked = Boolean(product.is_featured);
   $("isNewArrival").checked = Boolean(product.is_new_arrival);
   $("isBestSeller").checked = Boolean(product.is_best_seller);
   $("isActive").checked = Boolean(product.is_active);
   $("lowStockAlert").checked = product.low_stock_alert !== false;
+
   $("supplierProductUrl").value = product.supplier_product_url || "";
   $("dropbazarProductId").value = product.dropbazar_product_id || "";
 
@@ -955,12 +985,12 @@ window.editProduct = function(id) {
   $("saveProductButton").textContent = "UPDATE PRODUCT";
 
   showSection("products");
-  $("productForm").scrollIntoView({ behavior: "smooth", block: "start" });
-};
+  $("productForm").scrollIntoView({behavior:"smooth", block:"start"});
+}
 
 /* DELETE PRODUCT */
 
-window.deleteProduct = async function(id) {
+async function deleteProduct(id) {
   const product = adminProducts.find(item => item.id === id);
   if (!product) return;
 
@@ -972,43 +1002,51 @@ window.deleteProduct = async function(id) {
     await window.store.deleteProduct(id);
     await loadAdminProducts();
     alert("Product deleted successfully.");
-
   } catch (error) {
     alert("Delete failed: " + error.message);
   }
-};
+}
 
 /* AUTH SESSION */
 
 async function initializeAdmin() {
-  if (!supabaseClient || !window.store) {
-    showMessage(
-      $("loginMessage"),
-      "Supabase setup পাওয়া যায়নি। config.js এবং store.js ঠিকভাবে Load হয়েছে কি না দেখুন।"
-    );
+  if (!supabaseClient) {
+    showMessage($("loginMessage"), "Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");
     return;
   }
 
-  const { data, error } = await supabaseClient.auth.getSession();
-
-  if (error) {
-    showMessage($("loginMessage"), error.message);
+  if (!window.store) {
+    showMessage($("loginMessage"), "Store functions পাওয়া যায়নি। store.js পরীক্ষা করুন।");
     return;
   }
 
-  if (data.session?.user) {
-    await startApp(data.session.user);
+  try {
+    const {data, error} = await supabaseClient.auth.getSession();
+
+    if (error) throw error;
+
+    if (data.session?.user) {
+      await startApp(data.session.user);
+    }
+  } catch (error) {
+    showMessage($("loginMessage"), error.message || "Session check failed.");
   }
 }
 
-supabaseClient?.auth.onAuthStateChange((event, session) => {
-  if (event === "SIGNED_OUT") {
-    $("adminApp").classList.add("hidden");
-    $("loginScreen").classList.remove("hidden");
-  }
-});
+if (supabaseClient) {
+  supabaseClient.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_OUT") {
+      currentUser = null;
+      currentProfile = null;
+      $("adminApp").classList.add("hidden");
+      $("loginScreen").classList.remove("hidden");
+    }
+  });
+}
 
 initializeAdmin();
+
+})();
 </script>
 
 </body>
