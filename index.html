@@ -6,307 +6,384 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAMKHUSH BY RATUL | Premium Fashion Label</title>
 <meta name="description" content="Discover premium men's and women's fashion at TAMKHUSH BY RATUL.">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="store.js"></script>
+
 <style>
-:root {
-  --bg: #101113;
-  --panel: #191b1f;
-  --silver: #bfc5cc;
-  --white: #f5f5f5;
-  --muted: #999da4;
-  --border: #303238;
+:root{
+  --bg:#101113;
+  --panel:#191b1f;
+  --silver:#bfc5cc;
+  --white:#f5f5f5;
+  --muted:#969ba2;
+  --line:#303238;
 }
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  background:var(--bg);
-  color:var(--white);
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--white);
   font-family:Arial,Helvetica,sans-serif;
 }
-a { color:inherit; text-decoration:none; }
-button { font:inherit; cursor:pointer; }
-header {
-  position:sticky; top:0; z-index:10;
+button,input{font:inherit}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+header{
+  position:sticky;top:0;z-index:20;
   background:rgba(16,17,19,.96);
-  border-bottom:1px solid var(--border);
-  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  padding:17px 6%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;
 }
-.nav {
-  max-width:1200px; margin:auto; padding:18px 22px;
-  display:flex; align-items:center; justify-content:space-between;
-  gap:20px;
+.logo{font-size:19px;font-weight:800;letter-spacing:2px}
+.logo span{display:block;font-size:9px;color:var(--silver);letter-spacing:4px;margin-top:5px}
+nav{display:flex;gap:25px;font-size:13px;color:#ddd}
+nav a:hover{color:var(--silver)}
+.header-actions{display:flex;gap:10px;align-items:center}
+.btn{
+  background:var(--silver);color:#111;border:0;
+  padding:12px 18px;font-weight:700;border-radius:3px;
 }
-.logo { font-family:Georgia,serif; letter-spacing:2px; }
-.logo strong { display:block; font-size:23px; }
-.logo small { color:var(--silver); letter-spacing:4px; }
-nav { display:flex; gap:25px; color:#ddd; font-size:14px; }
-nav a:hover { color:var(--silver); }
-.cart {
-  border:1px solid #666; padding:10px 15px;
-  background:transparent; color:white; border-radius:3px;
+.btn:hover{background:white}
+.btn-outline{
+  background:transparent;color:white;border:1px solid var(--silver);
+  padding:11px 15px;border-radius:3px;
 }
-.hero {
-  max-width:1200px; margin:auto; padding:75px 22px 65px;
-  min-height:480px; display:grid;
-  grid-template-columns:1.1fr .9fr; align-items:center; gap:35px;
-}
-.eyebrow { color:var(--silver); letter-spacing:5px; font-size:12px; }
-.hero h1 {
-  font-family:Georgia,serif; font-size:clamp(42px,6vw,76px);
-  line-height:1.08; font-weight:400; margin:22px 0;
-}
-.hero h1 span { color:var(--silver); }
-.hero p { color:var(--muted); line-height:1.8; max-width:490px; }
-.actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
-.btn {
-  padding:14px 22px; border:1px solid var(--silver);
-  background:var(--silver); color:#111;
-  font-weight:bold; letter-spacing:1px;
-}
-.btn.outline { background:transparent; color:var(--white); }
-.hero-image {
-  min-height:340px; border:1px solid #444;
+.hero{
+  min-height:540px;padding:85px 8%;
+  display:flex;align-items:center;
   background:
-  linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.1)),
-  url("https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1000") center/cover;
-  border-radius:3px;
+  linear-gradient(90deg,rgba(10,11,13,.96),rgba(10,11,13,.55)),
+  url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1800') center/cover;
 }
-.section { max-width:1200px; margin:auto; padding:55px 22px; }
-.section-head {
-  display:flex; justify-content:space-between;
-  align-items:end; gap:15px; margin-bottom:28px;
+.hero-content{max-width:650px}
+.eyebrow{color:var(--silver);letter-spacing:5px;font-size:11px;margin-bottom:22px}
+.hero h1{font-size:clamp(40px,7vw,76px);line-height:1.08;letter-spacing:2px}
+.hero h1 span{color:var(--silver)}
+.hero p{color:#c2c4c8;line-height:1.8;margin:23px 0 30px;max-width:470px}
+.section{padding:75px 6%}
+.section-head{text-align:center;margin-bottom:38px}
+.section-head small{color:var(--silver);letter-spacing:4px}
+.section-head h2{font-size:32px;margin-top:12px;letter-spacing:1px}
+.categories{
+ display:grid;grid-template-columns:repeat(2,1fr);gap:18px
 }
-.section h2 { font:400 34px Georgia,serif; }
-.section-head p { color:var(--muted); font-size:13px; margin-top:8px; }
-.categories {
-  display:grid; grid-template-columns:1fr 1fr; gap:18px;
+.category{
+ min-height:260px;display:flex;align-items:end;padding:28px;
+ background-size:cover;background-position:center;
+ border:1px solid var(--line);
 }
-.category {
-  min-height:220px; display:flex; align-items:end;
-  padding:25px; border:1px solid var(--border);
-  background-size:cover; background-position:center;
-  position:relative; overflow:hidden;
+.category:first-child{
+ background-image:linear-gradient(0deg,#000b,#0002),url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=900')
 }
-.category:before {
-  content:""; position:absolute; inset:0;
-  background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);
+.category:last-child{
+ background-image:linear-gradient(0deg,#000b,#0002),url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900')
 }
-.category div { position:relative; }
-.category h3 { font:30px Georgia,serif; margin-bottom:10px; }
-.category a { color:var(--silver); font-size:13px; }
-.filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
-.filter {
-  background:transparent; color:#ddd; border:1px solid #555;
-  padding:9px 16px; border-radius:2px;
+.category h3{font-size:27px;letter-spacing:2px}
+.category p{color:#ddd;margin:8px 0 15px;font-size:13px}
+.category button{background:var(--silver);border:0;padding:11px 18px;font-weight:bold}
+.toolbar{
+ display:flex;justify-content:space-between;gap:12px;
+ margin-bottom:25px;flex-wrap:wrap;
 }
-.filter.active { background:var(--silver); color:#111; }
-.products {
-  display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+.search{
+ background:var(--panel);border:1px solid var(--line);
+ color:white;padding:13px 15px;min-width:230px;border-radius:3px;
 }
-.product {
-  background:var(--panel); border:1px solid var(--border);
-  overflow:hidden;
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filter{
+ background:transparent;border:1px solid var(--line);
+ color:#ddd;padding:11px 15px;
 }
-.product img {
-  width:100%; aspect-ratio:3/4; object-fit:cover;
-  display:block; background:#25272b;
+.filter.active{background:var(--silver);color:#111}
+.products{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px
 }
-.product-info { padding:15px; }
-.product-info small { color:var(--muted); }
-.product-info h3 { font-size:15px; margin:9px 0; }
-.price { color:var(--silver); font-weight:bold; }
-.add {
-  width:100%; margin-top:13px; padding:11px;
-  background:transparent; border:1px solid #777;
-  color:white;
+.product{
+ background:var(--panel);border:1px solid var(--line);
+ overflow:hidden;
 }
-.add:hover { background:var(--silver); color:#111; }
-.empty { color:var(--muted); padding:25px 0; }
-.banner {
-  margin-top:25px; padding:45px 20px; text-align:center;
-  background:#1b1d21; border:1px solid var(--border);
+.product img{width:100%;height:245px;object-fit:cover;background:#24262a}
+.product-info{padding:17px}
+.product-info small{color:var(--muted);text-transform:uppercase;letter-spacing:2px}
+.product-info h3{font-size:16px;margin:10px 0}
+.price{color:var(--silver);font-weight:bold;font-size:17px}
+.product-info button{width:100%;margin-top:15px}
+.empty{text-align:center;color:var(--muted);padding:35px;grid-column:1/-1}
+.about{
+ background:#181a1e;text-align:center;padding:75px 8%;
+ border-top:1px solid var(--line);border-bottom:1px solid var(--line);
 }
-.banner h2 { font:36px Georgia,serif; margin-bottom:12px; }
-.banner p { color:var(--muted); }
-footer {
-  border-top:1px solid var(--border); margin-top:50px;
-  padding:35px 22px; text-align:center; color:var(--muted);
-  line-height:2;
+.about h2{font-size:30px;margin-bottom:15px}
+.about p{color:#b8bbc0;line-height:1.8;max-width:650px;margin:auto}
+footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-height:2}
+.drawer{
+ position:fixed;inset:0;background:#0009;z-index:50;
+ display:none;justify-content:flex-end;
 }
-footer strong { color:var(--white); letter-spacing:2px; }
-#cartPanel {
-  display:none; position:fixed; z-index:30; right:15px; top:85px;
-  width:min(350px,calc(100% - 30px)); padding:20px;
-  background:#202227; border:1px solid #777;
-  box-shadow:0 10px 40px #000;
+.drawer.open{display:flex}
+.drawer-content{
+ width:min(420px,100%);height:100%;overflow:auto;
+ background:#17191d;padding:25px;
 }
-#cartPanel h3 { margin-bottom:15px; }
-#cartItems { color:#ddd; line-height:2; }
-#cartPanel button { margin-top:15px; }
-@media(max-width:800px) {
-  nav { display:none; }
-  .hero { grid-template-columns:1fr; padding-top:50px; }
-  .hero-image { min-height:260px; }
-  .products { grid-template-columns:repeat(2,1fr); gap:12px; }
-  .categories { grid-template-columns:1fr; }
-  .section h2 { font-size:28px; }
+.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
+.cart-item{padding:14px 0;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px}
+.cart-item button{background:none;color:#e88;border:0}
+.cart-total{margin:25px 0;font-size:20px}
+.note{font-size:12px;color:var(--muted);line-height:1.6}
+@media(max-width:850px){
+ nav{gap:12px}
+ .products{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .product img{height:220px}
 }
-@media(max-width:380px) {
-  .products { grid-template-columns:1fr; }
+@media(max-width:580px){
+ header{padding:14px 4%;flex-wrap:wrap}
+ nav{order:3;width:100%;justify-content:center;padding-top:8px}
+ .logo{font-size:16px}
+ .hero{min-height:470px;padding:65px 6%}
+ .section{padding:55px 5%}
+ .categories{grid-template-columns:1fr}
+ .category{min-height:220px}
+ .products{gap:10px}
+ .product img{height:170px}
+ .product-info{padding:12px}
+ .product-info h3{font-size:14px}
+ .section-head h2{font-size:26px}
 }
 </style>
 </head>
+
 <body>
 
 <header>
-  <div class="nav">
-    <a href="#" class="logo">
-      <strong>TAMKHUSH</strong>
-      <small>BY RATUL</small>
-    </a>
-    <nav>
-      <a href="#home">HOME</a>
-      <a href="#collections">COLLECTIONS</a>
-      <a href="#products">SHOP</a>
-      <a href="#about">ABOUT</a>
-    </nav>
-    <button class="cart" onclick="toggleCart()">
-      BAG (<span id="cartCount">0</span>)
-    </button>
+  <a href="#" class="logo">TAMKHUSH BY RATUL
+    <span>PREMIUM FASHION LABEL</span>
+  </a>
+  <nav>
+    <a href="#home">HOME</a>
+    <a href="#collections">COLLECTIONS</a>
+    <a href="#products">SHOP</a>
+    <a href="#about">ABOUT</a>
+  </nav>
+  <div class="header-actions">
+    <button class="btn-outline" onclick="openCart()">BAG (<span id="cartCount">0</span>)</button>
   </div>
 </header>
 
-<div id="cartPanel">
-  <h3>Your Shopping Bag</h3>
-  <div id="cartItems">Your bag is empty.</div>
-  <button class="btn outline" onclick="toggleCart()">CLOSE</button>
-</div>
-
 <main>
 <section class="hero" id="home">
-  <div>
+  <div class="hero-content">
     <div class="eyebrow">PREMIUM FASHION LABEL</div>
-    <h1>Discover Your<br><span>Own Style.</span></h1>
-    <p>
-      A modern fashion destination for men and women.
-      Explore timeless style, refined details and everyday elegance.
-    </p>
-    <div class="actions">
-      <a href="#products" class="btn">EXPLORE COLLECTION</a>
-      <a href="#collections" class="btn outline">DISCOVER MORE</a>
-    </div>
+    <h1>STYLE IS<br><span>YOUR IDENTITY.</span></h1>
+    <p>Discover a refined collection of modern fashion. Explore timeless style, quality and elegance with TAMKHUSH BY RATUL.</p>
+    <a href="#products" class="btn">EXPLORE COLLECTION</a>
   </div>
-  <div class="hero-image"></div>
 </section>
 
 <section class="section" id="collections">
   <div class="section-head">
-    <div>
-      <h2>Our Collections</h2>
-      <p>Find your signature style.</p>
-    </div>
+    <small>OUR COLLECTIONS</small>
+    <h2>SHOP BY CATEGORY</h2>
   </div>
   <div class="categories">
-    <div class="category" style="background-image:url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=900')">
-      <div><h3>Men's Fashion</h3><a href="#products" onclick="setFilter('Men')">EXPLORE COLLECTION →</a></div>
+    <div class="category">
+      <div>
+        <h3>MEN'S FASHION</h3>
+        <p>Modern essentials for every style.</p>
+        <button onclick="selectCategory('men')">EXPLORE MEN</button>
+      </div>
     </div>
-    <div class="category" style="background-image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900')">
-      <div><h3>Women's Fashion</h3><a href="#products" onclick="setFilter('Women')">EXPLORE COLLECTION →</a></div>
+    <div class="category">
+      <div>
+        <h3>WOMEN'S FASHION</h3>
+        <p>Elegance in every detail.</p>
+        <button onclick="selectCategory('women')">EXPLORE WOMEN</button>
+      </div>
     </div>
   </div>
 </section>
 
 <section class="section" id="products">
   <div class="section-head">
-    <div>
-      <h2>Featured Products</h2>
-      <p>Explore our selected fashion pieces.</p>
+    <small>THE LATEST EDIT</small>
+    <h2>FEATURED PRODUCTS</h2>
+  </div>
+
+  <div class="toolbar">
+    <input class="search" id="searchInput" placeholder="Search products..." oninput="renderProducts()">
+    <div class="filters">
+      <button class="filter active" onclick="selectCategory('all',this)">ALL</button>
+      <button class="filter" onclick="selectCategory('men',this)">MEN</button>
+      <button class="filter" onclick="selectCategory('women',this)">WOMEN</button>
+      <button class="filter" onclick="selectCategory('accessories',this)">ACCESSORIES</button>
     </div>
   </div>
-  <div class="filters">
-    <button class="filter active" onclick="setFilter('All',this)">All</button>
-    <button class="filter" onclick="setFilter('Men',this)">Men</button>
-    <button class="filter" onclick="setFilter('Women',this)">Women</button>
+
+  <div class="products" id="productGrid">
+    <div class="empty">Loading collection...</div>
   </div>
-  <div class="products" id="productGrid"></div>
-  <p class="empty" id="emptyMessage" hidden>No products found.</p>
 </section>
 
-<section class="section" id="about">
-  <div class="banner">
-    <h2>Luxury Fashion Station</h2>
-    <p>TAMKHUSH BY RATUL — Quality • Style • Elegance</p>
-  </div>
+<section class="about" id="about">
+  <h2>THE ART OF EVERYDAY ELEGANCE</h2>
+  <p>TAMKHUSH BY RATUL is a premium fashion label built around modern style, confidence and simplicity. Discover fashion that reflects your identity.</p>
 </section>
 </main>
 
 <footer>
   <strong>TAMKHUSH BY RATUL</strong><br>
   PREMIUM FASHION LABEL<br>
-  Men's & Women's Fashion<br>
-  <small>© 2026 TAMKHUSH BY RATUL. All rights reserved.</small>
+  © <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.
 </footer>
 
-<script>
-const products = [
- {name:"Classic Black Shirt",category:"Men",price:1250,image:"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600"},
- {name:"Premium Casual Outfit",category:"Men",price:1650,image:"https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600"},
- {name:"Elegant Women's Outfit",category:"Women",price:1850,image:"https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600"},
- {name:"Classic Handbag",category:"Women",price:1450,image:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600"}
-];
-
-let cart = [];
-let currentFilter = "All";
-
-function renderProducts() {
- const grid = document.getElementById("productGrid");
- grid.innerHTML = "";
- const shown = products.filter(p => currentFilter === "All" || p.category === currentFilter);
- document.getElementById("emptyMessage").hidden = shown.length > 0;
-
- shown.forEach((p,index) => {
-  const realIndex = products.indexOf(p);
-  grid.innerHTML += `
-   <article class="product">
-    <img src="${p.image}" alt="${p.name}" loading="lazy">
-    <div class="product-info">
-     <small>${p.category.toUpperCase()} COLLECTION</small>
-     <h3>${p.name}</h3>
-     <div class="price">৳${p.price.toLocaleString("en-BD")}</div>
-     <button class="add" onclick="addToCart(${realIndex})">ADD TO BAG</button>
+<div class="drawer" id="cartDrawer" onclick="if(event.target===this)closeCart()">
+  <div class="drawer-content">
+    <div class="drawer-head">
+      <h2>YOUR BAG</h2>
+      <button class="btn-outline" onclick="closeCart()">CLOSE</button>
     </div>
-   </article>`;
- });
+    <div id="cartItems"></div>
+    <div class="cart-total">Total: ৳<span id="cartTotal">0</span></div>
+    <p class="note">Checkout and online order submission will be enabled after secure backend setup.</p>
+    <button class="btn" style="width:100%;margin-top:18px" onclick="alert('Online checkout is coming soon. Please contact our store for ordering.')">CHECKOUT COMING SOON</button>
+  </div>
+</div>
+
+<script>
+let products = [];
+let activeCategory = 'all';
+let cart = JSON.parse(localStorage.getItem('tkr_cart') || '[]');
+
+function money(value){
+  return Number(value || 0).toLocaleString('en-BD');
 }
 
-function setFilter(category,button) {
- currentFilter = category;
- document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
- if(button) button.classList.add("active");
- renderProducts();
+function productImage(product){
+  return product.images && product.images.length
+    ? product.images[0]
+    : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=700';
 }
 
-function addToCart(index) {
- cart.push(products[index]);
- document.getElementById("cartCount").textContent = cart.length;
- updateCart();
+async function loadProducts(){
+  const grid = document.getElementById('productGrid');
+  try{
+    if(!window.store) throw new Error('Store is not loaded');
+    products = await window.store.getProducts();
+    renderProducts();
+  }catch(error){
+    console.error(error);
+    grid.innerHTML = '<div class="empty">Products could not be loaded. Please try again later.</div>';
+  }
 }
 
-function updateCart() {
- const box = document.getElementById("cartItems");
- if(!cart.length) {
-  box.textContent = "Your bag is empty.";
-  return;
- }
- box.innerHTML = cart.map(p=>`${p.name} — ৳${p.price}`).join("<br>");
- box.innerHTML += `<hr><strong>Total: ৳${cart.reduce((s,p)=>s+p.price,0).toLocaleString("en-BD")}</strong>`;
+function renderProducts(){
+  const grid = document.getElementById('productGrid');
+  const term = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  const filtered = products.filter(p=>{
+    const matchesCategory = activeCategory === 'all' ||
+      p.category === activeCategory ||
+      (activeCategory === 'men' && p.category === 'unisex') ||
+      (activeCategory === 'women' && p.category === 'unisex');
+    const matchesSearch = (p.name || '').toLowerCase().includes(term) ||
+      (p.description || '').toLowerCase().includes(term);
+    return matchesCategory && matchesSearch;
+  });
+
+  if(!filtered.length){
+    grid.innerHTML = '<div class="empty">No products found in this collection.</div>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p=>`
+    <article class="product">
+      <img src="${escapeHTML(productImage(p))}" alt="${escapeHTML(p.name)}" loading="lazy">
+      <div class="product-info">
+        <small>${escapeHTML(p.category || 'Fashion')}</small>
+        <h3>${escapeHTML(p.name)}</h3>
+        <div class="price">৳${money(p.selling_price)}</div>
+        <button class="btn" onclick="addToCart('${p.id}')">ADD TO BAG</button>
+      </div>
+    </article>
+  `).join('');
 }
 
-function toggleCart() {
- const panel = document.getElementById("cartPanel");
- panel.style.display = panel.style.display === "block" ? "none" : "block";
- updateCart();
+function escapeHTML(value){
+  return String(value ?? '').replace(/[&<>"']/g, c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
 }
 
-renderProducts();
+function selectCategory(category,button){
+  activeCategory = category;
+  document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+  if(button) button.classList.add('active');
+  else{
+    const match = [...document.querySelectorAll('.filter')]
+      .find(b=>b.textContent.toLowerCase() === category);
+    if(match) match.classList.add('active');
+  }
+  renderProducts();
+  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
+
+function addToCart(id){
+  const p = products.find(item=>item.id===id);
+  if(!p) return;
+  const existing = cart.find(item=>item.id===id);
+  if(existing) existing.quantity++;
+  else cart.push({
+    id:p.id,name:p.name,price:Number(p.selling_price),image:productImage(p),quantity:1
+  });
+  saveCart();
+}
+
+function saveCart(){
+  localStorage.setItem('tkr_cart',JSON.stringify(cart));
+  updateCart();
+}
+
+function updateCart(){
+  document.getElementById('cartCount').textContent =
+    cart.reduce((sum,item)=>sum+item.quantity,0);
+
+  document.getElementById('cartItems').innerHTML = cart.length
+    ? cart.map(item=>`
+      <div class="cart-item">
+        <div>
+          <strong>${escapeHTML(item.name)}</strong><br>
+          <small>৳${money(item.price)} × ${item.quantity}</small>
+        </div>
+        <div>
+          <strong>৳${money(item.price*item.quantity)}</strong><br>
+          <button onclick="removeCartItem('${item.id}')">REMOVE</button>
+        </div>
+      </div>
+    `).join('')
+    : '<p class="note">Your shopping bag is empty.</p>';
+
+  document.getElementById('cartTotal').textContent =
+    money(cart.reduce((sum,item)=>sum+item.price*item.quantity,0));
+}
+
+function removeCartItem(id){
+  cart=cart.filter(item=>item.id!==id);
+  saveCart();
+}
+
+function openCart(){
+  document.getElementById('cartDrawer').classList.add('open');
+  updateCart();
+}
+function closeCart(){
+  document.getElementById('cartDrawer').classList.remove('open');
+}
+
+document.getElementById('year').textContent=new Date().getFullYear();
+updateCart();
+loadProducts();
 </script>
+
 </body>
 </html>
