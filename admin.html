@@ -21,87 +21,42 @@
   --danger:#b94d58;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{
- background:var(--bg);color:var(--white);
- font-family:Arial,Helvetica,sans-serif;
-}
+body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
-.login-screen{
- min-height:100vh;display:flex;justify-content:center;
- align-items:center;padding:20px;
-}
-.login-card{
- width:100%;max-width:410px;background:var(--panel);
- border:1px solid var(--line);padding:35px;border-radius:5px;
-}
+.login-screen{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
+.login-card{width:100%;max-width:410px;background:var(--panel);border:1px solid var(--line);padding:35px;border-radius:5px}
 .brand{text-align:center;font-size:22px;font-weight:800;letter-spacing:2px}
 .brand small{display:block;color:var(--silver);font-size:9px;letter-spacing:4px;margin-top:8px}
 .login-card h2{text-align:center;margin:35px 0 25px}
 label{display:block;font-size:12px;color:var(--silver);margin:15px 0 7px}
-input,textarea,select{
- width:100%;background:#101215;border:1px solid var(--line);
- padding:13px;color:white;border-radius:3px;outline:none;
-}
+input,textarea,select{width:100%;background:#101215;border:1px solid var(--line);padding:13px;color:white;border-radius:3px;outline:none}
 input:focus,textarea:focus,select:focus{border-color:var(--silver)}
-.btn{
- background:var(--silver);color:#101113;border:0;
- padding:12px 17px;font-weight:bold;border-radius:3px;
-}
+.btn{background:var(--silver);color:#101113;border:0;padding:12px 17px;font-weight:bold;border-radius:3px}
 .btn:hover{background:white}
 .btn-full{width:100%;margin-top:20px}
-.btn-outline{
- background:transparent;border:1px solid var(--silver);
- color:white;padding:10px 14px;border-radius:3px;
-}
+.btn-outline{background:transparent;border:1px solid var(--silver);color:white;padding:10px 14px;border-radius:3px}
 .btn-danger{background:var(--danger);color:white;border:0;padding:9px 12px}
-.message{font-size:13px;color:#ff9b9b;margin-top:15px;line-height:1.5}
+.message{font-size:13px;color:#ff9b9b;margin-top:15px;line-height:1.5;overflow-wrap:anywhere}
 .layout{min-height:100vh}
-.sidebar{
- width:245px;position:fixed;top:0;bottom:0;left:0;
- background:#15171a;border-right:1px solid var(--line);
- padding:25px 17px;z-index:5;
-}
+.sidebar{width:245px;position:fixed;top:0;bottom:0;left:0;background:#15171a;border-right:1px solid var(--line);padding:25px 17px;z-index:5}
 .sidebar .brand{text-align:left;font-size:17px;line-height:1.4}
 .sidebar .brand small{font-size:8px}
 .side-label{color:var(--muted);font-size:10px;letter-spacing:3px;margin:42px 10px 15px}
-.side-link{
- display:block;width:100%;text-align:left;background:none;
- border:0;color:#c7c9cc;padding:14px 12px;margin:4px 0;
- border-radius:3px;font-size:13px;
-}
+.side-link{display:block;width:100%;text-align:left;background:none;border:0;color:#c7c9cc;padding:14px 12px;margin:4px 0;border-radius:3px;font-size:13px}
 .side-link:hover,.side-link.active{background:#292c31;color:white}
 .main{margin-left:245px;padding:30px;max-width:1500px}
-.topbar{
- display:flex;justify-content:space-between;align-items:center;
- gap:15px;margin-bottom:30px;flex-wrap:wrap;
-}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:30px;flex-wrap:wrap}
 .topbar h1{font-size:25px}
 .topbar p{font-size:12px;color:var(--muted);margin-top:7px}
-.role-pill{
- display:inline-block;border:1px solid var(--silver);
- color:var(--silver);padding:6px 10px;font-size:10px;
- letter-spacing:1px;text-transform:uppercase;
-}
-.stats{
- display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
- margin-bottom:30px;
-}
-.stat{
- background:var(--panel);border:1px solid var(--line);
- padding:22px;border-radius:4px;
-}
+.role-pill{display:inline-block;border:1px solid var(--silver);color:var(--silver);padding:6px 10px;font-size:10px;letter-spacing:1px;text-transform:uppercase}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:30px}
+.stat{background:var(--panel);border:1px solid var(--line);padding:22px;border-radius:4px}
 .stat small{color:var(--muted);font-size:11px}
 .stat h2{font-size:28px;margin-top:12px}
-.panel{
- background:var(--panel);border:1px solid var(--line);
- padding:23px;margin-bottom:25px;border-radius:4px;
-}
-.panel-head{
- display:flex;align-items:center;justify-content:space-between;
- gap:12px;flex-wrap:wrap;margin-bottom:20px;
-}
+.panel{background:var(--panel);border:1px solid var(--line);padding:23px;margin-bottom:25px;border-radius:4px}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
 .panel-head h2{font-size:18px}
 .form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0 15px}
 .full{grid-column:1/-1}
@@ -117,7 +72,6 @@ td{color:#ddd}
 .status{color:var(--silver);font-size:11px}
 .notice{color:var(--muted);font-size:12px;line-height:1.7;margin-top:12px}
 .empty{padding:25px;text-align:center;color:var(--muted)}
-.mobile-menu{display:none}
 @media(max-width:800px){
  .sidebar{width:205px}
  .main{margin-left:205px;padding:20px}
@@ -140,7 +94,6 @@ td{color:#ddd}
 
 <body>
 
-<!-- LOGIN -->
 <section class="login-screen" id="loginScreen">
   <div class="login-card">
     <div class="brand">
@@ -151,7 +104,7 @@ td{color:#ddd}
 
     <form id="loginForm">
       <label>Email Address</label>
-      <input id="loginEmail" type="email" placeholder="Enter admin email" required>
+      <input id="loginEmail" type="email" placeholder="Enter staff email" required>
       <label>Password</label>
       <input id="loginPassword" type="password" placeholder="Enter password" required>
       <button class="btn btn-full" id="loginButton" type="submit">SIGN IN</button>
@@ -161,7 +114,6 @@ td{color:#ddd}
   </div>
 </section>
 
-<!-- DASHBOARD -->
 <div class="layout hidden" id="dashboard">
   <aside class="sidebar">
     <div class="brand">TAMKHUSH BY RATUL
@@ -291,13 +243,8 @@ td{color:#ddd}
           <table>
             <thead>
               <tr>
-                <th>IMAGE</th>
-                <th>PRODUCT</th>
-                <th>CATEGORY</th>
-                <th>PRICE</th>
-                <th>STOCK</th>
-                <th>STATUS</th>
-                <th>ACTIONS</th>
+                <th>IMAGE</th><th>PRODUCT</th><th>CATEGORY</th>
+                <th>PRICE</th><th>STOCK</th><th>STATUS</th><th>ACTIONS</th>
               </tr>
             </thead>
             <tbody id="productTable">
@@ -329,7 +276,7 @@ function notify(id,message){
 
 async function startApp(){
   if(!window.supabaseClient){
-    notify('loginMessage','Supabase configuration is missing.');
+    notify('loginMessage','Supabase configuration is missing. Check config.js.');
     return;
   }
   try{
@@ -337,13 +284,19 @@ async function startApp(){
     if(error) throw error;
     if(data.session) await checkStaff(data.session.user);
   }catch(error){
-    console.error(error);
-    notify('loginMessage','Could not check login session.');
+    console.error('Session error:',error);
+    notify('loginMessage','SESSION ERROR: '+error.message);
   }
 }
 
 $('loginForm').addEventListener('submit',async e=>{
   e.preventDefault();
+
+  if(!window.supabaseClient){
+    notify('loginMessage','Supabase client is missing. Check config.js.');
+    return;
+  }
+
   const button=$('loginButton');
   button.disabled=true;
   button.textContent='SIGNING IN...';
@@ -354,29 +307,60 @@ $('loginForm').addEventListener('submit',async e=>{
       email:$('loginEmail').value.trim(),
       password:$('loginPassword').value
     });
+
     if(error) throw error;
     await checkStaff(data.user);
+
   }catch(error){
-    notify('loginMessage',error.message || 'Login failed.');
+    console.error('Login error:',error);
+    notify('loginMessage','LOGIN ERROR: '+error.message);
   }finally{
     button.disabled=false;
     button.textContent='SIGN IN';
   }
 });
 
+/* UPDATED STAFF VERIFICATION */
 async function checkStaff(user){
+
   const {data:profile,error}=await supabaseClient
     .from('profiles')
     .select('id,full_name,role')
     .eq('id',user.id)
-    .single();
+    .maybeSingle();
 
-  if(error || !profile ||
-     !['owner','manager','admin'].includes(profile.role)){
+  if(error){
+    console.error('Profile lookup error:',error);
     await supabaseClient.auth.signOut();
     $('dashboard').classList.add('hidden');
     $('loginScreen').classList.remove('hidden');
-    notify('loginMessage','Access denied. This account is not an authorized staff account.');
+
+    notify('loginMessage',
+      'PROFILE DATABASE ERROR: '+error.message+
+      ' | Code: '+(error.code||'unknown')
+    );
+    return;
+  }
+
+  if(!profile){
+    await supabaseClient.auth.signOut();
+    $('dashboard').classList.add('hidden');
+    $('loginScreen').classList.remove('hidden');
+
+    notify('loginMessage',
+      'PROFILE NOT FOUND: This user has no matching row in public.profiles.'
+    );
+    return;
+  }
+
+  const role=String(profile.role||'').trim().toLowerCase();
+
+  if(!['owner','manager','admin'].includes(role)){
+    await supabaseClient.auth.signOut();
+    $('dashboard').classList.add('hidden');
+    $('loginScreen').classList.remove('hidden');
+
+    notify('loginMessage','INVALID STAFF ROLE: '+role);
     return;
   }
 
@@ -385,8 +369,8 @@ async function checkStaff(user){
 
   $('loginScreen').classList.add('hidden');
   $('dashboard').classList.remove('hidden');
-  $('userRole').textContent=profile.role;
-  $('roleName').textContent=profile.role.toUpperCase();
+  $('userRole').textContent=role;
+  $('roleName').textContent=role.toUpperCase();
 
   await loadAdminProducts();
 }
@@ -403,6 +387,7 @@ function showSection(name,button){
   $('overviewSection').classList.toggle('hidden',name!=='overview');
   $('productsSection').classList.toggle('hidden',name!=='products');
   $('pageTitle').textContent=name==='products'?'Product Management':'Dashboard Overview';
+
   document.querySelectorAll('.side-link').forEach(b=>b.classList.remove('active'));
   if(button) button.classList.add('active');
 }
@@ -414,7 +399,7 @@ async function loadAdminProducts(){
     $('activeProducts').textContent=adminProducts.filter(p=>p.is_active).length;
     renderTable();
   }catch(error){
-    console.error(error);
+    console.error('Product loading error:',error);
     $('productTable').innerHTML='<tr><td colspan="7" class="empty">Could not load products. Check staff permissions.</td></tr>';
   }
 }
@@ -449,6 +434,7 @@ function listValue(value){
 
 $('productForm').addEventListener('submit',async e=>{
   e.preventDefault();
+
   const button=$('saveButton');
   button.disabled=true;
   button.textContent='SAVING...';
@@ -456,6 +442,7 @@ $('productForm').addEventListener('submit',async e=>{
 
   const id=$('productId').value;
   const name=$('productName').value.trim();
+
   const slug=name.toLowerCase()
     .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')
     +'-'+Date.now().toString().slice(-6);
@@ -477,7 +464,6 @@ $('productForm').addEventListener('submit',async e=>{
 
   try{
     if(id){
-      // Do not replace an existing slug when editing.
       delete product.slug;
       await window.store.updateProduct(id,product);
       notify('formMessage','Product updated successfully.');
@@ -485,11 +471,13 @@ $('productForm').addEventListener('submit',async e=>{
       await window.store.addProduct(product);
       notify('formMessage','Product added successfully.');
     }
+
     resetForm(false);
     await loadAdminProducts();
+
   }catch(error){
-    console.error(error);
-    notify('formMessage',error.message || 'Could not save product.');
+    console.error('Product save error:',error);
+    notify('formMessage',error.message||'Could not save product.');
   }finally{
     button.disabled=false;
     button.textContent='SAVE PRODUCT';
@@ -519,6 +507,7 @@ function editProduct(id){
 
 async function deleteProduct(id){
   const p=adminProducts.find(item=>item.id===id);
+
   if(!p || !confirm('Delete "'+p.name+'"? This action cannot be undone.')) return;
 
   try{
@@ -526,8 +515,8 @@ async function deleteProduct(id){
     await loadAdminProducts();
     notify('formMessage','Product deleted.');
   }catch(error){
-    console.error(error);
-    notify('formMessage',error.message || 'Could not delete product.');
+    console.error('Delete error:',error);
+    notify('formMessage',error.message||'Could not delete product.');
   }
 }
 
@@ -543,6 +532,8 @@ function resetForm(clearMessage=true){
 
 supabaseClient.auth.onAuthStateChange((event,session)=>{
   if(event==='SIGNED_OUT'){
+    currentUser=null;
+    currentProfile=null;
     $('dashboard').classList.add('hidden');
     $('loginScreen').classList.remove('hidden');
   }
