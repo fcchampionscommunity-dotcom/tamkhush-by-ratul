@@ -1,0 +1,443 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAMKHUSH | Admin Dashboard</title>
+<style>
+:root {
+  --bg:#101113;
+  --panel:#191b1f;
+  --silver:#bfc5cc;
+  --white:#f5f5f5;
+  --muted:#969ba3;
+  --border:#303238;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg);color:var(--white);
+  font-family:Arial,sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.layout{display:flex;min-height:100vh}
+.sidebar{
+  width:245px;background:#151619;
+  border-right:1px solid var(--border);
+  padding:25px 16px;flex-shrink:0;
+}
+.brand{
+  font:25px Georgia,serif;letter-spacing:2px;
+  text-align:center;padding:12px 0 25px;
+}
+.brand small{
+  display:block;font:11px Arial;
+  color:var(--silver);letter-spacing:5px;margin-top:7px;
+}
+.menu-title{
+  color:var(--muted);font-size:11px;
+  letter-spacing:2px;margin:22px 10px 10px;
+}
+.menu button{
+  width:100%;display:block;text-align:left;
+  background:transparent;color:#c5c6ca;
+  border:0;padding:13px 12px;border-radius:5px;
+  margin:4px 0;
+}
+.menu button:hover,.menu button.active{
+  background:#303238;color:white;
+}
+.main{flex:1;min-width:0;padding:25px}
+.topbar{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;margin-bottom:28px;
+}
+.topbar h1{font:30px Georgia,serif}
+.topbar p{color:var(--muted);font-size:13px;margin-top:7px}
+.owner{
+  border:1px solid #555;padding:10px 14px;
+  color:var(--silver);font-size:12px;
+}
+.page{display:none}
+.page.active{display:block}
+.cards{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:15px;margin-bottom:25px;
+}
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  padding:20px;border-radius:5px;
+}
+.card small{color:var(--muted)}
+.card h2{font-size:27px;margin-top:12px}
+.section-title{
+  font:25px Georgia,serif;margin:15px 0 20px;
+}
+.toolbar{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;
+}
+.primary{
+  background:var(--silver);color:#111;border:0;
+  padding:12px 17px;font-weight:bold;border-radius:3px;
+}
+.secondary{
+  background:transparent;color:white;border:1px solid #666;
+  padding:10px 14px;border-radius:3px;
+}
+.danger{color:#ff8585;border-color:#8b4545}
+input,select,textarea{
+  width:100%;background:#111316;color:white;
+  border:1px solid #444;padding:12px;
+  border-radius:3px;outline:none;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--silver)}
+.form-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:14px;
+}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font-size:13px;color:#c4c5c8}
+.full{grid-column:1/-1}
+.form-panel{
+  background:var(--panel);border:1px solid var(--border);
+  padding:22px;border-radius:5px;max-width:850px;
+}
+.form-actions{display:flex;gap:10px;margin-top:20px}
+.table-wrap{
+  overflow-x:auto;background:var(--panel);
+  border:1px solid var(--border);border-radius:5px;
+}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{
+  text-align:left;padding:15px;
+  border-bottom:1px solid var(--border);font-size:13px;
+}
+th{color:var(--silver);font-weight:500}
+td{color:#ddd}
+.status{
+  display:inline-block;padding:5px 9px;
+  border:1px solid #666;border-radius:20px;font-size:11px;
+}
+.note{
+  padding:15px;background:#22252a;border-left:3px solid var(--silver);
+  color:#c8cbd0;font-size:13px;line-height:1.7;margin-bottom:20px;
+}
+.product-thumb{
+  width:42px;height:50px;object-fit:cover;
+  vertical-align:middle;margin-right:10px;
+}
+.empty{text-align:center;color:var(--muted);padding:30px}
+.mobile-menu{display:none}
+@media(max-width:850px){
+ .sidebar{width:190px}
+ .cards{grid-template-columns:repeat(2,1fr)}
+ .main{padding:18px}
+}
+@media(max-width:600px){
+ .layout{display:block}
+ .sidebar{width:100%;padding:12px}
+ .brand{text-align:left;padding:5px}
+ .menu-title{display:none}
+ .menu{display:flex;overflow:auto;gap:5px}
+ .menu button{white-space:nowrap;width:auto;font-size:12px}
+ .main{padding:15px}
+ .cards{gap:9px}
+ .card{padding:14px}
+ .card h2{font-size:22px}
+ .topbar h1{font-size:24px}
+ .owner{font-size:10px}
+ .form-grid{grid-template-columns:1fr}
+ .full{grid-column:auto}
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<aside class="sidebar">
+  <div class="brand">
+    TAMKHUSH
+    <small>BY RATUL</small>
+  </div>
+
+  <div class="menu-title">MAIN MENU</div>
+  <div class="menu">
+    <button class="active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
+    <button onclick="showPage('products',this)">◇ Products</button>
+    <button onclick="showPage('orders',this)">▤ Orders</button>
+    <button onclick="showPage('customers',this)">♙ Customers</button>
+  </div>
+
+  <div class="menu-title">MANAGEMENT</div>
+  <div class="menu">
+    <button onclick="showPage('suppliers',this)">▣ Suppliers</button>
+    <button onclick="showPage('settings',this)">⚙ Settings</button>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="topbar">
+    <div>
+      <h1 id="pageTitle">Dashboard</h1>
+      <p>Welcome to your fashion store management.</p>
+    </div>
+    <div class="owner">OWNER PANEL</div>
+  </div>
+
+  <section class="page active" id="dashboard">
+    <div class="cards">
+      <div class="card"><small>Total Products</small><h2 id="totalProducts">0</h2></div>
+      <div class="card"><small>Total Orders</small><h2 id="totalOrders">0</h2></div>
+      <div class="card"><small>Pending Orders</small><h2 id="pendingOrders">0</h2></div>
+      <div class="card"><small>Customers</small><h2 id="totalCustomers">0</h2></div>
+    </div>
+    <h2 class="section-title">Quick Actions</h2>
+    <div class="toolbar">
+      <button class="primary" onclick="showPage('productForm')">+ Add New Product</button>
+      <button class="secondary" onclick="showPage('orders')">View Orders →</button>
+    </div>
+    <div class="note">
+      Product management and order statistics will be connected
+      to the secure online database in the next development stage.
+    </div>
+    <h2 class="section-title">Recent Products</h2>
+    <div id="recentProducts" class="table-wrap"></div>
+  </section>
+
+  <section class="page" id="products">
+    <div class="toolbar">
+      <h2 class="section-title">All Products</h2>
+      <button class="primary" onclick="showPage('productForm')">+ Add Product</button>
+    </div>
+    <div id="productTable" class="table-wrap"></div>
+  </section>
+
+  <section class="page" id="productForm">
+    <h2 class="section-title" id="formHeading">Add New Product</h2>
+    <div class="form-panel">
+      <form id="productFormElement">
+        <input type="hidden" id="editIndex" value="-1">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Product Name *</label>
+            <input id="pName" required placeholder="Enter product name">
+          </div>
+          <div class="field">
+            <label>Category *</label>
+            <select id="pCategory" required>
+              <option value="Men">Men's Fashion</option>
+              <option value="Women">Women's Fashion</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Product Price (৳) *</label>
+            <input id="pPrice" type="number" min="1" required placeholder="1250">
+          </div>
+          <div class="field">
+            <label>Supplier Cost (৳)</label>
+            <input id="pCost" type="number" min="0" placeholder="850">
+          </div>
+          <div class="field">
+            <label>Stock Quantity</label>
+            <input id="pStock" type="number" min="0" value="1">
+          </div>
+          <div class="field">
+            <label>Available Sizes</label>
+            <input id="pSize" placeholder="S, M, L, XL">
+          </div>
+          <div class="field">
+            <label>Available Colors</label>
+            <input id="pColor" placeholder="Black, White">
+          </div>
+          <div class="field full">
+            <label>Product Image URL</label>
+            <input id="pImage" type="url" placeholder="https://example.com/image.jpg">
+          </div>
+          <div class="field full">
+            <label>Product Description</label>
+            <textarea id="pDescription" rows="4" placeholder="Describe your product..."></textarea>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="primary" type="submit">Save Product</button>
+          <button class="secondary" type="button" onclick="showPage('products')">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <section class="page" id="orders">
+    <h2 class="section-title">Order Management</h2>
+    <div class="note">Customer orders will appear here after the checkout and database systems are connected.</div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody><tr><td colspan="5" class="empty">No orders yet.</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="page" id="customers">
+    <h2 class="section-title">Customers</h2>
+    <div class="note">Customer information will appear here when the online order system is connected.</div>
+  </section>
+
+  <section class="page" id="suppliers">
+    <h2 class="section-title">Supplier Management</h2>
+    <div class="note">DropBazar API integration will be configured here after receiving official API access.</div>
+    <div class="form-panel">
+      <div class="field">
+        <label>Supplier Name</label>
+        <input value="DropBazar BD" disabled>
+      </div>
+      <div class="field" style="margin-top:15px">
+        <label>API Connection</label>
+        <input value="Not Connected" disabled>
+      </div>
+    </div>
+  </section>
+
+  <section class="page" id="settings">
+    <h2 class="section-title">Store Settings</h2>
+    <div class="form-panel">
+      <div class="field">
+        <label>Store Name</label>
+        <input value="TAMKHUSH BY RATUL" disabled>
+      </div>
+      <div class="field" style="margin-top:15px">
+        <label>Brand Tagline</label>
+        <input value="PREMIUM FASHION LABEL" disabled>
+      </div>
+      <p style="color:#999;margin-top:18px;font-size:13px">
+        Secure account, payment, API and notification settings
+        will be connected in the backend stage.
+      </p>
+    </div>
+  </section>
+
+</main>
+</div>
+
+<script>
+const STORAGE_KEY = "tkr_admin_products_demo";
+
+function getProducts(){
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch(e) { return []; }
+}
+let products = getProducts();
+
+function saveProducts(){
+  localStorage.setItem(STORAGE_KEY,JSON.stringify(products));
+  renderProducts();
+}
+
+function showPage(id,button){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  const page=document.getElementById(id);
+  if(!page) return;
+  page.classList.add("active");
+
+  document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
+  if(button) button.classList.add("active");
+
+  const titles={
+    dashboard:"Dashboard",products:"Products",
+    productForm:"Product Editor",orders:"Orders",
+    customers:"Customers",suppliers:"Suppliers",
+    settings:"Settings"
+  };
+  document.getElementById("pageTitle").textContent=titles[id]||"Admin";
+  if(id==="productForm" && document.getElementById("editIndex").value==="-1"){
+    document.getElementById("formHeading").textContent="Add New Product";
+  }
+}
+
+document.getElementById("productFormElement").addEventListener("submit",function(e){
+  e.preventDefault();
+  const index=Number(document.getElementById("editIndex").value);
+  const product={
+    name:document.getElementById("pName").value.trim(),
+    category:document.getElementById("pCategory").value,
+    price:Number(document.getElementById("pPrice").value),
+    cost:Number(document.getElementById("pCost").value)||0,
+    stock:Number(document.getElementById("pStock").value)||0,
+    sizes:document.getElementById("pSize").value,
+    colors:document.getElementById("pColor").value,
+    image:document.getElementById("pImage").value,
+    description:document.getElementById("pDescription").value
+  };
+
+  if(index>=0 && index<products.length){
+    products[index]=product;
+  }else{
+    products.push(product);
+  }
+  saveProducts();
+  this.reset();
+  document.getElementById("editIndex").value="-1";
+  showPage("products");
+  alert("Product saved in this browser's demo storage.");
+});
+
+function editProduct(index){
+  const p=products[index];
+  if(!p)return;
+  document.getElementById("editIndex").value=index;
+  document.getElementById("pName").value=p.name;
+  document.getElementById("pCategory").value=p.category;
+  document.getElementById("pPrice").value=p.price;
+  document.getElementById("pCost").value=p.cost;
+  document.getElementById("pStock").value=p.stock;
+  document.getElementById("pSize").value=p.sizes;
+  document.getElementById("pColor").value=p.colors;
+  document.getElementById("pImage").value=p.image;
+  document.getElementById("pDescription").value=p.description;
+  document.getElementById("formHeading").textContent="Edit Product";
+  showPage("productForm");
+}
+
+function deleteProduct(index){
+  if(!confirm("Delete this product?"))return;
+  products.splice(index,1);
+  saveProducts();
+}
+
+function productRows(list){
+  if(!list.length)return '<div class="empty">No products added yet.</div>';
+  return `<table>
+  <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
+  <tbody>${list.map((p,i)=>`
+  <tr>
+    <td>${p.image?`<img class="product-thumb" src="${escapeHTML(p.image)}" alt="">`:''}${escapeHTML(p.name)}</td>
+    <td>${escapeHTML(p.category)}</td>
+    <td>৳${p.price.toLocaleString("en-BD")}</td>
+    <td>${p.stock}</td>
+    <td>
+      <button class="secondary" onclick="editProduct(${i})">Edit</button>
+      <button class="secondary danger" onclick="deleteProduct(${i})">Delete</button>
+    </td>
+  </tr>`).join("")}</tbody></table>`;
+}
+
+function escapeHTML(value){
+  return String(value??"").replace(/[&<>"']/g,c=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function renderProducts(){
+  document.getElementById("productTable").innerHTML=productRows(products);
+  document.getElementById("recentProducts").innerHTML=productRows(products.slice(-5).reverse());
+  document.getElementById("totalProducts").textContent=products.length;
+  document.getElementById("totalOrders").textContent="0";
+  document.getElementById("pendingOrders").textContent="0";
+  document.getElementById("totalCustomers").textContent="0";
+}
+
+renderProducts();
+</script>
+</body>
+</html>
