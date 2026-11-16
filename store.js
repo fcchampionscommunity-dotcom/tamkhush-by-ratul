@@ -4,35 +4,34 @@
    PRODUCT DATABASE FUNCTIONS
 ===================================== */
 
-// Supabase client comes from config.js
 const store = {
 
-  // 1. CUSTOMER WEBSITE: SHOW ACTIVE PRODUCTS
+  // CUSTOMER: ACTIVE PRODUCTS
   async getProducts() {
-    const { data, error } = await supabaseClient
+    const { data, error } = await window.supabaseClient
       .from("products")
       .select("*")
       .eq("is_active", true)
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data;
+    return data || [];
   },
 
-  // 2. ADMIN: GET ALL PRODUCTS
+  // ADMIN: ALL PRODUCTS
   async getAllProducts() {
-    const { data, error } = await supabaseClient
+    const { data, error } = await window.supabaseClient
       .from("products")
       .select("*")
       .order("created_at", { ascending: false });
 
     if (error) throw error;
-    return data;
+    return data || [];
   },
 
-  // 3. ADMIN: ADD PRODUCT
+  // ADMIN: ADD PRODUCT
   async addProduct(product) {
-    const { data, error } = await supabaseClient
+    const { data, error } = await window.supabaseClient
       .from("products")
       .insert([product])
       .select()
@@ -42,9 +41,9 @@ const store = {
     return data;
   },
 
-  // 4. ADMIN: UPDATE PRODUCT
+  // ADMIN: UPDATE PRODUCT
   async updateProduct(id, updates) {
-    const { data, error } = await supabaseClient
+    const { data, error } = await window.supabaseClient
       .from("products")
       .update(updates)
       .eq("id", id)
@@ -55,18 +54,33 @@ const store = {
     return data;
   },
 
-  // 5. ADMIN: DELETE PRODUCT
+  // ADMIN: DELETE PRODUCT
   async deleteProduct(id) {
-    const { error } = await supabaseClient
+    const { error } = await window.supabaseClient
       .from("products")
       .delete()
       .eq("id", id);
 
     if (error) throw error;
     return true;
+  },
+
+  // ADMIN: GET LOW STOCK PRODUCTS
+  async getLowStockProducts() {
+    const { data, error } = await window.supabaseClient
+      .from("products")
+      .select("*")
+      .eq("is_active", true)
+      .eq("low_stock_alert", true);
+
+    if (error) throw error;
+
+    return (data || []).filter(product =>
+      Number(product.stock || 0) <=
+      Number(product.low_stock_threshold ?? 5)
+    );
   }
 
 };
 
-// Make functions available to other JS files
 window.store = store;
