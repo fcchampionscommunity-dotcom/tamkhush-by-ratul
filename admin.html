@@ -4,440 +4,551 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAMKHUSH | Admin Dashboard</title>
+<title>Admin Dashboard | TAMKHUSH BY RATUL</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="store.js"></script>
+
 <style>
-:root {
+:root{
   --bg:#101113;
   --panel:#191b1f;
   --silver:#bfc5cc;
   --white:#f5f5f5;
-  --muted:#969ba3;
-  --border:#303238;
+  --muted:#92979e;
+  --line:#303238;
+  --danger:#b94d58;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{
-  background:var(--bg);color:var(--white);
-  font-family:Arial,sans-serif;
+ background:var(--bg);color:var(--white);
+ font-family:Arial,Helvetica,sans-serif;
 }
-button,input,select,textarea{font:inherit}
+button,input,textarea,select{font:inherit}
 button{cursor:pointer}
-.layout{display:flex;min-height:100vh}
+.hidden{display:none!important}
+.login-screen{
+ min-height:100vh;display:flex;justify-content:center;
+ align-items:center;padding:20px;
+}
+.login-card{
+ width:100%;max-width:410px;background:var(--panel);
+ border:1px solid var(--line);padding:35px;border-radius:5px;
+}
+.brand{text-align:center;font-size:22px;font-weight:800;letter-spacing:2px}
+.brand small{display:block;color:var(--silver);font-size:9px;letter-spacing:4px;margin-top:8px}
+.login-card h2{text-align:center;margin:35px 0 25px}
+label{display:block;font-size:12px;color:var(--silver);margin:15px 0 7px}
+input,textarea,select{
+ width:100%;background:#101215;border:1px solid var(--line);
+ padding:13px;color:white;border-radius:3px;outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--silver)}
+.btn{
+ background:var(--silver);color:#101113;border:0;
+ padding:12px 17px;font-weight:bold;border-radius:3px;
+}
+.btn:hover{background:white}
+.btn-full{width:100%;margin-top:20px}
+.btn-outline{
+ background:transparent;border:1px solid var(--silver);
+ color:white;padding:10px 14px;border-radius:3px;
+}
+.btn-danger{background:var(--danger);color:white;border:0;padding:9px 12px}
+.message{font-size:13px;color:#ff9b9b;margin-top:15px;line-height:1.5}
+.layout{min-height:100vh}
 .sidebar{
-  width:245px;background:#151619;
-  border-right:1px solid var(--border);
-  padding:25px 16px;flex-shrink:0;
+ width:245px;position:fixed;top:0;bottom:0;left:0;
+ background:#15171a;border-right:1px solid var(--line);
+ padding:25px 17px;z-index:5;
 }
-.brand{
-  font:25px Georgia,serif;letter-spacing:2px;
-  text-align:center;padding:12px 0 25px;
+.sidebar .brand{text-align:left;font-size:17px;line-height:1.4}
+.sidebar .brand small{font-size:8px}
+.side-label{color:var(--muted);font-size:10px;letter-spacing:3px;margin:42px 10px 15px}
+.side-link{
+ display:block;width:100%;text-align:left;background:none;
+ border:0;color:#c7c9cc;padding:14px 12px;margin:4px 0;
+ border-radius:3px;font-size:13px;
 }
-.brand small{
-  display:block;font:11px Arial;
-  color:var(--silver);letter-spacing:5px;margin-top:7px;
-}
-.menu-title{
-  color:var(--muted);font-size:11px;
-  letter-spacing:2px;margin:22px 10px 10px;
-}
-.menu button{
-  width:100%;display:block;text-align:left;
-  background:transparent;color:#c5c6ca;
-  border:0;padding:13px 12px;border-radius:5px;
-  margin:4px 0;
-}
-.menu button:hover,.menu button.active{
-  background:#303238;color:white;
-}
-.main{flex:1;min-width:0;padding:25px}
+.side-link:hover,.side-link.active{background:#292c31;color:white}
+.main{margin-left:245px;padding:30px;max-width:1500px}
 .topbar{
-  display:flex;justify-content:space-between;
-  align-items:center;gap:12px;margin-bottom:28px;
+ display:flex;justify-content:space-between;align-items:center;
+ gap:15px;margin-bottom:30px;flex-wrap:wrap;
 }
-.topbar h1{font:30px Georgia,serif}
-.topbar p{color:var(--muted);font-size:13px;margin-top:7px}
-.owner{
-  border:1px solid #555;padding:10px 14px;
-  color:var(--silver);font-size:12px;
+.topbar h1{font-size:25px}
+.topbar p{font-size:12px;color:var(--muted);margin-top:7px}
+.role-pill{
+ display:inline-block;border:1px solid var(--silver);
+ color:var(--silver);padding:6px 10px;font-size:10px;
+ letter-spacing:1px;text-transform:uppercase;
 }
-.page{display:none}
-.page.active{display:block}
-.cards{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:15px;margin-bottom:25px;
+.stats{
+ display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+ margin-bottom:30px;
 }
-.card{
-  background:var(--panel);border:1px solid var(--border);
-  padding:20px;border-radius:5px;
+.stat{
+ background:var(--panel);border:1px solid var(--line);
+ padding:22px;border-radius:4px;
 }
-.card small{color:var(--muted)}
-.card h2{font-size:27px;margin-top:12px}
-.section-title{
-  font:25px Georgia,serif;margin:15px 0 20px;
+.stat small{color:var(--muted);font-size:11px}
+.stat h2{font-size:28px;margin-top:12px}
+.panel{
+ background:var(--panel);border:1px solid var(--line);
+ padding:23px;margin-bottom:25px;border-radius:4px;
 }
-.toolbar{
-  display:flex;justify-content:space-between;
-  align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px;
+.panel-head{
+ display:flex;align-items:center;justify-content:space-between;
+ gap:12px;flex-wrap:wrap;margin-bottom:20px;
 }
-.primary{
-  background:var(--silver);color:#111;border:0;
-  padding:12px 17px;font-weight:bold;border-radius:3px;
-}
-.secondary{
-  background:transparent;color:white;border:1px solid #666;
-  padding:10px 14px;border-radius:3px;
-}
-.danger{color:#ff8585;border-color:#8b4545}
-input,select,textarea{
-  width:100%;background:#111316;color:white;
-  border:1px solid #444;padding:12px;
-  border-radius:3px;outline:none;
-}
-input:focus,select:focus,textarea:focus{border-color:var(--silver)}
-.form-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:14px;
-}
-.field{display:flex;flex-direction:column;gap:8px}
-.field label{font-size:13px;color:#c4c5c8}
+.panel-head h2{font-size:18px}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0 15px}
 .full{grid-column:1/-1}
-.form-panel{
-  background:var(--panel);border:1px solid var(--border);
-  padding:22px;border-radius:5px;max-width:850px;
-}
-.form-actions{display:flex;gap:10px;margin-top:20px}
-.table-wrap{
-  overflow-x:auto;background:var(--panel);
-  border:1px solid var(--border);border-radius:5px;
-}
-table{width:100%;border-collapse:collapse;min-width:600px}
-th,td{
-  text-align:left;padding:15px;
-  border-bottom:1px solid var(--border);font-size:13px;
-}
-th{color:var(--silver);font-weight:500}
+textarea{min-height:90px;resize:vertical}
+.table-wrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px;font-size:12px}
+th,td{text-align:left;padding:14px 11px;border-bottom:1px solid var(--line)}
+th{color:var(--silver);font-size:10px;letter-spacing:1px}
 td{color:#ddd}
-.status{
-  display:inline-block;padding:5px 9px;
-  border:1px solid #666;border-radius:20px;font-size:11px;
-}
-.note{
-  padding:15px;background:#22252a;border-left:3px solid var(--silver);
-  color:#c8cbd0;font-size:13px;line-height:1.7;margin-bottom:20px;
-}
-.product-thumb{
-  width:42px;height:50px;object-fit:cover;
-  vertical-align:middle;margin-right:10px;
-}
-.empty{text-align:center;color:var(--muted);padding:30px}
+.actions{display:flex;gap:7px}
+.small-btn{padding:7px 10px;font-size:11px}
+.product-thumb{width:42px;height:48px;object-fit:cover;background:#333}
+.status{color:var(--silver);font-size:11px}
+.notice{color:var(--muted);font-size:12px;line-height:1.7;margin-top:12px}
+.empty{padding:25px;text-align:center;color:var(--muted)}
 .mobile-menu{display:none}
-@media(max-width:850px){
- .sidebar{width:190px}
- .cards{grid-template-columns:repeat(2,1fr)}
- .main{padding:18px}
+@media(max-width:800px){
+ .sidebar{width:205px}
+ .main{margin-left:205px;padding:20px}
+ .stats{grid-template-columns:1fr}
 }
 @media(max-width:600px){
- .layout{display:block}
- .sidebar{width:100%;padding:12px}
- .brand{text-align:left;padding:5px}
- .menu-title{display:none}
- .menu{display:flex;overflow:auto;gap:5px}
- .menu button{white-space:nowrap;width:auto;font-size:12px}
- .main{padding:15px}
- .cards{gap:9px}
- .card{padding:14px}
- .card h2{font-size:22px}
- .topbar h1{font-size:24px}
- .owner{font-size:10px}
+ .sidebar{position:relative;width:100%;height:auto;padding:15px}
+ .sidebar .brand{font-size:15px}
+ .side-label{margin:18px 8px 8px}
+ .sidebar nav{display:flex;flex-wrap:wrap;gap:5px}
+ .side-link{width:auto;padding:10px;font-size:11px}
+ .main{margin:0;padding:15px}
+ .topbar h1{font-size:21px}
  .form-grid{grid-template-columns:1fr}
  .full{grid-column:auto}
+ .panel{padding:15px}
 }
 </style>
 </head>
+
 <body>
 
-<div class="layout">
+<!-- LOGIN -->
+<section class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="brand">
+      TAMKHUSH BY RATUL
+      <small>ADMINISTRATION PANEL</small>
+    </div>
+    <h2>ADMIN LOGIN</h2>
 
-<aside class="sidebar">
-  <div class="brand">
-    TAMKHUSH
-    <small>BY RATUL</small>
+    <form id="loginForm">
+      <label>Email Address</label>
+      <input id="loginEmail" type="email" placeholder="Enter admin email" required>
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="Enter password" required>
+      <button class="btn btn-full" id="loginButton" type="submit">SIGN IN</button>
+      <div class="message" id="loginMessage"></div>
+    </form>
+    <p class="notice">Authorized staff only. Access is restricted to registered Owner, Manager and Admin accounts.</p>
   </div>
+</section>
 
-  <div class="menu-title">MAIN MENU</div>
-  <div class="menu">
-    <button class="active" onclick="showPage('dashboard',this)">▦ Dashboard</button>
-    <button onclick="showPage('products',this)">◇ Products</button>
-    <button onclick="showPage('orders',this)">▤ Orders</button>
-    <button onclick="showPage('customers',this)">♙ Customers</button>
-  </div>
-
-  <div class="menu-title">MANAGEMENT</div>
-  <div class="menu">
-    <button onclick="showPage('suppliers',this)">▣ Suppliers</button>
-    <button onclick="showPage('settings',this)">⚙ Settings</button>
-  </div>
-</aside>
-
-<main class="main">
-  <div class="topbar">
-    <div>
-      <h1 id="pageTitle">Dashboard</h1>
-      <p>Welcome to your fashion store management.</p>
+<!-- DASHBOARD -->
+<div class="layout hidden" id="dashboard">
+  <aside class="sidebar">
+    <div class="brand">TAMKHUSH BY RATUL
+      <small>CONTROL PANEL</small>
     </div>
-    <div class="owner">OWNER PANEL</div>
-  </div>
+    <div class="side-label">MAIN MENU</div>
+    <nav>
+      <button class="side-link active" onclick="showSection('overview',this)">▣ Dashboard</button>
+      <button class="side-link" onclick="showSection('products',this)">◇ Products</button>
+    </nav>
+    <div class="side-label">ACCOUNT</div>
+    <button class="side-link" onclick="signOut()">↪ Sign Out</button>
+  </aside>
 
-  <section class="page active" id="dashboard">
-    <div class="cards">
-      <div class="card"><small>Total Products</small><h2 id="totalProducts">0</h2></div>
-      <div class="card"><small>Total Orders</small><h2 id="totalOrders">0</h2></div>
-      <div class="card"><small>Pending Orders</small><h2 id="pendingOrders">0</h2></div>
-      <div class="card"><small>Customers</small><h2 id="totalCustomers">0</h2></div>
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard Overview</h1>
+        <p>Welcome to TAMKHUSH BY RATUL administration.</p>
+      </div>
+      <div>
+        <span class="role-pill" id="userRole">STAFF</span>
+        <button class="btn-outline" onclick="signOut()">LOG OUT</button>
+      </div>
     </div>
-    <h2 class="section-title">Quick Actions</h2>
-    <div class="toolbar">
-      <button class="primary" onclick="showPage('productForm')">+ Add New Product</button>
-      <button class="secondary" onclick="showPage('orders')">View Orders →</button>
-    </div>
-    <div class="note">
-      Product management and order statistics will be connected
-      to the secure online database in the next development stage.
-    </div>
-    <h2 class="section-title">Recent Products</h2>
-    <div id="recentProducts" class="table-wrap"></div>
-  </section>
 
-  <section class="page" id="products">
-    <div class="toolbar">
-      <h2 class="section-title">All Products</h2>
-      <button class="primary" onclick="showPage('productForm')">+ Add Product</button>
-    </div>
-    <div id="productTable" class="table-wrap"></div>
-  </section>
-
-  <section class="page" id="productForm">
-    <h2 class="section-title" id="formHeading">Add New Product</h2>
-    <div class="form-panel">
-      <form id="productFormElement">
-        <input type="hidden" id="editIndex" value="-1">
-        <div class="form-grid">
-          <div class="field full">
-            <label>Product Name *</label>
-            <input id="pName" required placeholder="Enter product name">
-          </div>
-          <div class="field">
-            <label>Category *</label>
-            <select id="pCategory" required>
-              <option value="Men">Men's Fashion</option>
-              <option value="Women">Women's Fashion</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>Product Price (৳) *</label>
-            <input id="pPrice" type="number" min="1" required placeholder="1250">
-          </div>
-          <div class="field">
-            <label>Supplier Cost (৳)</label>
-            <input id="pCost" type="number" min="0" placeholder="850">
-          </div>
-          <div class="field">
-            <label>Stock Quantity</label>
-            <input id="pStock" type="number" min="0" value="1">
-          </div>
-          <div class="field">
-            <label>Available Sizes</label>
-            <input id="pSize" placeholder="S, M, L, XL">
-          </div>
-          <div class="field">
-            <label>Available Colors</label>
-            <input id="pColor" placeholder="Black, White">
-          </div>
-          <div class="field full">
-            <label>Product Image URL</label>
-            <input id="pImage" type="url" placeholder="https://example.com/image.jpg">
-          </div>
-          <div class="field full">
-            <label>Product Description</label>
-            <textarea id="pDescription" rows="4" placeholder="Describe your product..."></textarea>
-          </div>
+    <section id="overviewSection">
+      <div class="stats">
+        <div class="stat">
+          <small>TOTAL PRODUCTS</small>
+          <h2 id="totalProducts">0</h2>
         </div>
-        <div class="form-actions">
-          <button class="primary" type="submit">Save Product</button>
-          <button class="secondary" type="button" onclick="showPage('products')">Cancel</button>
+        <div class="stat">
+          <small>ACTIVE PRODUCTS</small>
+          <h2 id="activeProducts">0</h2>
         </div>
-      </form>
-    </div>
-  </section>
-
-  <section class="page" id="orders">
-    <h2 class="section-title">Order Management</h2>
-    <div class="note">Customer orders will appear here after the checkout and database systems are connected.</div>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Order ID</th><th>Customer</th><th>Product</th><th>Total</th><th>Status</th></tr></thead>
-        <tbody><tr><td colspan="5" class="empty">No orders yet.</td></tr></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="page" id="customers">
-    <h2 class="section-title">Customers</h2>
-    <div class="note">Customer information will appear here when the online order system is connected.</div>
-  </section>
-
-  <section class="page" id="suppliers">
-    <h2 class="section-title">Supplier Management</h2>
-    <div class="note">DropBazar API integration will be configured here after receiving official API access.</div>
-    <div class="form-panel">
-      <div class="field">
-        <label>Supplier Name</label>
-        <input value="DropBazar BD" disabled>
+        <div class="stat">
+          <small>YOUR ROLE</small>
+          <h2 id="roleName" style="font-size:20px">STAFF</h2>
+        </div>
       </div>
-      <div class="field" style="margin-top:15px">
-        <label>API Connection</label>
-        <input value="Not Connected" disabled>
-      </div>
-    </div>
-  </section>
 
-  <section class="page" id="settings">
-    <h2 class="section-title">Store Settings</h2>
-    <div class="form-panel">
-      <div class="field">
-        <label>Store Name</label>
-        <input value="TAMKHUSH BY RATUL" disabled>
+      <div class="panel">
+        <div class="panel-head"><h2>Store Overview</h2></div>
+        <p class="notice">Your Supabase staff account is connected. Use the Products section to manage the store catalogue. Customer orders, supplier integration and reports will be added in later development stages.</p>
+        <button class="btn" style="margin-top:20px" onclick="showSection('products')">MANAGE PRODUCTS</button>
       </div>
-      <div class="field" style="margin-top:15px">
-        <label>Brand Tagline</label>
-        <input value="PREMIUM FASHION LABEL" disabled>
-      </div>
-      <p style="color:#999;margin-top:18px;font-size:13px">
-        Secure account, payment, API and notification settings
-        will be connected in the backend stage.
-      </p>
-    </div>
-  </section>
+    </section>
 
-</main>
+    <section id="productsSection" class="hidden">
+      <div class="panel">
+        <div class="panel-head">
+          <h2 id="formTitle">Add New Product</h2>
+          <button class="btn-outline" onclick="resetForm()">CLEAR FORM</button>
+        </div>
+
+        <form id="productForm">
+          <input type="hidden" id="productId">
+          <div class="form-grid">
+            <div>
+              <label>Product Name *</label>
+              <input id="productName" required placeholder="Product name">
+            </div>
+            <div>
+              <label>Category *</label>
+              <select id="productCategory" required>
+                <option value="men">Men</option>
+                <option value="women">Women</option>
+                <option value="unisex">Unisex</option>
+                <option value="accessories">Accessories</option>
+              </select>
+            </div>
+            <div>
+              <label>Selling Price (BDT) *</label>
+              <input id="sellingPrice" type="number" min="0" step="0.01" required>
+            </div>
+            <div>
+              <label>Supplier Cost (BDT)</label>
+              <input id="supplierCost" type="number" min="0" step="0.01" value="0">
+            </div>
+            <div>
+              <label>Stock Quantity</label>
+              <input id="stock" type="number" min="0" value="0">
+            </div>
+            <div>
+              <label>Sizes (comma separated)</label>
+              <input id="sizes" placeholder="S, M, L, XL">
+            </div>
+            <div>
+              <label>Colors (comma separated)</label>
+              <input id="colors" placeholder="Black, White, Silver">
+            </div>
+            <div>
+              <label>Product Image URL</label>
+              <input id="imageUrl" type="url" placeholder="https://...">
+            </div>
+            <div class="full">
+              <label>Description</label>
+              <textarea id="description" placeholder="Product description..."></textarea>
+            </div>
+            <div>
+              <label>Featured Product?</label>
+              <select id="featured">
+                <option value="false">No</option>
+                <option value="true">Yes</option>
+              </select>
+            </div>
+            <div>
+              <label>Publish Status</label>
+              <select id="active">
+                <option value="true">Active / Published</option>
+                <option value="false">Hidden / Draft</option>
+              </select>
+            </div>
+          </div>
+          <button class="btn" style="margin-top:22px" type="submit" id="saveButton">SAVE PRODUCT</button>
+          <p class="message" id="formMessage"></p>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>All Products</h2>
+          <button class="btn-outline" onclick="loadAdminProducts()">REFRESH</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>IMAGE</th>
+                <th>PRODUCT</th>
+                <th>CATEGORY</th>
+                <th>PRICE</th>
+                <th>STOCK</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="productTable">
+              <tr><td colspan="7" class="empty">Loading products...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
 </div>
 
 <script>
-const STORAGE_KEY = "tkr_admin_products_demo";
+let currentUser = null;
+let currentProfile = null;
+let adminProducts = [];
 
-function getProducts(){
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-  catch(e) { return []; }
-}
-let products = getProducts();
+const $ = id => document.getElementById(id);
 
-function saveProducts(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(products));
-  renderProducts();
-}
-
-function showPage(id,button){
-  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
-  const page=document.getElementById(id);
-  if(!page) return;
-  page.classList.add("active");
-
-  document.querySelectorAll(".menu button").forEach(b=>b.classList.remove("active"));
-  if(button) button.classList.add("active");
-
-  const titles={
-    dashboard:"Dashboard",products:"Products",
-    productForm:"Product Editor",orders:"Orders",
-    customers:"Customers",suppliers:"Suppliers",
-    settings:"Settings"
-  };
-  document.getElementById("pageTitle").textContent=titles[id]||"Admin";
-  if(id==="productForm" && document.getElementById("editIndex").value==="-1"){
-    document.getElementById("formHeading").textContent="Add New Product";
-  }
-}
-
-document.getElementById("productFormElement").addEventListener("submit",function(e){
-  e.preventDefault();
-  const index=Number(document.getElementById("editIndex").value);
-  const product={
-    name:document.getElementById("pName").value.trim(),
-    category:document.getElementById("pCategory").value,
-    price:Number(document.getElementById("pPrice").value),
-    cost:Number(document.getElementById("pCost").value)||0,
-    stock:Number(document.getElementById("pStock").value)||0,
-    sizes:document.getElementById("pSize").value,
-    colors:document.getElementById("pColor").value,
-    image:document.getElementById("pImage").value,
-    description:document.getElementById("pDescription").value
-  };
-
-  if(index>=0 && index<products.length){
-    products[index]=product;
-  }else{
-    products.push(product);
-  }
-  saveProducts();
-  this.reset();
-  document.getElementById("editIndex").value="-1";
-  showPage("products");
-  alert("Product saved in this browser's demo storage.");
-});
-
-function editProduct(index){
-  const p=products[index];
-  if(!p)return;
-  document.getElementById("editIndex").value=index;
-  document.getElementById("pName").value=p.name;
-  document.getElementById("pCategory").value=p.category;
-  document.getElementById("pPrice").value=p.price;
-  document.getElementById("pCost").value=p.cost;
-  document.getElementById("pStock").value=p.stock;
-  document.getElementById("pSize").value=p.sizes;
-  document.getElementById("pColor").value=p.colors;
-  document.getElementById("pImage").value=p.image;
-  document.getElementById("pDescription").value=p.description;
-  document.getElementById("formHeading").textContent="Edit Product";
-  showPage("productForm");
-}
-
-function deleteProduct(index){
-  if(!confirm("Delete this product?"))return;
-  products.splice(index,1);
-  saveProducts();
-}
-
-function productRows(list){
-  if(!list.length)return '<div class="empty">No products added yet.</div>';
-  return `<table>
-  <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead>
-  <tbody>${list.map((p,i)=>`
-  <tr>
-    <td>${p.image?`<img class="product-thumb" src="${escapeHTML(p.image)}" alt="">`:''}${escapeHTML(p.name)}</td>
-    <td>${escapeHTML(p.category)}</td>
-    <td>৳${p.price.toLocaleString("en-BD")}</td>
-    <td>${p.stock}</td>
-    <td>
-      <button class="secondary" onclick="editProduct(${i})">Edit</button>
-      <button class="secondary danger" onclick="deleteProduct(${i})">Delete</button>
-    </td>
-  </tr>`).join("")}</tbody></table>`;
-}
-
-function escapeHTML(value){
-  return String(value??"").replace(/[&<>"']/g,c=>({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+function safe(value){
+  return String(value ?? '').replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   })[c]);
 }
 
-function renderProducts(){
-  document.getElementById("productTable").innerHTML=productRows(products);
-  document.getElementById("recentProducts").innerHTML=productRows(products.slice(-5).reverse());
-  document.getElementById("totalProducts").textContent=products.length;
-  document.getElementById("totalOrders").textContent="0";
-  document.getElementById("pendingOrders").textContent="0";
-  document.getElementById("totalCustomers").textContent="0";
+function notify(id,message){
+  $(id).textContent=message;
 }
 
-renderProducts();
+async function startApp(){
+  if(!window.supabaseClient){
+    notify('loginMessage','Supabase configuration is missing.');
+    return;
+  }
+  try{
+    const {data,error}=await supabaseClient.auth.getSession();
+    if(error) throw error;
+    if(data.session) await checkStaff(data.session.user);
+  }catch(error){
+    console.error(error);
+    notify('loginMessage','Could not check login session.');
+  }
+}
+
+$('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const button=$('loginButton');
+  button.disabled=true;
+  button.textContent='SIGNING IN...';
+  notify('loginMessage','');
+
+  try{
+    const {data,error}=await supabaseClient.auth.signInWithPassword({
+      email:$('loginEmail').value.trim(),
+      password:$('loginPassword').value
+    });
+    if(error) throw error;
+    await checkStaff(data.user);
+  }catch(error){
+    notify('loginMessage',error.message || 'Login failed.');
+  }finally{
+    button.disabled=false;
+    button.textContent='SIGN IN';
+  }
+});
+
+async function checkStaff(user){
+  const {data:profile,error}=await supabaseClient
+    .from('profiles')
+    .select('id,full_name,role')
+    .eq('id',user.id)
+    .single();
+
+  if(error || !profile ||
+     !['owner','manager','admin'].includes(profile.role)){
+    await supabaseClient.auth.signOut();
+    $('dashboard').classList.add('hidden');
+    $('loginScreen').classList.remove('hidden');
+    notify('loginMessage','Access denied. This account is not an authorized staff account.');
+    return;
+  }
+
+  currentUser=user;
+  currentProfile=profile;
+
+  $('loginScreen').classList.add('hidden');
+  $('dashboard').classList.remove('hidden');
+  $('userRole').textContent=profile.role;
+  $('roleName').textContent=profile.role.toUpperCase();
+
+  await loadAdminProducts();
+}
+
+async function signOut(){
+  await supabaseClient.auth.signOut();
+  currentUser=null;
+  currentProfile=null;
+  $('dashboard').classList.add('hidden');
+  $('loginScreen').classList.remove('hidden');
+}
+
+function showSection(name,button){
+  $('overviewSection').classList.toggle('hidden',name!=='overview');
+  $('productsSection').classList.toggle('hidden',name!=='products');
+  $('pageTitle').textContent=name==='products'?'Product Management':'Dashboard Overview';
+  document.querySelectorAll('.side-link').forEach(b=>b.classList.remove('active'));
+  if(button) button.classList.add('active');
+}
+
+async function loadAdminProducts(){
+  try{
+    adminProducts=await window.store.getAllProducts();
+    $('totalProducts').textContent=adminProducts.length;
+    $('activeProducts').textContent=adminProducts.filter(p=>p.is_active).length;
+    renderTable();
+  }catch(error){
+    console.error(error);
+    $('productTable').innerHTML='<tr><td colspan="7" class="empty">Could not load products. Check staff permissions.</td></tr>';
+  }
+}
+
+function renderTable(){
+  if(!adminProducts.length){
+    $('productTable').innerHTML='<tr><td colspan="7" class="empty">No products yet. Add your first product above.</td></tr>';
+    return;
+  }
+
+  $('productTable').innerHTML=adminProducts.map(p=>{
+    const image=p.images && p.images[0] ? p.images[0] : '';
+    return `
+      <tr>
+        <td>${image?`<img class="product-thumb" src="${safe(image)}" alt="">`:'—'}</td>
+        <td>${safe(p.name)}</td>
+        <td>${safe(p.category)}</td>
+        <td>৳${Number(p.selling_price).toLocaleString('en-BD')}</td>
+        <td>${Number(p.stock||0)}</td>
+        <td class="status">${p.is_active?'Published':'Hidden'}</td>
+        <td><div class="actions">
+          <button class="btn-outline small-btn" onclick="editProduct('${p.id}')">EDIT</button>
+          <button class="btn-danger small-btn" onclick="deleteProduct('${p.id}')">DELETE</button>
+        </div></td>
+      </tr>`;
+  }).join('');
+}
+
+function listValue(value){
+  return value.split(',').map(x=>x.trim()).filter(Boolean);
+}
+
+$('productForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const button=$('saveButton');
+  button.disabled=true;
+  button.textContent='SAVING...';
+  notify('formMessage','');
+
+  const id=$('productId').value;
+  const name=$('productName').value.trim();
+  const slug=name.toLowerCase()
+    .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')
+    +'-'+Date.now().toString().slice(-6);
+
+  const product={
+    name,
+    slug,
+    category:$('productCategory').value,
+    selling_price:Number($('sellingPrice').value),
+    supplier_cost:Number($('supplierCost').value||0),
+    stock:Number($('stock').value||0),
+    sizes:listValue($('sizes').value),
+    colors:listValue($('colors').value),
+    images:$('imageUrl').value.trim()?[$('imageUrl').value.trim()]:[],
+    description:$('description').value.trim(),
+    is_featured:$('featured').value==='true',
+    is_active:$('active').value==='true'
+  };
+
+  try{
+    if(id){
+      // Do not replace an existing slug when editing.
+      delete product.slug;
+      await window.store.updateProduct(id,product);
+      notify('formMessage','Product updated successfully.');
+    }else{
+      await window.store.addProduct(product);
+      notify('formMessage','Product added successfully.');
+    }
+    resetForm(false);
+    await loadAdminProducts();
+  }catch(error){
+    console.error(error);
+    notify('formMessage',error.message || 'Could not save product.');
+  }finally{
+    button.disabled=false;
+    button.textContent='SAVE PRODUCT';
+  }
+});
+
+function editProduct(id){
+  const p=adminProducts.find(item=>item.id===id);
+  if(!p) return;
+
+  $('productId').value=p.id;
+  $('productName').value=p.name||'';
+  $('productCategory').value=p.category||'men';
+  $('sellingPrice').value=p.selling_price||0;
+  $('supplierCost').value=p.supplier_cost||0;
+  $('stock').value=p.stock||0;
+  $('sizes').value=(p.sizes||[]).join(', ');
+  $('colors').value=(p.colors||[]).join(', ');
+  $('imageUrl').value=(p.images||[])[0]||'';
+  $('description').value=p.description||'';
+  $('featured').value=String(!!p.is_featured);
+  $('active').value=String(!!p.is_active);
+  $('formTitle').textContent='Edit Product';
+  $('saveButton').textContent='UPDATE PRODUCT';
+  $('productsSection').scrollIntoView({behavior:'smooth'});
+}
+
+async function deleteProduct(id){
+  const p=adminProducts.find(item=>item.id===id);
+  if(!p || !confirm('Delete "'+p.name+'"? This action cannot be undone.')) return;
+
+  try{
+    await window.store.deleteProduct(id);
+    await loadAdminProducts();
+    notify('formMessage','Product deleted.');
+  }catch(error){
+    console.error(error);
+    notify('formMessage',error.message || 'Could not delete product.');
+  }
+}
+
+function resetForm(clearMessage=true){
+  $('productForm').reset();
+  $('productId').value='';
+  $('supplierCost').value='0';
+  $('stock').value='0';
+  $('formTitle').textContent='Add New Product';
+  $('saveButton').textContent='SAVE PRODUCT';
+  if(clearMessage) notify('formMessage','');
+}
+
+supabaseClient.auth.onAuthStateChange((event,session)=>{
+  if(event==='SIGNED_OUT'){
+    $('dashboard').classList.add('hidden');
+    $('loginScreen').classList.remove('hidden');
+  }
+});
+
+startApp();
 </script>
 </body>
 </html>
