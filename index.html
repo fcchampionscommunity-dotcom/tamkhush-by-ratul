@@ -1,0 +1,312 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TAMKHUSH BY RATUL | Premium Fashion Label</title>
+<meta name="description" content="Discover premium men's and women's fashion at TAMKHUSH BY RATUL.">
+<style>
+:root {
+  --bg: #101113;
+  --panel: #191b1f;
+  --silver: #bfc5cc;
+  --white: #f5f5f5;
+  --muted: #999da4;
+  --border: #303238;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:var(--bg);
+  color:var(--white);
+  font-family:Arial,Helvetica,sans-serif;
+}
+a { color:inherit; text-decoration:none; }
+button { font:inherit; cursor:pointer; }
+header {
+  position:sticky; top:0; z-index:10;
+  background:rgba(16,17,19,.96);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(12px);
+}
+.nav {
+  max-width:1200px; margin:auto; padding:18px 22px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:20px;
+}
+.logo { font-family:Georgia,serif; letter-spacing:2px; }
+.logo strong { display:block; font-size:23px; }
+.logo small { color:var(--silver); letter-spacing:4px; }
+nav { display:flex; gap:25px; color:#ddd; font-size:14px; }
+nav a:hover { color:var(--silver); }
+.cart {
+  border:1px solid #666; padding:10px 15px;
+  background:transparent; color:white; border-radius:3px;
+}
+.hero {
+  max-width:1200px; margin:auto; padding:75px 22px 65px;
+  min-height:480px; display:grid;
+  grid-template-columns:1.1fr .9fr; align-items:center; gap:35px;
+}
+.eyebrow { color:var(--silver); letter-spacing:5px; font-size:12px; }
+.hero h1 {
+  font-family:Georgia,serif; font-size:clamp(42px,6vw,76px);
+  line-height:1.08; font-weight:400; margin:22px 0;
+}
+.hero h1 span { color:var(--silver); }
+.hero p { color:var(--muted); line-height:1.8; max-width:490px; }
+.actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:28px; }
+.btn {
+  padding:14px 22px; border:1px solid var(--silver);
+  background:var(--silver); color:#111;
+  font-weight:bold; letter-spacing:1px;
+}
+.btn.outline { background:transparent; color:var(--white); }
+.hero-image {
+  min-height:340px; border:1px solid #444;
+  background:
+  linear-gradient(0deg,rgba(0,0,0,.2),rgba(0,0,0,.1)),
+  url("https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1000") center/cover;
+  border-radius:3px;
+}
+.section { max-width:1200px; margin:auto; padding:55px 22px; }
+.section-head {
+  display:flex; justify-content:space-between;
+  align-items:end; gap:15px; margin-bottom:28px;
+}
+.section h2 { font:400 34px Georgia,serif; }
+.section-head p { color:var(--muted); font-size:13px; margin-top:8px; }
+.categories {
+  display:grid; grid-template-columns:1fr 1fr; gap:18px;
+}
+.category {
+  min-height:220px; display:flex; align-items:end;
+  padding:25px; border:1px solid var(--border);
+  background-size:cover; background-position:center;
+  position:relative; overflow:hidden;
+}
+.category:before {
+  content:""; position:absolute; inset:0;
+  background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);
+}
+.category div { position:relative; }
+.category h3 { font:30px Georgia,serif; margin-bottom:10px; }
+.category a { color:var(--silver); font-size:13px; }
+.filters { display:flex; gap:10px; flex-wrap:wrap; margin-bottom:22px; }
+.filter {
+  background:transparent; color:#ddd; border:1px solid #555;
+  padding:9px 16px; border-radius:2px;
+}
+.filter.active { background:var(--silver); color:#111; }
+.products {
+  display:grid; grid-template-columns:repeat(4,1fr); gap:18px;
+}
+.product {
+  background:var(--panel); border:1px solid var(--border);
+  overflow:hidden;
+}
+.product img {
+  width:100%; aspect-ratio:3/4; object-fit:cover;
+  display:block; background:#25272b;
+}
+.product-info { padding:15px; }
+.product-info small { color:var(--muted); }
+.product-info h3 { font-size:15px; margin:9px 0; }
+.price { color:var(--silver); font-weight:bold; }
+.add {
+  width:100%; margin-top:13px; padding:11px;
+  background:transparent; border:1px solid #777;
+  color:white;
+}
+.add:hover { background:var(--silver); color:#111; }
+.empty { color:var(--muted); padding:25px 0; }
+.banner {
+  margin-top:25px; padding:45px 20px; text-align:center;
+  background:#1b1d21; border:1px solid var(--border);
+}
+.banner h2 { font:36px Georgia,serif; margin-bottom:12px; }
+.banner p { color:var(--muted); }
+footer {
+  border-top:1px solid var(--border); margin-top:50px;
+  padding:35px 22px; text-align:center; color:var(--muted);
+  line-height:2;
+}
+footer strong { color:var(--white); letter-spacing:2px; }
+#cartPanel {
+  display:none; position:fixed; z-index:30; right:15px; top:85px;
+  width:min(350px,calc(100% - 30px)); padding:20px;
+  background:#202227; border:1px solid #777;
+  box-shadow:0 10px 40px #000;
+}
+#cartPanel h3 { margin-bottom:15px; }
+#cartItems { color:#ddd; line-height:2; }
+#cartPanel button { margin-top:15px; }
+@media(max-width:800px) {
+  nav { display:none; }
+  .hero { grid-template-columns:1fr; padding-top:50px; }
+  .hero-image { min-height:260px; }
+  .products { grid-template-columns:repeat(2,1fr); gap:12px; }
+  .categories { grid-template-columns:1fr; }
+  .section h2 { font-size:28px; }
+}
+@media(max-width:380px) {
+  .products { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav">
+    <a href="#" class="logo">
+      <strong>TAMKHUSH</strong>
+      <small>BY RATUL</small>
+    </a>
+    <nav>
+      <a href="#home">HOME</a>
+      <a href="#collections">COLLECTIONS</a>
+      <a href="#products">SHOP</a>
+      <a href="#about">ABOUT</a>
+    </nav>
+    <button class="cart" onclick="toggleCart()">
+      BAG (<span id="cartCount">0</span>)
+    </button>
+  </div>
+</header>
+
+<div id="cartPanel">
+  <h3>Your Shopping Bag</h3>
+  <div id="cartItems">Your bag is empty.</div>
+  <button class="btn outline" onclick="toggleCart()">CLOSE</button>
+</div>
+
+<main>
+<section class="hero" id="home">
+  <div>
+    <div class="eyebrow">PREMIUM FASHION LABEL</div>
+    <h1>Discover Your<br><span>Own Style.</span></h1>
+    <p>
+      A modern fashion destination for men and women.
+      Explore timeless style, refined details and everyday elegance.
+    </p>
+    <div class="actions">
+      <a href="#products" class="btn">EXPLORE COLLECTION</a>
+      <a href="#collections" class="btn outline">DISCOVER MORE</a>
+    </div>
+  </div>
+  <div class="hero-image"></div>
+</section>
+
+<section class="section" id="collections">
+  <div class="section-head">
+    <div>
+      <h2>Our Collections</h2>
+      <p>Find your signature style.</p>
+    </div>
+  </div>
+  <div class="categories">
+    <div class="category" style="background-image:url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=900')">
+      <div><h3>Men's Fashion</h3><a href="#products" onclick="setFilter('Men')">EXPLORE COLLECTION →</a></div>
+    </div>
+    <div class="category" style="background-image:url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900')">
+      <div><h3>Women's Fashion</h3><a href="#products" onclick="setFilter('Women')">EXPLORE COLLECTION →</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="products">
+  <div class="section-head">
+    <div>
+      <h2>Featured Products</h2>
+      <p>Explore our selected fashion pieces.</p>
+    </div>
+  </div>
+  <div class="filters">
+    <button class="filter active" onclick="setFilter('All',this)">All</button>
+    <button class="filter" onclick="setFilter('Men',this)">Men</button>
+    <button class="filter" onclick="setFilter('Women',this)">Women</button>
+  </div>
+  <div class="products" id="productGrid"></div>
+  <p class="empty" id="emptyMessage" hidden>No products found.</p>
+</section>
+
+<section class="section" id="about">
+  <div class="banner">
+    <h2>Luxury Fashion Station</h2>
+    <p>TAMKHUSH BY RATUL — Quality • Style • Elegance</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <strong>TAMKHUSH BY RATUL</strong><br>
+  PREMIUM FASHION LABEL<br>
+  Men's & Women's Fashion<br>
+  <small>© 2026 TAMKHUSH BY RATUL. All rights reserved.</small>
+</footer>
+
+<script>
+const products = [
+ {name:"Classic Black Shirt",category:"Men",price:1250,image:"https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600"},
+ {name:"Premium Casual Outfit",category:"Men",price:1650,image:"https://images.unsplash.com/photo-1618354691373-d851c5c3a990?w=600"},
+ {name:"Elegant Women's Outfit",category:"Women",price:1850,image:"https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600"},
+ {name:"Classic Handbag",category:"Women",price:1450,image:"https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=600"}
+];
+
+let cart = [];
+let currentFilter = "All";
+
+function renderProducts() {
+ const grid = document.getElementById("productGrid");
+ grid.innerHTML = "";
+ const shown = products.filter(p => currentFilter === "All" || p.category === currentFilter);
+ document.getElementById("emptyMessage").hidden = shown.length > 0;
+
+ shown.forEach((p,index) => {
+  const realIndex = products.indexOf(p);
+  grid.innerHTML += `
+   <article class="product">
+    <img src="${p.image}" alt="${p.name}" loading="lazy">
+    <div class="product-info">
+     <small>${p.category.toUpperCase()} COLLECTION</small>
+     <h3>${p.name}</h3>
+     <div class="price">৳${p.price.toLocaleString("en-BD")}</div>
+     <button class="add" onclick="addToCart(${realIndex})">ADD TO BAG</button>
+    </div>
+   </article>`;
+ });
+}
+
+function setFilter(category,button) {
+ currentFilter = category;
+ document.querySelectorAll(".filter").forEach(b=>b.classList.remove("active"));
+ if(button) button.classList.add("active");
+ renderProducts();
+}
+
+function addToCart(index) {
+ cart.push(products[index]);
+ document.getElementById("cartCount").textContent = cart.length;
+ updateCart();
+}
+
+function updateCart() {
+ const box = document.getElementById("cartItems");
+ if(!cart.length) {
+  box.textContent = "Your bag is empty.";
+  return;
+ }
+ box.innerHTML = cart.map(p=>`${p.name} — ৳${p.price}`).join("<br>");
+ box.innerHTML += `<hr><strong>Total: ৳${cart.reduce((s,p)=>s+p.price,0).toLocaleString("en-BD")}</strong>`;
+}
+
+function toggleCart() {
+ const panel = document.getElementById("cartPanel");
+ panel.style.display = panel.style.display === "block" ? "none" : "block";
+ updateCart();
+}
+
+renderProducts();
+</script>
+</body>
+</html>
