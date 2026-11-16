@@ -38,11 +38,12 @@ nav{display:flex;gap:25px;font-size:13px;color:#ddd}
 nav a:hover{color:var(--silver)}
 .header-actions{display:flex;gap:10px;align-items:center}
 .btn{
-  background:var(--silver);color:#111;border:0;padding:12px 18px;
+  background:var(--silver);color:#111;border:0;padding:13px 20px;
   font-weight:700;border-radius:3px;
 }
 .btn:hover{background:white}
 .btn-outline{background:transparent;color:white;border:1px solid var(--silver);padding:11px 15px;border-radius:3px}
+
 .hero{
   min-height:540px;padding:85px 8%;display:flex;align-items:center;
   background:linear-gradient(90deg,rgba(10,11,13,.96),rgba(10,11,13,.55)),
@@ -53,6 +54,7 @@ nav a:hover{color:var(--silver)}
 .hero h1{font-size:clamp(40px,7vw,76px);line-height:1.08;letter-spacing:2px}
 .hero h1 span{color:var(--silver)}
 .hero p{color:#c2c4c8;line-height:1.8;margin:23px 0 30px;max-width:470px}
+
 .section{padding:75px 6%}
 .section-head{text-align:center;margin-bottom:38px}
 .section-head small{color:var(--silver);letter-spacing:4px}
@@ -71,6 +73,7 @@ nav a:hover{color:var(--silver)}
 .category h3{font-size:27px;letter-spacing:2px}
 .category p{color:#ddd;margin:8px 0 15px;font-size:13px}
 .category button{background:var(--silver);border:0;padding:11px 18px;font-weight:bold}
+
 .toolbar{display:flex;justify-content:space-between;gap:12px;margin-bottom:25px;flex-wrap:wrap}
 .search{
   background:var(--panel);border:1px solid var(--line);color:white;
@@ -79,12 +82,15 @@ nav a:hover{color:var(--silver)}
 .filters{display:flex;gap:8px;flex-wrap:wrap}
 .filter{background:transparent;border:1px solid var(--line);color:#ddd;padding:11px 15px}
 .filter.active{background:var(--silver);color:#111}
+
 .products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
-.product{background:var(--panel);border:1px solid var(--line);overflow:hidden}
+.product{background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:.25s}
+.product:hover{transform:translateY(-4px);border-color:#858b94}
 .product-image-button{
-  display:block;width:100%;padding:0;border:0;background:#24262a;
+  display:block;width:100%;height:290px;padding:12px;border:0;
+  background:#202226;
 }
-.product img{width:100%;height:245px;object-fit:cover;display:block}
+.product img{width:100%;height:100%;object-fit:contain;display:block}
 .product-info{padding:17px}
 .product-info small{color:var(--muted);text-transform:uppercase;letter-spacing:2px}
 .product-info h3{font-size:16px;margin:10px 0}
@@ -92,10 +98,76 @@ nav a:hover{color:var(--silver)}
 .product-info button{width:100%;margin-top:12px}
 .view-btn{background:transparent;color:var(--silver);border:1px solid var(--silver);padding:11px}
 .empty{text-align:center;color:var(--muted);padding:35px;grid-column:1/-1}
+
 .about{background:#181a1e;text-align:center;padding:75px 8%;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .about h2{font-size:30px;margin-bottom:15px}
 .about p{color:#b8bbc0;line-height:1.8;max-width:650px;margin:auto}
 footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-height:2}
+
+/* FULL PAGE PRODUCT DETAILS */
+#productDetailsPage{
+  display:none;
+  min-height:80vh;
+  padding:25px 6% 75px;
+}
+#productDetailsPage.active{display:block}
+.detail-topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:15px;padding:8px 0 25px;border-bottom:1px solid var(--line);
+  margin-bottom:30px;
+}
+.back-button{
+  background:transparent;border:1px solid #555;color:white;
+  padding:11px 17px;border-radius:3px;
+}
+.detail-breadcrumb{color:var(--muted);font-size:12px}
+.detail-layout{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:55px;max-width:1250px;margin:0 auto;
+}
+.gallery{min-width:0}
+.main-image-box{
+  height:620px;background:#1a1c20;border:1px solid var(--line);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+}
+#detailMainImage{
+  width:100%;height:100%;object-fit:contain;display:block;
+}
+.thumbnail-list{
+  display:flex;gap:12px;overflow-x:auto;padding:15px 0;
+}
+.thumbnail{
+  flex:0 0 82px;height:95px;background:#1c1e22;
+  border:1px solid var(--line);padding:5px;
+}
+.thumbnail.active{border:1px solid var(--silver)}
+.thumbnail img{width:100%;height:100%;object-fit:contain}
+.detail-info{padding:12px 0}
+.detail-category{font-size:11px;letter-spacing:4px;color:var(--silver);text-transform:uppercase}
+.detail-info h1{font-size:clamp(27px,3vw,40px);line-height:1.2;margin:16px 0}
+.detail-price{font-size:28px;font-weight:bold;color:var(--silver);margin:18px 0}
+.detail-description{color:#b8bbc0;line-height:1.9;font-size:14px;white-space:pre-line;margin:20px 0 28px}
+.detail-divider{border:0;border-top:1px solid var(--line);margin:22px 0}
+.option-label{display:block;color:#ddd;font-size:12px;letter-spacing:2px;margin:20px 0 9px}
+.option-select,.quantity-input{
+  width:100%;padding:14px;background:#101113;color:white;
+  border:1px solid #454950;border-radius:2px;
+}
+.quantity-row{display:flex;align-items:center;gap:12px}
+.quantity-row button{background:#292c31;color:white;border:1px solid #555;padding:12px 18px}
+.quantity-input{text-align:center;max-width:100px}
+.stock-note{font-size:12px;color:var(--muted);margin-top:15px}
+.detail-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}
+.detail-actions button{min-height:49px}
+.buy-button{background:var(--silver);color:#111;border:0;font-weight:bold}
+.add-button{background:transparent;color:white;border:1px solid var(--silver);font-weight:bold}
+.detail-benefits{
+  margin-top:30px;padding:20px;background:#191b1f;
+  border:1px solid var(--line);color:#c6c8cc;
+  font-size:12px;line-height:2;
+}
+.detail-benefits div{border-bottom:1px solid #303238;padding:7px 0}
+.detail-benefits div:last-child{border:0}
 
 /* Cart drawer */
 .drawer{
@@ -109,7 +181,7 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 }
 .drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
 .cart-item{padding:15px 0;border-bottom:1px solid var(--line);display:flex;gap:12px}
-.cart-item img{width:70px;height:85px;object-fit:cover;background:#25272b}
+.cart-item img{width:70px;height:85px;object-fit:contain;background:#25272b}
 .cart-item-info{flex:1;min-width:0}
 .cart-item-info strong{font-size:14px}
 .cart-item-info small{display:block;color:var(--muted);margin-top:5px;line-height:1.6}
@@ -119,44 +191,11 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .cart-total{margin:25px 0;font-size:20px}
 .note{font-size:12px;color:var(--muted);line-height:1.6}
 
-/* Product details modal */
-.modal{
-  position:fixed;inset:0;background:#000d;z-index:60;
-  display:none;align-items:center;justify-content:center;padding:18px;
-}
-.modal.open{display:flex}
-.modal-content{
-  position:relative;background:#191b1f;border:1px solid #454950;
-  width:min(850px,100%);max-height:90vh;overflow:auto;
-  display:grid;grid-template-columns:1fr 1fr;
-}
-.modal-image{width:100%;height:100%;min-height:420px;object-fit:cover;background:#25272b}
-.modal-info{padding:35px}
-.modal-close{
-  position:absolute;right:12px;top:12px;z-index:2;
-  background:#111;color:white;border:1px solid #666;
-  width:36px;height:36px;border-radius:50%;font-size:20px;
-}
-.modal-category{color:var(--silver);letter-spacing:3px;font-size:11px;text-transform:uppercase}
-.modal-info h2{font-size:27px;margin:13px 0}
-.modal-price{font-size:23px;color:var(--silver);font-weight:bold;margin:15px 0}
-.modal-description{color:#bfc2c7;line-height:1.8;font-size:14px;margin-bottom:22px;white-space:pre-line}
-.option-label{display:block;color:#ddd;font-size:12px;letter-spacing:2px;margin:18px 0 8px}
-.option-select,.quantity-input{
-  width:100%;padding:12px;background:#101113;color:white;
-  border:1px solid #454950;border-radius:2px;
-}
-.quantity-row{display:flex;align-items:center;gap:12px}
-.quantity-row button{background:#292c31;color:white;border:1px solid #555;padding:11px 16px}
-.quantity-input{text-align:center;max-width:90px}
-.stock-note{font-size:12px;color:var(--muted);margin-top:12px}
-.modal-add{width:100%;margin-top:22px}
-body.modal-open{overflow:hidden}
-
-@media(max-width:850px){
-  nav{gap:12px}
+@media(max-width:900px){
   .products{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .product img{height:220px}
+  .detail-layout{grid-template-columns:1fr;gap:25px}
+  .main-image-box{height:520px}
+  .detail-info{padding:10px 0}
 }
 @media(max-width:580px){
   header{padding:14px 4%;flex-wrap:wrap}
@@ -167,14 +206,18 @@ body.modal-open{overflow:hidden}
   .categories{grid-template-columns:1fr}
   .category{min-height:220px}
   .products{gap:10px}
-  .product img{height:170px}
+  .product-image-button{height:205px;padding:8px}
   .product-info{padding:12px}
   .product-info h3{font-size:14px}
   .section-head h2{font-size:26px}
-  .modal-content{grid-template-columns:1fr}
-  .modal-image{height:260px;min-height:0}
-  .modal-info{padding:22px}
-  .modal-info h2{font-size:22px}
+  #productDetailsPage{padding:15px 4% 50px}
+  .detail-topbar{margin-bottom:18px}
+  .detail-breadcrumb{display:none}
+  .main-image-box{height:390px;padding:12px}
+  .thumbnail{flex-basis:68px;height:78px}
+  .detail-info h1{font-size:27px}
+  .detail-price{font-size:25px}
+  .detail-actions{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -182,21 +225,22 @@ body.modal-open{overflow:hidden}
 <body>
 
 <header>
-  <a href="#" class="logo">TAMKHUSH BY RATUL
+  <a href="#" class="logo" onclick="showHome();return false;">
+    TAMKHUSH BY RATUL
     <span>PREMIUM FASHION LABEL</span>
   </a>
   <nav>
-    <a href="#home">HOME</a>
-    <a href="#collections">COLLECTIONS</a>
-    <a href="#products">SHOP</a>
-    <a href="#about">ABOUT</a>
+    <a href="#home" onclick="showHome()">HOME</a>
+    <a href="#collections" onclick="showHome()">COLLECTIONS</a>
+    <a href="#products" onclick="showHome()">SHOP</a>
+    <a href="#about" onclick="showHome()">ABOUT</a>
   </nav>
   <div class="header-actions">
     <button class="btn-outline" onclick="openCart()">BAG (<span id="cartCount">0</span>)</button>
   </div>
 </header>
 
-<main>
+<main id="homePage">
 <section class="hero" id="home">
   <div class="hero-content">
     <div class="eyebrow">PREMIUM FASHION LABEL</div>
@@ -234,7 +278,6 @@ body.modal-open{overflow:hidden}
     <small>THE LATEST EDIT</small>
     <h2>FEATURED PRODUCTS</h2>
   </div>
-
   <div class="toolbar">
     <input class="search" id="searchInput" placeholder="Search products..." oninput="renderProducts()">
     <div class="filters">
@@ -244,7 +287,6 @@ body.modal-open{overflow:hidden}
       <button class="filter" onclick="selectCategory('accessories',this)">ACCESSORIES</button>
     </div>
   </div>
-
   <div class="products" id="productGrid">
     <div class="empty">Loading collection...</div>
   </div>
@@ -256,13 +298,70 @@ body.modal-open{overflow:hidden}
 </section>
 </main>
 
+<!-- FULL PAGE PRODUCT DETAILS -->
+<section id="productDetailsPage">
+  <div class="detail-topbar">
+    <button class="back-button" onclick="showHome()">← BACK TO SHOP</button>
+    <div class="detail-breadcrumb">HOME / COLLECTION / PRODUCT</div>
+  </div>
+
+  <div class="detail-layout">
+    <div class="gallery">
+      <div class="main-image-box">
+        <img id="detailMainImage" src="" alt="Product">
+      </div>
+      <div class="thumbnail-list" id="detailThumbnails"></div>
+    </div>
+
+    <div class="detail-info">
+      <div class="detail-category" id="detailCategory"></div>
+      <h1 id="detailName"></h1>
+      <div class="detail-price">৳<span id="detailPrice"></span></div>
+      <p class="detail-description" id="detailDescription"></p>
+
+      <hr class="detail-divider">
+
+      <div id="detailSizeWrap">
+        <label class="option-label" for="detailSize">SELECT SIZE</label>
+        <select class="option-select" id="detailSize"></select>
+      </div>
+
+      <div id="detailColorWrap">
+        <label class="option-label" for="detailColor">SELECT COLOR</label>
+        <select class="option-select" id="detailColor"></select>
+      </div>
+
+      <label class="option-label" for="detailQuantity">QUANTITY</label>
+      <div class="quantity-row">
+        <button onclick="changeDetailQuantity(-1)">−</button>
+        <input class="quantity-input" id="detailQuantity" type="number" min="1" max="99" value="1">
+        <button onclick="changeDetailQuantity(1)">+</button>
+      </div>
+
+      <div class="stock-note" id="detailStock"></div>
+
+      <div class="detail-actions">
+        <button class="buy-button" onclick="buySelectedProduct()">BUY NOW</button>
+        <button class="add-button" onclick="addSelectedProductToCart()">ADD TO BAG</button>
+      </div>
+
+      <div class="detail-benefits">
+        <div>✓ Premium fashion collection</div>
+        <div>✓ Size and color selection</div>
+        <div>✓ Secure order processing</div>
+        <div>✓ Delivery information at checkout</div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <footer>
   <strong>TAMKHUSH BY RATUL</strong><br>
   PREMIUM FASHION LABEL<br>
   © <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.
 </footer>
 
-<!-- Cart -->
+<!-- CART -->
 <div class="drawer" id="cartDrawer" onclick="if(event.target===this)closeCart()">
   <div class="drawer-content">
     <div class="drawer-head">
@@ -271,42 +370,8 @@ body.modal-open{overflow:hidden}
     </div>
     <div id="cartItems"></div>
     <div class="cart-total">Total: ৳<span id="cartTotal">0</span></div>
-    <p class="note">Your selected items are saved in your shopping bag. Online checkout will be added in the next step.</p>
+    <p class="note">Your selected items are saved in your shopping bag.</p>
     <button class="btn" style="width:100%;margin-top:18px" onclick="checkoutComingSoon()">PROCEED TO CHECKOUT</button>
-  </div>
-</div>
-
-<!-- Product Details -->
-<div class="modal" id="productModal" onclick="if(event.target===this)closeProductModal()">
-  <div class="modal-content">
-    <button class="modal-close" onclick="closeProductModal()">×</button>
-    <img class="modal-image" id="modalImage" src="" alt="Product image">
-    <div class="modal-info">
-      <div class="modal-category" id="modalCategory"></div>
-      <h2 id="modalName"></h2>
-      <div class="modal-price">৳<span id="modalPrice"></span></div>
-      <p class="modal-description" id="modalDescription"></p>
-
-      <div id="sizeOptionWrap">
-        <label class="option-label" for="modalSize">SELECT SIZE</label>
-        <select class="option-select" id="modalSize"></select>
-      </div>
-
-      <div id="colorOptionWrap">
-        <label class="option-label" for="modalColor">SELECT COLOR</label>
-        <select class="option-select" id="modalColor"></select>
-      </div>
-
-      <label class="option-label" for="modalQuantity">QUANTITY</label>
-      <div class="quantity-row">
-        <button onclick="changeModalQuantity(-1)">−</button>
-        <input class="quantity-input" id="modalQuantity" type="number" min="1" max="99" value="1">
-        <button onclick="changeModalQuantity(1)">+</button>
-      </div>
-
-      <div class="stock-note" id="modalStock"></div>
-      <button class="btn modal-add" onclick="addSelectedProductToCart()">ADD TO BAG</button>
-    </div>
   </div>
 </div>
 
@@ -314,6 +379,7 @@ body.modal-open{overflow:hidden}
 let products = [];
 let activeCategory = 'all';
 let selectedProduct = null;
+let detailImages = [];
 
 let cart = [];
 try{
@@ -333,10 +399,20 @@ function escapeHTML(value){
   })[c]);
 }
 
+function getProductImages(product){
+  let images = product.images || [];
+  if(typeof images === 'string'){
+    try{ images = JSON.parse(images); }catch(e){ images = [images]; }
+  }
+  if(!Array.isArray(images)) images = [];
+  images = images.filter(x=>typeof x === 'string' && x.trim());
+  return images.length ? images : [
+    'https://images.unsplash.com/photo-1445205170230-053b83016050?w=900'
+  ];
+}
+
 function productImage(product){
-  return product.images && product.images.length
-    ? product.images[0]
-    : 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=700';
+  return getProductImages(product)[0];
 }
 
 function getOptions(value){
@@ -367,12 +443,11 @@ function renderProducts(){
     const category = String(p.category || '').toLowerCase();
     const matchesCategory = activeCategory === 'all' ||
       category === activeCategory ||
-      (activeCategory === 'men' && category === 'unisex') ||
-      (activeCategory === 'women' && category === 'unisex');
+      ((activeCategory === 'men' || activeCategory === 'women') && category === 'unisex');
 
     const matchesSearch =
-      (p.name || '').toLowerCase().includes(term) ||
-      (p.description || '').toLowerCase().includes(term);
+      String(p.name || '').toLowerCase().includes(term) ||
+      String(p.description || '').toLowerCase().includes(term);
 
     return matchesCategory && matchesSearch;
   });
@@ -409,29 +484,46 @@ function selectCategory(category,button){
     if(match) match.classList.add('active');
   }
 
+  showHome();
   renderProducts();
   document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
+
+function showHome(){
+  document.getElementById('homePage').style.display = 'block';
+  document.getElementById('productDetailsPage').classList.remove('active');
+  selectedProduct = null;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
 function openProductDetails(id){
   selectedProduct = products.find(item=>String(item.id)===String(id));
   if(!selectedProduct) return;
 
-  document.getElementById('modalImage').src = productImage(selectedProduct);
-  document.getElementById('modalImage').alt = selectedProduct.name || 'Product';
-  document.getElementById('modalCategory').textContent = selectedProduct.category || 'Fashion';
-  document.getElementById('modalName').textContent = selectedProduct.name || 'Product';
-  document.getElementById('modalPrice').textContent = money(selectedProduct.selling_price);
-  document.getElementById('modalDescription').textContent =
+  detailImages = getProductImages(selectedProduct);
+
+  document.getElementById('detailMainImage').src = detailImages[0];
+  document.getElementById('detailMainImage').alt = selectedProduct.name || 'Product';
+  document.getElementById('detailCategory').textContent = selectedProduct.category || 'Fashion';
+  document.getElementById('detailName').textContent = selectedProduct.name || 'Product';
+  document.getElementById('detailPrice').textContent = money(selectedProduct.selling_price);
+  document.getElementById('detailDescription').textContent =
     selectedProduct.description || 'Discover this item from the TAMKHUSH BY RATUL collection.';
+
+  const thumbnails = document.getElementById('detailThumbnails');
+  thumbnails.innerHTML = detailImages.map((image,index)=>`
+    <button class="thumbnail ${index===0?'active':''}" onclick="changeDetailImage(${index})">
+      <img src="${escapeHTML(image)}" alt="Product image ${index+1}">
+    </button>
+  `).join('');
 
   const sizes = getOptions(selectedProduct.sizes);
   const colors = getOptions(selectedProduct.colors);
 
-  const sizeWrap = document.getElementById('sizeOptionWrap');
-  const colorWrap = document.getElementById('colorOptionWrap');
-  const sizeSelect = document.getElementById('modalSize');
-  const colorSelect = document.getElementById('modalColor');
+  const sizeWrap = document.getElementById('detailSizeWrap');
+  const colorWrap = document.getElementById('detailColorWrap');
+  const sizeSelect = document.getElementById('detailSize');
+  const colorSelect = document.getElementById('detailColor');
 
   sizeWrap.style.display = sizes.length ? 'block' : 'none';
   colorWrap.style.display = colors.length ? 'block' : 'none';
@@ -444,47 +536,50 @@ function openProductDetails(id){
     ? '<option value="">Choose color</option>' + colors.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join('')
     : '';
 
-  document.getElementById('modalQuantity').value = 1;
+  document.getElementById('detailQuantity').value = 1;
 
   const stock = Number(selectedProduct.stock);
-  document.getElementById('modalStock').textContent =
+  document.getElementById('detailStock').textContent =
     Number.isFinite(stock) ? (stock > 0 ? `Available stock: ${stock}` : 'Stock availability: Please contact us') : '';
 
-  document.getElementById('productModal').classList.add('open');
-  document.body.classList.add('modal-open');
+  document.getElementById('homePage').style.display = 'none';
+  document.getElementById('productDetailsPage').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function closeProductModal(){
-  document.getElementById('productModal').classList.remove('open');
-  document.body.classList.remove('modal-open');
-  selectedProduct = null;
+function changeDetailImage(index){
+  if(!detailImages[index]) return;
+  document.getElementById('detailMainImage').src = detailImages[index];
+  document.querySelectorAll('.thumbnail').forEach((button,i)=>{
+    button.classList.toggle('active',i===index);
+  });
 }
 
-function changeModalQuantity(change){
-  const input = document.getElementById('modalQuantity');
+function changeDetailQuantity(change){
+  const input = document.getElementById('detailQuantity');
   let value = Number(input.value || 1);
   value = Math.max(1,Math.min(99,value + change));
   input.value = value;
 }
 
-function addSelectedProductToCart(){
-  if(!selectedProduct) return;
+function getSelectedProductOptions(){
+  if(!selectedProduct) return null;
 
   const sizes = getOptions(selectedProduct.sizes);
   const colors = getOptions(selectedProduct.colors);
-  const size = sizes.length ? document.getElementById('modalSize').value : '';
-  const color = colors.length ? document.getElementById('modalColor').value : '';
+  const size = sizes.length ? document.getElementById('detailSize').value : '';
+  const color = colors.length ? document.getElementById('detailColor').value : '';
 
   if(sizes.length && !size){
     alert('Please select a size first.');
-    return;
+    return null;
   }
   if(colors.length && !color){
     alert('Please select a color first.');
-    return;
+    return null;
   }
 
-  const quantity = Math.max(1,Math.min(99,Number(document.getElementById('modalQuantity').value || 1)));
+  const quantity = Math.max(1,Math.min(99,Number(document.getElementById('detailQuantity').value || 1)));
   const stock = Number(selectedProduct.stock);
 
   if(Number.isFinite(stock) && stock > 0){
@@ -492,35 +587,70 @@ function addSelectedProductToCart(){
       String(item.id)===String(selectedProduct.id) &&
       item.size===size && item.color===color
     );
-    const alreadyInCart = existing ? existing.quantity : 0;
+    const alreadyInCart = existing ? Number(existing.quantity) : 0;
 
     if(alreadyInCart + quantity > stock){
       alert(`Only ${stock} item(s) currently available in stock.`);
-      return;
+      return null;
     }
   }
 
+  return {size,color,quantity};
+}
+
+function addSelectedProductToCart(){
+  if(!selectedProduct) return;
+  const options = getSelectedProductOptions();
+  if(!options) return;
+
   const existing = cart.find(item=>
     String(item.id)===String(selectedProduct.id) &&
-    item.size===size && item.color===color
+    item.size===options.size && item.color===options.color
   );
 
   if(existing){
-    existing.quantity += quantity;
+    existing.quantity += options.quantity;
   }else{
     cart.push({
       id:selectedProduct.id,
       name:selectedProduct.name,
       price:Number(selectedProduct.selling_price || 0),
       image:productImage(selectedProduct),
-      size,
-      color,
-      quantity
+      size:options.size,
+      color:options.color,
+      quantity:options.quantity
     });
   }
 
   saveCart();
-  closeProductModal();
+  openCart();
+}
+
+function buySelectedProduct(){
+  if(!selectedProduct) return;
+  const options = getSelectedProductOptions();
+  if(!options) return;
+
+  const existing = cart.find(item=>
+    String(item.id)===String(selectedProduct.id) &&
+    item.size===options.size && item.color===options.color
+  );
+
+  if(existing){
+    existing.quantity += options.quantity;
+  }else{
+    cart.push({
+      id:selectedProduct.id,
+      name:selectedProduct.name,
+      price:Number(selectedProduct.selling_price || 0),
+      image:productImage(selectedProduct),
+      size:options.size,
+      color:options.color,
+      quantity:options.quantity
+    });
+  }
+
+  saveCart();
   openCart();
 }
 
@@ -595,13 +725,13 @@ function closeCart(){
 }
 
 function checkoutComingSoon(){
-  alert('Checkout form will be added in the next update.');
+  alert('Checkout page will be added in the next update.');
 }
 
 document.addEventListener('keydown',event=>{
   if(event.key==='Escape'){
-    closeProductModal();
     closeCart();
+    showHome();
   }
 });
 
