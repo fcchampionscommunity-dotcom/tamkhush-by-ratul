@@ -6,27 +6,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>TAMKHUSH BY RATUL | Premium Fashion Label</title>
 <meta name="description" content="Discover premium men's and women's fashion at TAMKHUSH BY RATUL.">
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="store.js"></script>
-
 <style>
-:root{
-  --bg:#101113;--panel:#191b1f;--silver:#bfc5cc;
-  --white:#f5f5f5;--muted:#969ba2;--line:#303238;
-}
+:root{--bg:#101113;--panel:#191b1f;--silver:#bfc5cc;--white:#f5f5f5;--muted:#969ba2;--line:#303238}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
-header{
-  position:sticky;top:0;z-index:20;background:rgba(16,17,19,.97);
-  border-bottom:1px solid var(--line);padding:17px 6%;
-  display:flex;align-items:center;justify-content:space-between;gap:15px;
-}
+header{position:sticky;top:0;z-index:20;background:rgba(16,17,19,.97);border-bottom:1px solid var(--line);padding:17px 6%;display:flex;align-items:center;justify-content:space-between;gap:15px}
 .logo{font-size:19px;font-weight:800;letter-spacing:2px}
 .logo span{display:block;font-size:9px;color:var(--silver);letter-spacing:4px;margin-top:5px}
 nav{display:flex;gap:25px;font-size:13px;color:#ddd}
@@ -35,11 +26,7 @@ nav a:hover{color:var(--silver)}
 .btn{background:var(--silver);color:#111;border:0;padding:13px 20px;font-weight:700;border-radius:3px}
 .btn:hover{background:white}
 .btn-outline{background:transparent;color:white;border:1px solid var(--silver);padding:11px 15px;border-radius:3px}
-.hero{
-  min-height:540px;padding:85px 8%;display:flex;align-items:center;
-  background:linear-gradient(90deg,rgba(10,11,13,.96),rgba(10,11,13,.55)),
-  url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1800') center/cover;
-}
+.hero{min-height:540px;padding:85px 8%;display:flex;align-items:center;background:linear-gradient(90deg,rgba(10,11,13,.96),rgba(10,11,13,.55)),url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1800') center/cover}
 .hero-content{max-width:650px}
 .eyebrow{color:var(--silver);letter-spacing:5px;font-size:11px;margin-bottom:22px}
 .hero h1{font-size:clamp(40px,7vw,76px);line-height:1.08;letter-spacing:2px}
@@ -50,10 +37,7 @@ nav a:hover{color:var(--silver)}
 .section-head small{color:var(--silver);letter-spacing:4px}
 .section-head h2{font-size:32px;margin-top:12px;letter-spacing:1px}
 .categories{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.category{
-  min-height:260px;display:flex;align-items:end;padding:28px;
-  background-size:cover;background-position:center;border:1px solid var(--line);
-}
+.category{min-height:260px;display:flex;align-items:end;padding:28px;background-size:cover;background-position:center;border:1px solid var(--line)}
 .category:first-child{background-image:linear-gradient(0deg,#000b,#0002),url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=900')}
 .category:last-child{background-image:linear-gradient(0deg,#000b,#0002),url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900')}
 .category h3{font-size:27px;letter-spacing:2px}
@@ -80,8 +64,6 @@ nav a:hover{color:var(--silver)}
 .about h2{font-size:30px;margin-bottom:15px}
 .about p{color:#b8bbc0;line-height:1.8;max-width:650px;margin:auto}
 footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-height:2}
-
-/* PRODUCT DETAILS */
 #productDetailsPage{display:none;min-height:80vh;padding:25px 6% 75px}
 #productDetailsPage.active{display:block}
 .detail-topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:8px 0 25px;border-bottom:1px solid var(--line);margin-bottom:30px}
@@ -114,8 +96,6 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .detail-benefits{margin-top:30px;padding:20px;background:#191b1f;border:1px solid var(--line);color:#c6c8cc;font-size:12px;line-height:2}
 .detail-benefits div{border-bottom:1px solid #303238;padding:7px 0}
 .detail-benefits div:last-child{border:0}
-
-/* CART */
 .drawer{position:fixed;inset:0;background:#000b;z-index:50;display:none;justify-content:flex-end}
 .drawer.open{display:flex}
 .drawer-content{width:min(440px,100%);height:100%;overflow:auto;background:#17191d;padding:25px}
@@ -130,8 +110,6 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .remove-btn{background:none;color:#e88;border:0;margin-left:8px;font-size:12px}
 .cart-total{margin:25px 0;font-size:20px}
 .note{font-size:12px;color:var(--muted);line-height:1.6}
-
-/* CHECKOUT */
 .page-wrap{display:none;max-width:1100px;margin:0 auto;padding:35px 5% 70px}
 .page-heading{margin:22px 0 28px}
 .page-heading small{color:var(--silver);letter-spacing:3px}
@@ -143,16 +121,10 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .field{margin-bottom:16px}
 .field.full{grid-column:1/-1}
 .field label{display:block;font-size:13px;color:#ddd;margin-bottom:8px}
-.field input,.field textarea,.field select{
-  width:100%;padding:13px;background:#101113;color:white;
-  border:1px solid #454950;border-radius:3px;outline:none;
-}
+.field input,.field textarea,.field select{width:100%;padding:13px;background:#101113;color:white;border:1px solid #454950;border-radius:3px;outline:none}
 .field textarea{min-height:95px;resize:vertical}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--silver)}
-.delivery-option{
-  display:flex;gap:12px;align-items:center;padding:15px;
-  border:1px solid #454950;margin:10px 0;border-radius:3px;cursor:pointer;
-}
+.delivery-option{display:flex;gap:12px;align-items:center;padding:15px;border:1px solid #454950;margin:10px 0;border-radius:3px;cursor:pointer}
 .delivery-option:has(input:checked){border-color:var(--silver);background:#24272c}
 .delivery-option input{accent-color:#bfc5cc;width:17px;height:17px}
 .delivery-option span{flex:1}
@@ -162,12 +134,10 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .summary-items{margin-bottom:15px}
 .summary-product{display:flex;justify-content:space-between;gap:12px;padding:9px 0;color:#ddd;font-size:13px;line-height:1.5}
 .summary-product small{display:block;color:var(--muted)}
-.checkout-message{display:none;margin:15px 0;padding:13px;border:1px solid #9a5555;color:#ffbaba;background:#351d1d;font-size:13px;line-height:1.6}
+.checkout-message{display:none;margin:15px 0;padding:13px;border:1px solid #9a5555;color:#ffbaba;background:#351d1d;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
 .checkout-submit{width:100%;margin-top:20px;padding:16px;font-size:15px}
 .checkout-submit:disabled{opacity:.55;cursor:not-allowed}
 .payment-note{margin-top:15px;color:var(--muted);font-size:12px;line-height:1.7}
-
-/* RECEIPT */
 .receipt-wrap{max-width:780px;margin:0 auto;padding:35px 5% 70px}
 .receipt-card{background:#f7f7f7;color:#171717;padding:35px;border-radius:4px;box-shadow:0 10px 35px #0005}
 .receipt-brand{text-align:center;border-bottom:2px solid #222;padding-bottom:22px;margin-bottom:22px}
@@ -187,273 +157,121 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .receipt-actions button{min-width:150px}
 .status-pill{display:inline-block;background:#e9e9e9;padding:5px 10px;border-radius:20px;font-size:12px}
 .receipt-image{width:42px;height:48px;object-fit:contain;vertical-align:middle;margin-right:8px;background:#eee}
-
-@media(max-width:900px){
-  .products{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .detail-layout{grid-template-columns:1fr;gap:25px}
-  .main-image-box{height:520px}
-  .detail-info{padding:10px 0}
-  .checkout-grid{grid-template-columns:1fr}
-}
+@media(max-width:900px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-layout{grid-template-columns:1fr;gap:25px}.main-image-box{height:520px}.detail-info{padding:10px 0}.checkout-grid{grid-template-columns:1fr}}
 @media(max-width:580px){
-  header{padding:14px 4%;flex-wrap:wrap}
-  nav{order:3;width:100%;justify-content:center;padding-top:8px;font-size:11px}
-  .logo{font-size:16px}
-  .hero{min-height:470px;padding:65px 6%}
-  .section{padding:55px 5%}
-  .categories{grid-template-columns:1fr}
-  .category{min-height:220px}
-  .products{gap:10px}
-  .product-image-button{height:205px;padding:8px}
-  .product-info{padding:12px}
-  .product-info h3{font-size:14px}
-  .section-head h2{font-size:26px}
-  #productDetailsPage{padding:15px 4% 50px}
-  .detail-topbar{margin-bottom:18px}
-  .detail-breadcrumb{display:none}
-  .main-image-box{height:390px;padding:12px}
-  .thumbnail{flex-basis:68px;height:78px}
-  .detail-info h1{font-size:27px}
-  .detail-price{font-size:25px}
-  .detail-actions{grid-template-columns:1fr}
-  .page-wrap{padding:20px 4% 50px}
-  .panel{padding:17px}
-  .form-grid{grid-template-columns:1fr}
-  .field.full{grid-column:auto}
-  .receipt-wrap{padding:20px 3% 50px}
-  .receipt-card{padding:18px 13px}
-  .receipt-brand h1{font-size:19px}
-  .receipt-table{font-size:11px}
-  .receipt-table th,.receipt-table td{padding:8px 4px}
+header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:center;padding-top:8px;font-size:11px}.logo{font-size:16px}
+.hero{min-height:470px;padding:65px 6%}.section{padding:55px 5%}.categories{grid-template-columns:1fr}.category{min-height:220px}
+.products{gap:10px}.product-image-button{height:205px;padding:8px}.product-info{padding:12px}.product-info h3{font-size:14px}
+.section-head h2{font-size:26px}#productDetailsPage{padding:15px 4% 50px}.detail-topbar{margin-bottom:18px}.detail-breadcrumb{display:none}
+.main-image-box{height:390px;padding:12px}.thumbnail{flex-basis:68px;height:78px}.detail-info h1{font-size:27px}.detail-price{font-size:25px}
+.detail-actions{grid-template-columns:1fr}.page-wrap{padding:20px 4% 50px}.panel{padding:17px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
+.receipt-wrap{padding:20px 3% 50px}.receipt-card{padding:18px 13px}.receipt-brand h1{font-size:19px}.receipt-table{font-size:11px}
+.receipt-table th,.receipt-table td{padding:8px 4px}
 }
 @media print{
-  @page{size:A4;margin:12mm}
-  body{background:#fff!important;color:#111!important}
-  body *{visibility:hidden!important}
-  #receiptPage,#receiptPage *{visibility:visible!important}
-  #receiptPage{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:0!important;margin:0!important}
-  #receiptContent{box-shadow:none!important;border-radius:0!important;padding:10px!important}
-  #receiptActions{display:none!important}
+@page{size:A4;margin:12mm}body{background:#fff!important;color:#111!important}body *{visibility:hidden!important}
+#receiptPage,#receiptPage *{visibility:visible!important}
+#receiptPage{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:0!important;margin:0!important}
+#receiptContent{box-shadow:none!important;border-radius:0!important;padding:10px!important}#receiptActions{display:none!important}
 }
 </style>
 </head>
-
 <body>
 <header>
-  <a href="#" class="logo" onclick="showHome();return false;">
-    TAMKHUSH BY RATUL
-    <span>PREMIUM FASHION LABEL</span>
-  </a>
-  <nav>
-    <a href="#home" onclick="showHome()">HOME</a>
-    <a href="#collections" onclick="showHome()">COLLECTIONS</a>
-    <a href="#products" onclick="showHome()">SHOP</a>
-    <a href="#about" onclick="showHome()">ABOUT</a>
-  </nav>
-  <div class="header-actions">
-    <button class="btn-outline" onclick="openCart()">BAG (<span id="cartCount">0</span>)</button>
-  </div>
+<a href="#" class="logo" onclick="showHome();return false;">TAMKHUSH BY RATUL<span>PREMIUM FASHION LABEL</span></a>
+<nav>
+<a href="#home" onclick="showHome()">HOME</a><a href="#collections" onclick="showHome()">COLLECTIONS</a><a href="#products" onclick="showHome()">SHOP</a><a href="#about" onclick="showHome()">ABOUT</a>
+</nav>
+<div class="header-actions"><button class="btn-outline" onclick="openCart()">BAG (<span id="cartCount">0</span>)</button></div>
 </header>
 
 <main id="homePage">
-<section class="hero" id="home">
-  <div class="hero-content">
-    <div class="eyebrow">PREMIUM FASHION LABEL</div>
-    <h1>STYLE IS<br><span>YOUR IDENTITY.</span></h1>
-    <p>Discover a refined collection of modern fashion. Explore timeless style, quality and elegance with TAMKHUSH BY RATUL.</p>
-    <a href="#products" class="btn">EXPLORE COLLECTION</a>
-  </div>
-</section>
-
+<section class="hero" id="home"><div class="hero-content">
+<div class="eyebrow">PREMIUM FASHION LABEL</div><h1>STYLE IS<br><span>YOUR IDENTITY.</span></h1>
+<p>Discover a refined collection of modern fashion. Explore timeless style, quality and elegance with TAMKHUSH BY RATUL.</p>
+<a href="#products" class="btn">EXPLORE COLLECTION</a>
+</div></section>
 <section class="section" id="collections">
-  <div class="section-head"><small>OUR COLLECTIONS</small><h2>SHOP BY CATEGORY</h2></div>
-  <div class="categories">
-    <div class="category"><div><h3>MEN'S FASHION</h3><p>Modern essentials for every style.</p><button onclick="selectCategory('men')">EXPLORE MEN</button></div></div>
-    <div class="category"><div><h3>WOMEN'S FASHION</h3><p>Elegance in every detail.</p><button onclick="selectCategory('women')">EXPLORE WOMEN</button></div></div>
-  </div>
-</section>
-
+<div class="section-head"><small>OUR COLLECTIONS</small><h2>SHOP BY CATEGORY</h2></div>
+<div class="categories">
+<div class="category"><div><h3>MEN'S FASHION</h3><p>Modern essentials for every style.</p><button onclick="selectCategory('men')">EXPLORE MEN</button></div></div>
+<div class="category"><div><h3>WOMEN'S FASHION</h3><p>Elegance in every detail.</p><button onclick="selectCategory('women')">EXPLORE WOMEN</button></div></div>
+</div></section>
 <section class="section" id="products">
-  <div class="section-head"><small>THE LATEST EDIT</small><h2>FEATURED PRODUCTS</h2></div>
-  <div class="toolbar">
-    <input class="search" id="searchInput" placeholder="Search products..." oninput="renderProducts()">
-    <div class="filters">
-      <button class="filter active" onclick="selectCategory('all',this)">ALL</button>
-      <button class="filter" onclick="selectCategory('men',this)">MEN</button>
-      <button class="filter" onclick="selectCategory('women',this)">WOMEN</button>
-      <button class="filter" onclick="selectCategory('accessories',this)">ACCESSORIES</button>
-    </div>
-  </div>
-  <div class="products" id="productGrid"><div class="empty">Loading collection...</div></div>
+<div class="section-head"><small>THE LATEST EDIT</small><h2>FEATURED PRODUCTS</h2></div>
+<div class="toolbar"><input class="search" id="searchInput" placeholder="Search products..." oninput="renderProducts()">
+<div class="filters">
+<button class="filter active" onclick="selectCategory('all',this)">ALL</button><button class="filter" onclick="selectCategory('men',this)">MEN</button><button class="filter" onclick="selectCategory('women',this)">WOMEN</button><button class="filter" onclick="selectCategory('accessories',this)">ACCESSORIES</button>
+</div></div>
+<div class="products" id="productGrid"><div class="empty">Loading collection...</div></div>
 </section>
-
-<section class="about" id="about">
-  <h2>THE ART OF EVERYDAY ELEGANCE</h2>
-  <p>TAMKHUSH BY RATUL is a premium fashion label built around modern style, confidence and simplicity. Discover fashion that reflects your identity.</p>
-</section>
+<section class="about" id="about"><h2>THE ART OF EVERYDAY ELEGANCE</h2><p>TAMKHUSH BY RATUL is a premium fashion label built around modern style, confidence and simplicity. Discover fashion that reflects your identity.</p></section>
 </main>
 
-<!-- PRODUCT DETAILS -->
 <section id="productDetailsPage">
-  <div class="detail-topbar">
-    <button class="back-button" onclick="showHome()">← BACK TO SHOP</button>
-    <div class="detail-breadcrumb">HOME / COLLECTION / PRODUCT</div>
-  </div>
-  <div class="detail-layout">
-    <div class="gallery">
-      <div class="main-image-box"><img id="detailMainImage" src="" alt="Product"></div>
-      <div class="thumbnail-list" id="detailThumbnails"></div>
-    </div>
-    <div class="detail-info">
-      <div class="detail-category" id="detailCategory"></div>
-      <h1 id="detailName"></h1>
-      <div class="detail-price">৳<span id="detailPrice"></span></div>
-      <p class="detail-description" id="detailDescription"></p>
-      <hr class="detail-divider">
-      <div id="detailSizeWrap">
-        <label class="option-label" for="detailSize">SELECT SIZE</label>
-        <select class="option-select" id="detailSize"></select>
-      </div>
-      <div id="detailColorWrap">
-        <label class="option-label" for="detailColor">SELECT COLOR</label>
-        <select class="option-select" id="detailColor"></select>
-      </div>
-      <label class="option-label" for="detailQuantity">QUANTITY</label>
-      <div class="quantity-row">
-        <button onclick="changeDetailQuantity(-1)">−</button>
-        <input class="quantity-input" id="detailQuantity" type="number" min="1" max="99" value="1">
-        <button onclick="changeDetailQuantity(1)">+</button>
-      </div>
-      <div class="stock-note" id="detailStock"></div>
-      <div class="detail-actions">
-        <button class="buy-button" onclick="buySelectedProduct()">BUY NOW</button>
-        <button class="add-button" onclick="addSelectedProductToCart()">ADD TO BAG</button>
-      </div>
-      <div class="detail-benefits">
-        <div>✓ Premium fashion collection</div>
-        <div>✓ Size and color selection</div>
-        <div>✓ Secure order processing</div>
-        <div>✓ Delivery information at checkout</div>
-      </div>
-    </div>
-  </div>
+<div class="detail-topbar"><button class="back-button" onclick="showHome()">← BACK TO SHOP</button><div class="detail-breadcrumb">HOME / COLLECTION / PRODUCT</div></div>
+<div class="detail-layout">
+<div class="gallery"><div class="main-image-box"><img id="detailMainImage" src="" alt="Product"></div><div class="thumbnail-list" id="detailThumbnails"></div></div>
+<div class="detail-info">
+<div class="detail-category" id="detailCategory"></div><h1 id="detailName"></h1><div class="detail-price">৳<span id="detailPrice"></span></div>
+<p class="detail-description" id="detailDescription"></p><hr class="detail-divider">
+<div id="detailSizeWrap"><label class="option-label" for="detailSize">SELECT SIZE</label><select class="option-select" id="detailSize"></select></div>
+<div id="detailColorWrap"><label class="option-label" for="detailColor">SELECT COLOR</label><select class="option-select" id="detailColor"></select></div>
+<label class="option-label" for="detailQuantity">QUANTITY</label>
+<div class="quantity-row"><button onclick="changeDetailQuantity(-1)">−</button><input class="quantity-input" id="detailQuantity" type="number" min="1" max="99" value="1"><button onclick="changeDetailQuantity(1)">+</button></div>
+<div class="stock-note" id="detailStock"></div>
+<div class="detail-actions"><button class="buy-button" onclick="buySelectedProduct()">BUY NOW</button><button class="add-button" onclick="addSelectedProductToCart()">ADD TO BAG</button></div>
+<div class="detail-benefits"><div>✓ Premium fashion collection</div><div>✓ Size and color selection</div><div>✓ Secure order processing</div><div>✓ Delivery information at checkout</div></div>
+</div></div>
 </section>
 
-<!-- CHECKOUT PAGE -->
 <section id="checkoutPage" class="page-wrap">
-  <button class="back-button" onclick="backToCart()">← ব্যাগে ফিরে যান</button>
-  <div class="page-heading">
-    <small>TAMKHUSH BY RATUL</small>
-    <h1>অর্ডার সম্পন্ন করুন</h1>
-  </div>
-
-  <form id="checkoutForm">
-    <div class="checkout-grid">
-      <div class="panel">
-        <h2>আপনার তথ্য ও ডেলিভারি ঠিকানা</h2>
-
-        <div class="form-grid">
-          <div class="field">
-            <label for="customerName">আপনার নাম *</label>
-            <input id="customerName" type="text" required minlength="2" placeholder="সম্পূর্ণ নাম লিখুন">
-          </div>
-          <div class="field">
-            <label for="customerPhone">মোবাইল নম্বর *</label>
-            <input id="customerPhone" type="tel" required placeholder="01XXXXXXXXX">
-          </div>
-          <div class="field full">
-            <label for="customerEmail">ইমেইল (ঐচ্ছিক)</label>
-            <input id="customerEmail" type="email" placeholder="আপনার ইমেইল">
-          </div>
-          <div class="field">
-            <label for="customerDistrict">জেলা *</label>
-            <input id="customerDistrict" type="text" required placeholder="যেমন: ঢাকা">
-          </div>
-          <div class="field">
-            <label for="customerArea">থানা / উপজেলা / এলাকা *</label>
-            <input id="customerArea" type="text" required placeholder="আপনার থানা বা এলাকা">
-          </div>
-          <div class="field full">
-            <label for="customerAddress">সম্পূর্ণ ঠিকানা *</label>
-            <textarea id="customerAddress" required minlength="8" placeholder="বাসা/বাড়ি নম্বর, রোড, এলাকার নামসহ সম্পূর্ণ ঠিকানা লিখুন"></textarea>
-          </div>
-          <div class="field full">
-            <label for="customerPostal">পোস্ট কোড (ঐচ্ছিক)</label>
-            <input id="customerPostal" type="text" placeholder="পোস্ট কোড">
-          </div>
-          <div class="field full">
-            <label>ডেলিভারি এলাকা নির্বাচন করুন *</label>
-            <label class="delivery-option">
-              <input type="radio" name="deliveryZone" value="inside_dhaka">
-              <span>ঢাকার ভিতরে</span><strong>৳৭০</strong>
-            </label>
-            <label class="delivery-option">
-              <input type="radio" name="deliveryZone" value="outside_dhaka">
-              <span>ঢাকার বাইরে</span><strong>৳১২০</strong>
-            </label>
-          </div>
-          <div class="field full">
-            <label for="customerNote">অতিরিক্ত নির্দেশনা (ঐচ্ছিক)</label>
-            <textarea id="customerNote" placeholder="অর্ডার সম্পর্কে কোনো কথা থাকলে লিখুন"></textarea>
-          </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2>আপনার অর্ডার</h2>
-        <div id="checkoutItems" class="summary-items"></div>
-        <div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳<span id="checkoutSubtotal">0</span></strong></div>
-        <div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">নির্বাচন করুন</span></strong></div>
-        <div class="summary-line total"><span>সর্বমোট</span><strong>৳<span id="checkoutTotal">0</span></strong></div>
-        <div id="checkoutMessage" class="checkout-message"></div>
-        <button type="submit" id="checkoutSubmit" class="btn checkout-submit">অর্ডার কনফার্ম করুন</button>
-        <p class="payment-note">পেমেন্ট পদ্ধতি: ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)। ডেলিভারি চার্জ ঠিকানা ও নির্বাচিত এলাকার ভিত্তিতে যোগ হবে।</p>
-      </div>
-    </div>
-  </form>
-</section>
-
-<!-- RECEIPT PAGE -->
-<section id="receiptPage" style="display:none">
-  <div class="receipt-wrap">
-    <div class="receipt-card" id="receiptContent">
-      <div class="receipt-brand">
-        <h1>TAMKHUSH BY RATUL</h1>
-        <p>PREMIUM FASHION LABEL</p>
-      </div>
-      <h2 class="receipt-title">অর্ডার রসিদ</h2>
-      <div id="receiptDetails"></div>
-      <div class="receipt-footer">
-        <strong>ধন্যবাদ আমাদের সাথে কেনাকাটা করার জন্য!</strong><br>
-        TAMKHUSH BY RATUL — Discover Your Style.
-      </div>
-    </div>
-    <div class="receipt-actions" id="receiptActions">
-      <button class="btn" onclick="downloadReceipt()">PDF ডাউনলোড / প্রিন্ট</button>
-      <button class="btn-outline" onclick="showHome()">হোম পেজে ফিরে যান</button>
-    </div>
-  </div>
-</section>
-
-<footer>
-  <strong>TAMKHUSH BY RATUL</strong><br>
-  PREMIUM FASHION LABEL<br>
-  © <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.
-</footer>
-
-<!-- CART DRAWER -->
-<div class="drawer" id="cartDrawer" onclick="if(event.target===this)closeCart()">
-  <div class="drawer-content">
-    <div class="drawer-head">
-      <h2>YOUR BAG</h2>
-      <button class="btn-outline" onclick="closeCart()">CLOSE</button>
-    </div>
-    <div id="cartItems"></div>
-    <div class="cart-total">Total: ৳<span id="cartTotal">0</span></div>
-    <p class="note">Your selected items are saved in your shopping bag.</p>
-    <button class="btn" style="width:100%;margin-top:18px" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
-  </div>
+<button class="back-button" onclick="backToCart()">← ব্যাগে ফিরে যান</button>
+<div class="page-heading"><small>TAMKHUSH BY RATUL</small><h1>অর্ডার সম্পন্ন করুন</h1></div>
+<form id="checkoutForm">
+<div class="checkout-grid"><div class="panel">
+<h2>আপনার তথ্য ও ডেলিভারি ঠিকানা</h2>
+<div class="form-grid">
+<div class="field"><label for="customerName">আপনার নাম *</label><input id="customerName" type="text" required minlength="2" placeholder="সম্পূর্ণ নাম লিখুন"></div>
+<div class="field"><label for="customerPhone">মোবাইল নম্বর *</label><input id="customerPhone" type="tel" required placeholder="01XXXXXXXXX"></div>
+<div class="field full"><label for="customerEmail">ইমেইল (ঐচ্ছিক)</label><input id="customerEmail" type="email" placeholder="আপনার ইমেইল"></div>
+<div class="field"><label for="customerDistrict">জেলা *</label><select id="customerDistrict" required disabled><option value="">জেলা লোড হচ্ছে...</option></select></div>
+<div class="field"><label for="customerArea">থানা / উপজেলা *</label><select id="customerArea" required disabled><option value="">আগে জেলা নির্বাচন করুন</option></select></div>
+<div class="field full"><label for="customerAddress">সম্পূর্ণ ঠিকানা *</label><textarea id="customerAddress" required minlength="8" placeholder="বাসা/বাড়ি নম্বর, রোড, এলাকার নামসহ সম্পূর্ণ ঠিকানা লিখুন"></textarea></div>
+<div class="field full"><label for="customerPostal">পোস্ট কোড (ঐচ্ছিক)</label><input id="customerPostal" type="text" placeholder="পোস্ট কোড"></div>
+<div class="field full"><label>ডেলিভারি এলাকা নির্বাচন করুন *</label>
+<label class="delivery-option"><input type="radio" name="deliveryZone" value="inside_dhaka"><span>ঢাকার ভিতরে</span><strong>৳৭০</strong></label>
+<label class="delivery-option"><input type="radio" name="deliveryZone" value="outside_dhaka"><span>ঢাকার বাইরে</span><strong>৳১২০</strong></label>
 </div>
+<div class="field full"><label for="customerNote">অতিরিক্ত নির্দেশনা (ঐচ্ছিক)</label><textarea id="customerNote" placeholder="অর্ডার সম্পর্কে কোনো কথা থাকলে লিখুন"></textarea></div>
+</div></div>
+<div class="panel"><h2>আপনার অর্ডার</h2><div id="checkoutItems" class="summary-items"></div>
+<div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳<span id="checkoutSubtotal">0</span></strong></div>
+<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">নির্বাচন করুন</span></strong></div>
+<div class="summary-line total"><span>সর্বমোট</span><strong>৳<span id="checkoutTotal">0</span></strong></div>
+<div id="checkoutMessage" class="checkout-message"></div>
+<button type="submit" id="checkoutSubmit" class="btn checkout-submit">অর্ডার কনফার্ম করুন</button>
+<p class="payment-note">পেমেন্ট পদ্ধতি: ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)। ডেলিভারি চার্জ নির্বাচিত এলাকার ভিত্তিতে যোগ হবে।</p>
+</div></div></form>
+</section>
+
+<section id="receiptPage" style="display:none"><div class="receipt-wrap">
+<div class="receipt-card" id="receiptContent">
+<div class="receipt-brand"><h1>TAMKHUSH BY RATUL</h1><p>PREMIUM FASHION LABEL</p></div>
+<h2 class="receipt-title">অর্ডার রসিদ</h2><div id="receiptDetails"></div>
+<div class="receipt-footer"><strong>ধন্যবাদ আমাদের সাথে কেনাকাটা করার জন্য!</strong><br>TAMKHUSH BY RATUL — Discover Your Style.</div>
+</div>
+<div class="receipt-actions" id="receiptActions"><button class="btn" onclick="downloadReceipt()">PDF ডাউনলোড / প্রিন্ট</button><button class="btn-outline" onclick="showHome()">হোম পেজে ফিরে যান</button></div>
+</div></section>
+
+<footer><strong>TAMKHUSH BY RATUL</strong><br>PREMIUM FASHION LABEL<br>© <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.</footer>
+
+<div class="drawer" id="cartDrawer" onclick="if(event.target===this)closeCart()"><div class="drawer-content">
+<div class="drawer-head"><h2>YOUR BAG</h2><button class="btn-outline" onclick="closeCart()">CLOSE</button></div>
+<div id="cartItems"></div><div class="cart-total">Total: ৳<span id="cartTotal">0</span></div>
+<p class="note">Your selected items are saved in your shopping bag.</p>
+<button class="btn" style="width:100%;margin-top:18px" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
+</div></div>
 
 <script>
 let products=[];
@@ -461,495 +279,428 @@ let activeCategory='all';
 let selectedProduct=null;
 let detailImages=[];
 let currentReceipt=null;
+let districtsLoaded=false;
+let districtsLoading=false;
 
 let cart=[];
 try{
-  const savedCart=JSON.parse(localStorage.getItem('tkr_cart')||'[]');
-  cart=Array.isArray(savedCart)?savedCart:[];
+const savedCart=JSON.parse(localStorage.getItem('tkr_cart')||'[]');
+cart=Array.isArray(savedCart)?savedCart:[];
 }catch(error){cart=[];}
 
-function money(value){
-  return Number(value||0).toLocaleString('en-BD');
-}
-
+function money(value){return Number(value||0).toLocaleString('en-BD');}
 function escapeHTML(value){
-  return String(value??'').replace(/[&<>"']/g,c=>({
-    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-  })[c]);
+return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
-
 function getProductImages(product){
-  let images=product.images||[];
-  if(typeof images==='string'){
-    try{images=JSON.parse(images);}catch(e){images=[images];}
-  }
-  if(!Array.isArray(images))images=[];
-  images=images.filter(x=>typeof x==='string'&&x.trim());
-  return images.length?images:['https://images.unsplash.com/photo-1445205170230-053b83016050?w=900'];
+let images=product.images||[];
+if(typeof images==='string'){try{images=JSON.parse(images);}catch(e){images=[images];}}
+if(!Array.isArray(images))images=[];
+images=images.filter(x=>typeof x==='string'&&x.trim());
+return images.length?images:['https://images.unsplash.com/photo-1445205170230-053b83016050?w=900'];
 }
-
 function productImage(product){return getProductImages(product)[0];}
-
 function getOptions(value){
-  if(Array.isArray(value))return value.filter(Boolean).map(String);
-  if(typeof value==='string'&&value.trim())return value.split(',').map(v=>v.trim()).filter(Boolean);
-  return [];
+if(Array.isArray(value))return value.filter(Boolean).map(String);
+if(typeof value==='string'&&value.trim())return value.split(',').map(v=>v.trim()).filter(Boolean);
+return [];
 }
 
 async function loadProducts(){
-  const grid=document.getElementById('productGrid');
-  try{
-    if(!window.store)throw new Error('Store is not loaded');
-    products=await window.store.getProducts();
-    renderProducts();
-  }catch(error){
-    console.error(error);
-    grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';
-  }
+const grid=document.getElementById('productGrid');
+try{
+if(!window.store)throw new Error('Store is not loaded');
+products=await window.store.getProducts();
+renderProducts();
+}catch(error){console.error(error);grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';}
 }
 
+/* DROPBAZAR DISTRICT & THANA */
+async function invokeLocations(body){
+const client=window.supabaseClient;
+if(!client||!client.functions)throw new Error('Supabase client is not available');
+const {data,error}=await client.functions.invoke('dropbazar-locations',{body});
+if(error)throw await getUsefulFunctionError(error);
+if(!data||data.success!==true||!Array.isArray(data.data)){
+throw new Error(data?.error||'Location service returned an invalid response');
+}
+return data.data;
+}
+
+async function getUsefulFunctionError(error){
+let message=error?.message||'Function request failed';
+try{
+const context=error?.context;
+if(context){
+if(typeof context.json==='function'){
+const body=await context.clone().json();
+message=body?.error||body?.message||body?.details||message;
+}else if(typeof context==='string'){
+message=context;
+}
+}
+}catch(e){}
+return new Error(String(message));
+}
+
+async function loadDistricts(){
+if(districtsLoaded||districtsLoading)return;
+districtsLoading=true;
+const districtSelect=document.getElementById('customerDistrict');
+const thanaSelect=document.getElementById('customerArea');
+districtSelect.disabled=true;
+districtSelect.innerHTML='<option value="">জেলা লোড হচ্ছে...</option>';
+thanaSelect.disabled=true;
+thanaSelect.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';
+try{
+const list=await invokeLocations({});
+districtSelect.innerHTML='<option value="">জেলা নির্বাচন করুন</option>'+
+list.map(item=>`<option value="${Number(item.id)}">${escapeHTML(item.bn_name||item.name)}</option>`).join('');
+districtsLoaded=true;
+districtSelect.disabled=false;
+}catch(error){
+console.error('District loading error:',error);
+districtSelect.innerHTML='<option value="">জেলা লোড হয়নি — আবার চেষ্টা করুন</option>';
+districtSelect.disabled=false;
+showCheckoutError('জেলার তালিকা লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
+}finally{districtsLoading=false;}
+}
+
+async function loadThanas(districtId){
+const thanaSelect=document.getElementById('customerArea');
+thanaSelect.disabled=true;
+thanaSelect.innerHTML='<option value="">থানা লোড হচ্ছে...</option>';
+if(!districtId){
+thanaSelect.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';
+return;
+}
+try{
+const list=await invokeLocations({district_id:Number(districtId)});
+thanaSelect.innerHTML='<option value="">থানা / উপজেলা নির্বাচন করুন</option>'+
+list.map(item=>`<option value="${Number(item.id)}">${escapeHTML(item.bn_name||item.name)}</option>`).join('');
+thanaSelect.disabled=false;
+if(!list.length)thanaSelect.innerHTML='<option value="">এই জেলার থানা পাওয়া যায়নি</option>';
+}catch(error){
+console.error('Thana loading error:',error);
+thanaSelect.innerHTML='<option value="">থানা লোড হয়নি — জেলা আবার নির্বাচন করুন</option>';
+thanaSelect.disabled=false;
+showCheckoutError('থানা/উপজেলার তালিকা লোড করা যায়নি। আবার জেলা নির্বাচন করে চেষ্টা করুন।');
+}
+}
+
+document.getElementById('customerDistrict').addEventListener('change',event=>{
+document.getElementById('customerArea').value='';
+loadThanas(event.target.value);
+});
+
 function renderProducts(){
-  const grid=document.getElementById('productGrid');
-  const term=document.getElementById('searchInput').value.toLowerCase().trim();
-
-  const filtered=products.filter(p=>{
-    const category=String(p.category||'').toLowerCase();
-    const matchesCategory=activeCategory==='all'||category===activeCategory||
-      ((activeCategory==='men'||activeCategory==='women')&&category==='unisex');
-    const matchesSearch=String(p.name||'').toLowerCase().includes(term)||
-      String(p.description||'').toLowerCase().includes(term);
-    return matchesCategory&&matchesSearch;
-  });
-
-  if(!filtered.length){
-    grid.innerHTML='<div class="empty">No products found in this collection.</div>';
-    return;
-  }
-
-  grid.innerHTML=filtered.map(p=>`
-    <article class="product">
-      <button class="product-image-button" onclick="openProductDetails('${escapeHTML(p.id)}')" aria-label="View ${escapeHTML(p.name)}">
-        <img src="${escapeHTML(productImage(p))}" alt="${escapeHTML(p.name)}" loading="lazy">
-      </button>
-      <div class="product-info">
-        <small>${escapeHTML(p.category||'Fashion')}</small>
-        <h3>${escapeHTML(p.name)}</h3>
-        <div class="price">৳${money(p.selling_price)}</div>
-        <button class="view-btn" onclick="openProductDetails('${escapeHTML(p.id)}')">VIEW DETAILS</button>
-      </div>
-    </article>
-  `).join('');
+const grid=document.getElementById('productGrid');
+const term=document.getElementById('searchInput').value.toLowerCase().trim();
+const filtered=products.filter(p=>{
+const category=String(p.category||'').toLowerCase();
+const matchesCategory=activeCategory==='all'||category===activeCategory||((activeCategory==='men'||activeCategory==='women')&&category==='unisex');
+const matchesSearch=String(p.name||'').toLowerCase().includes(term)||String(p.description||'').toLowerCase().includes(term);
+return matchesCategory&&matchesSearch;
+});
+if(!filtered.length){grid.innerHTML='<div class="empty">No products found in this collection.</div>';return;}
+grid.innerHTML=filtered.map(p=>`
+<article class="product">
+<button class="product-image-button" onclick="openProductDetails('${escapeHTML(p.id)}')" aria-label="View ${escapeHTML(p.name)}"><img src="${escapeHTML(productImage(p))}" alt="${escapeHTML(p.name)}" loading="lazy"></button>
+<div class="product-info"><small>${escapeHTML(p.category||'Fashion')}</small><h3>${escapeHTML(p.name)}</h3>
+<div class="price">৳${money(p.selling_price)}</div><button class="view-btn" onclick="openProductDetails('${escapeHTML(p.id)}')">VIEW DETAILS</button></div>
+</article>`).join('');
 }
 
 function selectCategory(category,button){
-  activeCategory=category;
-  document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
-  if(button)button.classList.add('active');
-  else{
-    const match=[...document.querySelectorAll('.filter')].find(b=>b.textContent.trim().toLowerCase()===category);
-    if(match)match.classList.add('active');
-  }
-  showHome();
-  renderProducts();
-  document.getElementById('products').scrollIntoView({behavior:'smooth'});
+activeCategory=category;
+document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
+if(button)button.classList.add('active');
+else{
+const match=[...document.querySelectorAll('.filter')].find(b=>b.textContent.trim().toLowerCase()===category);
+if(match)match.classList.add('active');
 }
-
+showHome();renderProducts();document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
 function hideOtherPages(){
-  document.getElementById('checkoutPage').style.display='none';
-  document.getElementById('receiptPage').style.display='none';
-  document.getElementById('productDetailsPage').classList.remove('active');
+document.getElementById('checkoutPage').style.display='none';
+document.getElementById('receiptPage').style.display='none';
+document.getElementById('productDetailsPage').classList.remove('active');
 }
-
 function showHome(){
-  hideOtherPages();
-  document.getElementById('homePage').style.display='block';
-  selectedProduct=null;
-  closeCart();
-  window.scrollTo({top:0,behavior:'smooth'});
+hideOtherPages();document.getElementById('homePage').style.display='block';
+selectedProduct=null;closeCart();window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function openProductDetails(id){
-  selectedProduct=products.find(item=>String(item.id)===String(id));
-  if(!selectedProduct)return;
-
-  detailImages=getProductImages(selectedProduct);
-  document.getElementById('detailMainImage').src=detailImages[0];
-  document.getElementById('detailMainImage').alt=selectedProduct.name||'Product';
-  document.getElementById('detailCategory').textContent=selectedProduct.category||'Fashion';
-  document.getElementById('detailName').textContent=selectedProduct.name||'Product';
-  document.getElementById('detailPrice').textContent=money(selectedProduct.selling_price);
-  document.getElementById('detailDescription').textContent=selectedProduct.description||'Discover this item from the TAMKHUSH BY RATUL collection.';
-
-  document.getElementById('detailThumbnails').innerHTML=detailImages.map((image,index)=>`
-    <button class="thumbnail ${index===0?'active':''}" onclick="changeDetailImage(${index})">
-      <img src="${escapeHTML(image)}" alt="Product image ${index+1}">
-    </button>
-  `).join('');
-
-  const sizes=getOptions(selectedProduct.sizes);
-  const colors=getOptions(selectedProduct.colors);
-  document.getElementById('detailSizeWrap').style.display=sizes.length?'block':'none';
-  document.getElementById('detailColorWrap').style.display=colors.length?'block':'none';
-  document.getElementById('detailSize').innerHTML=sizes.length?
-    '<option value="">Choose size</option>'+sizes.map(s=>`<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join(''):'';
-  document.getElementById('detailColor').innerHTML=colors.length?
-    '<option value="">Choose color</option>'+colors.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join(''):'';
-
-  document.getElementById('detailQuantity').value=1;
-  const stock=Number(selectedProduct.stock);
-  document.getElementById('detailStock').textContent=
-    Number.isFinite(stock)?(stock>0?`Available stock: ${stock}`:'Stock availability: Please contact us'):'';
-
-  document.getElementById('homePage').style.display='none';
-  document.getElementById('checkoutPage').style.display='none';
-  document.getElementById('receiptPage').style.display='none';
-  document.getElementById('productDetailsPage').classList.add('active');
-  window.scrollTo({top:0,behavior:'smooth'});
+selectedProduct=products.find(item=>String(item.id)===String(id));
+if(!selectedProduct)return;
+detailImages=getProductImages(selectedProduct);
+document.getElementById('detailMainImage').src=detailImages[0];
+document.getElementById('detailMainImage').alt=selectedProduct.name||'Product';
+document.getElementById('detailCategory').textContent=selectedProduct.category||'Fashion';
+document.getElementById('detailName').textContent=selectedProduct.name||'Product';
+document.getElementById('detailPrice').textContent=money(selectedProduct.selling_price);
+document.getElementById('detailDescription').textContent=selectedProduct.description||'Discover this item from the TAMKHUSH BY RATUL collection.';
+document.getElementById('detailThumbnails').innerHTML=detailImages.map((image,index)=>`
+<button class="thumbnail ${index===0?'active':''}" onclick="changeDetailImage(${index})"><img src="${escapeHTML(image)}" alt="Product image ${index+1}"></button>`).join('');
+const sizes=getOptions(selectedProduct.sizes),colors=getOptions(selectedProduct.colors);
+document.getElementById('detailSizeWrap').style.display=sizes.length?'block':'none';
+document.getElementById('detailColorWrap').style.display=colors.length?'block':'none';
+document.getElementById('detailSize').innerHTML=sizes.length?'<option value="">Choose size</option>'+sizes.map(s=>`<option value="${escapeHTML(s)}">${escapeHTML(s)}</option>`).join(''):'';
+document.getElementById('detailColor').innerHTML=colors.length?'<option value="">Choose color</option>'+colors.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join(''):'';
+document.getElementById('detailQuantity').value=1;
+const stock=Number(selectedProduct.stock);
+document.getElementById('detailStock').textContent=Number.isFinite(stock)?(stock>0?`Available stock: ${stock}`:'Stock availability: Please contact us'):'';
+document.getElementById('homePage').style.display='none';
+document.getElementById('checkoutPage').style.display='none';
+document.getElementById('receiptPage').style.display='none';
+document.getElementById('productDetailsPage').classList.add('active');
+window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function changeDetailImage(index){
-  if(!detailImages[index])return;
-  document.getElementById('detailMainImage').src=detailImages[index];
-  document.querySelectorAll('.thumbnail').forEach((button,i)=>button.classList.toggle('active',i===index));
+if(!detailImages[index])return;
+document.getElementById('detailMainImage').src=detailImages[index];
+document.querySelectorAll('.thumbnail').forEach((button,i)=>button.classList.toggle('active',i===index));
 }
-
 function changeDetailQuantity(change){
-  const input=document.getElementById('detailQuantity');
-  input.value=Math.max(1,Math.min(99,Number(input.value||1)+change));
+const input=document.getElementById('detailQuantity');
+input.value=Math.max(1,Math.min(99,Number(input.value||1)+change));
 }
-
 function getSelectedProductOptions(){
-  if(!selectedProduct)return null;
-  const sizes=getOptions(selectedProduct.sizes);
-  const colors=getOptions(selectedProduct.colors);
-  const size=sizes.length?document.getElementById('detailSize').value:'';
-  const color=colors.length?document.getElementById('detailColor').value:'';
-
-  if(sizes.length&&!size){alert('Please select a size first.');return null;}
-  if(colors.length&&!color){alert('Please select a color first.');return null;}
-
-  const quantity=Math.max(1,Math.min(99,Number(document.getElementById('detailQuantity').value||1)));
-  const stock=Number(selectedProduct.stock);
-  if(Number.isFinite(stock)&&stock>0){
-    const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===size&&item.color===color);
-    const alreadyInCart=existing?Number(existing.quantity):0;
-    if(alreadyInCart+quantity>stock){alert(`Only ${stock} item(s) currently available in stock.`);return null;}
-  }
-  return {size,color,quantity};
+if(!selectedProduct)return null;
+const sizes=getOptions(selectedProduct.sizes),colors=getOptions(selectedProduct.colors);
+const size=sizes.length?document.getElementById('detailSize').value:'';
+const color=colors.length?document.getElementById('detailColor').value:'';
+if(sizes.length&&!size){alert('Please select a size first.');return null;}
+if(colors.length&&!color){alert('Please select a color first.');return null;}
+const quantity=Math.max(1,Math.min(99,Number(document.getElementById('detailQuantity').value||1)));
+const stock=Number(selectedProduct.stock);
+if(Number.isFinite(stock)&&stock>0){
+const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===size&&item.color===color);
+const alreadyInCart=existing?Number(existing.quantity):0;
+if(alreadyInCart+quantity>stock){alert(`Only ${stock} item(s) currently available in stock.`);return null;}
 }
-
+return {size,color,quantity};
+}
 function addSelectedProductToCart(){
-  if(!selectedProduct)return;
-  const options=getSelectedProductOptions();
-  if(!options)return;
-  addProductToCart(options);
+if(!selectedProduct)return;const options=getSelectedProductOptions();if(!options)return;addProductToCart(options);
 }
-
 function buySelectedProduct(){
-  if(!selectedProduct)return;
-  const options=getSelectedProductOptions();
-  if(!options)return;
-  addProductToCart(options);
+if(!selectedProduct)return;const options=getSelectedProductOptions();if(!options)return;addProductToCart(options);
 }
-
 function addProductToCart(options){
-  const existing=cart.find(item=>
-    String(item.id)===String(selectedProduct.id)&&
-    item.size===options.size&&item.color===options.color
-  );
-  if(existing)existing.quantity+=options.quantity;
-  else{
-    cart.push({
-      id:selectedProduct.id,
-      name:selectedProduct.name,
-      price:Number(selectedProduct.selling_price||0),
-      image:productImage(selectedProduct),
-      size:options.size,
-      color:options.color,
-      quantity:options.quantity
-    });
-  }
-  saveCart();
-  openCart();
+const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===options.size&&item.color===options.color);
+if(existing)existing.quantity+=options.quantity;
+else cart.push({id:selectedProduct.id,name:selectedProduct.name,price:Number(selectedProduct.selling_price||0),image:productImage(selectedProduct),size:options.size,color:options.color,quantity:options.quantity});
+saveCart();openCart();
 }
-
-function saveCart(){
-  localStorage.setItem('tkr_cart',JSON.stringify(cart));
-  updateCart();
-}
-
+function saveCart(){localStorage.setItem('tkr_cart',JSON.stringify(cart));updateCart();}
 function updateCart(){
-  document.getElementById('cartCount').textContent=
-    cart.reduce((sum,item)=>sum+Number(item.quantity||0),0);
-
-  document.getElementById('cartItems').innerHTML=cart.length?
-    cart.map((item,index)=>`
-      <div class="cart-item">
-        <img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}">
-        <div class="cart-item-info">
-          <strong>${escapeHTML(item.name)}</strong>
-          <small>
-            ${item.size?'Size: '+escapeHTML(item.size)+'<br>':''}
-            ${item.color?'Color: '+escapeHTML(item.color)+'<br>':''}
-            ৳${money(item.price)} each
-          </small>
-          <div class="cart-item-actions">
-            <button class="qty-btn" onclick="changeCartQuantity(${index},-1)">−</button>
-            <span>${Number(item.quantity||1)}</span>
-            <button class="qty-btn" onclick="changeCartQuantity(${index},1)">+</button>
-            <button class="remove-btn" onclick="removeCartItem(${index})">REMOVE</button>
-          </div>
-        </div>
-        <strong>৳${money(Number(item.price)*Number(item.quantity))}</strong>
-      </div>
-    `).join(''):'<p class="note">Your shopping bag is empty.</p>';
-
-  document.getElementById('cartTotal').textContent=
-    money(cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.quantity),0));
+document.getElementById('cartCount').textContent=cart.reduce((sum,item)=>sum+Number(item.quantity||0),0);
+document.getElementById('cartItems').innerHTML=cart.length?cart.map((item,index)=>`
+<div class="cart-item"><img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}">
+<div class="cart-item-info"><strong>${escapeHTML(item.name)}</strong>
+<small>${item.size?'Size: '+escapeHTML(item.size)+'<br>':''}${item.color?'Color: '+escapeHTML(item.color)+'<br>':''}৳${money(item.price)} each</small>
+<div class="cart-item-actions"><button class="qty-btn" onclick="changeCartQuantity(${index},-1)">−</button><span>${Number(item.quantity||1)}</span><button class="qty-btn" onclick="changeCartQuantity(${index},1)">+</button><button class="remove-btn" onclick="removeCartItem(${index})">REMOVE</button></div></div>
+<strong>৳${money(Number(item.price)*Number(item.quantity))}</strong></div>`).join(''):'<p class="note">Your shopping bag is empty.</p>';
+document.getElementById('cartTotal').textContent=money(cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.quantity),0));
 }
-
 function changeCartQuantity(index,change){
-  if(!cart[index])return;
-  const nextQuantity=Number(cart[index].quantity)+change;
-  if(nextQuantity<=0){removeCartItem(index);return;}
-  const product=products.find(p=>String(p.id)===String(cart[index].id));
-  if(product&&Number(product.stock)>0&&nextQuantity>Number(product.stock)){
-    alert(`Only ${product.stock} item(s) currently available.`);
-    return;
-  }
-  cart[index].quantity=nextQuantity;
-  saveCart();
-  if(document.getElementById('checkoutPage').style.display==='block')updateCheckoutSummary();
+if(!cart[index])return;
+const nextQuantity=Number(cart[index].quantity)+change;
+if(nextQuantity<=0){removeCartItem(index);return;}
+const product=products.find(p=>String(p.id)===String(cart[index].id));
+if(product&&Number(product.stock)>0&&nextQuantity>Number(product.stock)){alert(`Only ${product.stock} item(s) currently available.`);return;}
+cart[index].quantity=nextQuantity;saveCart();
+if(document.getElementById('checkoutPage').style.display==='block')updateCheckoutSummary();
 }
-
 function removeCartItem(index){
-  cart.splice(index,1);
-  saveCart();
-  if(document.getElementById('checkoutPage').style.display==='block'){
-    if(!cart.length)showHome();
-    else updateCheckoutSummary();
-  }
+cart.splice(index,1);saveCart();
+if(document.getElementById('checkoutPage').style.display==='block'){if(!cart.length)showHome();else updateCheckoutSummary();}
 }
+function openCart(){document.getElementById('cartDrawer').classList.add('open');updateCart();}
+function closeCart(){document.getElementById('cartDrawer').classList.remove('open');}
 
-function openCart(){
-  document.getElementById('cartDrawer').classList.add('open');
-  updateCart();
-}
-
-function closeCart(){
-  document.getElementById('cartDrawer').classList.remove('open');
-}
-
-/* CHECKOUT FUNCTIONS */
+/* CHECKOUT */
 function openCheckout(){
-  if(!cart.length){alert('আপনার ব্যাগে কোনো পণ্য নেই।');return;}
-  closeCart();
-  document.getElementById('homePage').style.display='none';
-  document.getElementById('productDetailsPage').classList.remove('active');
-  document.getElementById('receiptPage').style.display='none';
-  document.getElementById('checkoutPage').style.display='block';
-  document.getElementById('checkoutMessage').style.display='none';
-  updateCheckoutSummary();
-  window.scrollTo({top:0,behavior:'smooth'});
+if(!cart.length){alert('আপনার ব্যাগে কোনো পণ্য নেই।');return;}
+closeCart();
+document.getElementById('homePage').style.display='none';
+document.getElementById('productDetailsPage').classList.remove('active');
+document.getElementById('receiptPage').style.display='none';
+document.getElementById('checkoutPage').style.display='block';
+document.getElementById('checkoutMessage').style.display='none';
+updateCheckoutSummary();
+if(!districtsLoaded)loadDistricts();
+window.scrollTo({top:0,behavior:'smooth'});
 }
-
-function backToCart(){
-  document.getElementById('checkoutPage').style.display='none';
-  openCart();
-}
-
-function getCartSubtotal(){
-  return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.quantity)||0),0);
-}
-
+function backToCart(){document.getElementById('checkoutPage').style.display='none';openCart();}
+function getCartSubtotal(){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.quantity)||0),0);}
 function getSelectedDeliveryCharge(){
-  const selected=document.querySelector('input[name="deliveryZone"]:checked');
-  if(!selected)return null;
-  return selected.value==='inside_dhaka'?70:120;
+const selected=document.querySelector('input[name="deliveryZone"]:checked');
+if(!selected)return null;
+return selected.value==='inside_dhaka'?70:120;
 }
-
 function updateCheckoutSummary(){
-  const items=document.getElementById('checkoutItems');
-  items.innerHTML=cart.map(item=>`
-    <div class="summary-product">
-      <span>
-        ${escapeHTML(item.name)} × ${Number(item.quantity)}
-        <small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small>
-      </span>
-      <strong>৳${money(Number(item.price)*Number(item.quantity))}</strong>
-    </div>
-  `).join('');
-
-  const subtotal=getCartSubtotal();
-  const delivery=getSelectedDeliveryCharge();
-  document.getElementById('checkoutSubtotal').textContent=money(subtotal);
-  document.getElementById('checkoutDelivery').textContent=delivery===null?'নির্বাচন করুন':money(delivery);
-  document.getElementById('checkoutTotal').textContent=money(subtotal+(delivery||0));
+document.getElementById('checkoutItems').innerHTML=cart.map(item=>`
+<div class="summary-product"><span>${escapeHTML(item.name)} × ${Number(item.quantity)}
+<small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small></span>
+<strong>৳${money(Number(item.price)*Number(item.quantity))}</strong></div>`).join('');
+const subtotal=getCartSubtotal(),delivery=getSelectedDeliveryCharge();
+document.getElementById('checkoutSubtotal').textContent=money(subtotal);
+document.getElementById('checkoutDelivery').textContent=delivery===null?'নির্বাচন করুন':money(delivery);
+document.getElementById('checkoutTotal').textContent=money(subtotal+(delivery||0));
 }
-
-document.querySelectorAll('input[name="deliveryZone"]').forEach(input=>{
-  input.addEventListener('change',updateCheckoutSummary);
-});
-
+document.querySelectorAll('input[name="deliveryZone"]').forEach(input=>input.addEventListener('change',updateCheckoutSummary));
 function showCheckoutError(message){
-  const box=document.getElementById('checkoutMessage');
-  box.textContent=message;
-  box.style.display='block';
-  box.scrollIntoView({behavior:'smooth',block:'center'});
+const box=document.getElementById('checkoutMessage');
+box.textContent=message;box.style.display='block';
+box.scrollIntoView({behavior:'smooth',block:'center'});
 }
-
 function translateOrderError(message){
-  const text=String(message||'');
-  if(text.includes('Insufficient stock'))return 'দুঃখিত, এই পণ্যের পর্যাপ্ত স্টক নেই।';
-  if(text.includes('unavailable'))return 'আপনার নির্বাচিত একটি পণ্য বর্তমানে পাওয়া যাচ্ছে না।';
-  if(text.includes('Invalid size'))return 'একটি পণ্যের সাইজ সঠিক নয়। আবার সাইজ নির্বাচন করুন।';
-  if(text.includes('Invalid color'))return 'একটি পণ্যের রং সঠিক নয়। আবার রং নির্বাচন করুন।';
-  if(text.includes('Invalid phone'))return 'সঠিক মোবাইল নম্বর লিখুন।';
-  if(text.includes('Could not save order'))return 'অর্ডার সংরক্ষণ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।';
-  if(text.includes('Server configuration'))return 'সার্ভারের সেটআপে সমস্যা আছে। অনুগ্রহ করে পরে চেষ্টা করুন।';
-  return 'অর্ডার জমা দেওয়া যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।';
+const text=String(message||'');
+if(text.includes('Insufficient stock'))return 'দুঃখিত, এই পণ্যের পর্যাপ্ত স্টক নেই।';
+if(text.includes('unavailable'))return 'আপনার নির্বাচিত একটি পণ্য বর্তমানে পাওয়া যাচ্ছে না।';
+if(text.includes('Invalid size'))return 'একটি পণ্যের সাইজ সঠিক নয়। আবার সাইজ নির্বাচন করুন।';
+if(text.includes('Invalid color'))return 'একটি পণ্যের রং সঠিক নয়। আবার রং নির্বাচন করুন।';
+if(text.includes('Invalid phone'))return 'সঠিক মোবাইল নম্বর লিখুন।';
+if(text.includes('Could not save order'))return 'অর্ডার সংরক্ষণ করা যায়নি। সার্ভার লগ পরীক্ষা করা প্রয়োজন।';
+if(text.includes('Server configuration'))return 'সার্ভারের সেটআপে সমস্যা আছে।';
+if(text.includes('Supabase client'))return 'ওয়েবসাইটের Supabase সংযোগ পাওয়া যাচ্ছে না। config.js পরীক্ষা করতে হবে।';
+return 'অর্ডার জমা দেওয়া যায়নি: '+text;
 }
 
 async function handleCheckoutSubmit(event){
-  event.preventDefault();
-  if(!cart.length){showCheckoutError('আপনার ব্যাগে কোনো পণ্য নেই।');return;}
+event.preventDefault();
+if(!cart.length){showCheckoutError('আপনার ব্যাগে কোনো পণ্য নেই।');return;}
+const deliveryZone=document.querySelector('input[name="deliveryZone"]:checked')?.value;
+if(!deliveryZone){showCheckoutError('অনুগ্রহ করে ডেলিভারি এলাকা নির্বাচন করুন।');return;}
 
-  const deliveryZone=document.querySelector('input[name="deliveryZone"]:checked')?.value;
-  if(!deliveryZone){showCheckoutError('অনুগ্রহ করে ডেলিভারি এলাকা নির্বাচন করুন।');return;}
-
-  const submitButton=document.getElementById('checkoutSubmit');
-  const message=document.getElementById('checkoutMessage');
-  message.style.display='none';
-
-  const payload={
-    customerName:document.getElementById('customerName').value.trim(),
-    customerPhone:document.getElementById('customerPhone').value.trim(),
-    customerEmail:document.getElementById('customerEmail').value.trim()||null,
-    shippingAddress:document.getElementById('customerAddress').value.trim(),
-    city:document.getElementById('customerDistrict').value.trim(),
-    area:document.getElementById('customerArea').value.trim(),
-    postalCode:document.getElementById('customerPostal').value.trim()||null,
-    deliveryZone,
-    items:cart.map(item=>({
-      productId:String(item.id),
-      quantity:Number(item.quantity),
-      size:item.size||'',
-      color:item.color||''
-    })),
-    customerNote:document.getElementById('customerNote').value.trim()||null
-  };
-
-  submitButton.disabled=true;
-  submitButton.textContent='অর্ডার জমা হচ্ছে...';
-
-  try{
-    const client=window.supabaseClient;
-    if(!client||!client.functions)throw new Error('Supabase client is not available');
-
-    const {data,error}=await client.functions.invoke('customer-order',{body:payload});
-
-    if(error){
-      console.error('Customer order function error:',error);
-      throw new Error(error.message||'Function request failed');
-    }
-
-    if(!data||data.success!==true||!data.order){
-      throw new Error(data?.error||'Order response was not valid');
-    }
-
-    currentReceipt=data.order;
-    localStorage.setItem('tkr_last_receipt',JSON.stringify(currentReceipt));
-
-    cart=[];
-    saveCart();
-
-    document.getElementById('checkoutPage').style.display='none';
-    document.getElementById('homePage').style.display='none';
-    document.getElementById('productDetailsPage').classList.remove('active');
-    closeCart();
-
-    renderReceipt(currentReceipt);
-    document.getElementById('receiptPage').style.display='block';
-    window.scrollTo({top:0,behavior:'smooth'});
-
-  }catch(error){
-    console.error('Checkout error:',error);
-    showCheckoutError(translateOrderError(error.message));
-  }finally{
-    submitButton.disabled=false;
-    submitButton.textContent='অর্ডার কনফার্ম করুন';
-  }
+const districtSelect=document.getElementById('customerDistrict');
+const thanaSelect=document.getElementById('customerArea');
+if(!districtSelect.value||!thanaSelect.value){
+showCheckoutError('অনুগ্রহ করে জেলা এবং থানা/উপজেলা নির্বাচন করুন।');return;
 }
+const districtName=districtSelect.options[districtSelect.selectedIndex]?.textContent.trim();
+const thanaName=thanaSelect.options[thanaSelect.selectedIndex]?.textContent.trim();
+if(!districtName||!thanaName){showCheckoutError('জেলা অথবা থানার সঠিক নাম পাওয়া যায়নি। আবার নির্বাচন করুন।');return;}
 
+const submitButton=document.getElementById('checkoutSubmit');
+document.getElementById('checkoutMessage').style.display='none';
+
+const payload={
+customerName:document.getElementById('customerName').value.trim(),
+customerPhone:document.getElementById('customerPhone').value.trim(),
+customerEmail:document.getElementById('customerEmail').value.trim()||null,
+shippingAddress:document.getElementById('customerAddress').value.trim(),
+city:districtName,
+area:thanaName,
+districtId:Number(districtSelect.value),
+thanaId:Number(thanaSelect.value),
+postalCode:document.getElementById('customerPostal').value.trim()||null,
+deliveryZone,
+items:cart.map(item=>({productId:String(item.id),quantity:Number(item.quantity),size:item.size||'',color:item.color||''})),
+customerNote:document.getElementById('customerNote').value.trim()||null
+};
+
+submitButton.disabled=true;submitButton.textContent='অর্ডার জমা হচ্ছে...';
+try{
+const client=window.supabaseClient;
+if(!client||!client.functions)throw new Error('Supabase client is not available');
+const {data,error}=await client.functions.invoke('customer-order',{body:payload});
+if(error)throw await getUsefulFunctionError(error);
+if(!data||data.success!==true||!data.order)throw new Error(data?.error||data?.message||'Order response was not valid');
+
+const serverOrder=data.order;
+currentReceipt={
+...serverOrder,
+customer_name:payload.customerName,
+customer_phone:payload.customerPhone,
+customer_email:payload.customerEmail,
+shipping_address:payload.shippingAddress,
+city:payload.city,
+area:payload.area,
+postal_code:payload.postalCode,
+customer_note:payload.customerNote,
+created_at:new Date().toISOString(),
+order_status:serverOrder.status||serverOrder.order_status||'new',
+discount:Number(serverOrder.discount||0),
+order_items:cart.map(item=>({
+product_name:item.name,
+image:item.image,
+size:item.size,
+color:item.color,
+quantity:Number(item.quantity),
+unit_price:Number(item.price),
+line_total:Number(item.price)*Number(item.quantity)
+}))
+};
+localStorage.setItem('tkr_last_receipt',JSON.stringify(currentReceipt));
+cart=[];saveCart();
+document.getElementById('checkoutPage').style.display='none';
+document.getElementById('homePage').style.display='none';
+document.getElementById('productDetailsPage').classList.remove('active');
+closeCart();
+renderReceipt(currentReceipt);
+document.getElementById('receiptPage').style.display='block';
+window.scrollTo({top:0,behavior:'smooth'});
+}catch(error){
+console.error('Checkout error:',error);
+showCheckoutError(translateOrderError(error.message));
+}finally{
+submitButton.disabled=false;
+submitButton.textContent='অর্ডার কনফার্ম করুন';
+}
+}
 document.getElementById('checkoutForm').addEventListener('submit',handleCheckoutSubmit);
 
 /* RECEIPT */
 function formatReceiptDate(value){
-  const date=value?new Date(value):new Date();
-  if(Number.isNaN(date.getTime()))return new Date().toLocaleString('bn-BD');
-  return date.toLocaleString('bn-BD',{dateStyle:'medium',timeStyle:'short'});
+const date=value?new Date(value):new Date();
+if(Number.isNaN(date.getTime()))return new Date().toLocaleString('bn-BD');
+return date.toLocaleString('bn-BD',{dateStyle:'medium',timeStyle:'short'});
 }
-
 function renderReceipt(order){
-  const items=Array.isArray(order.order_items)?order.order_items:[];
-  const statusMap={new:'নতুন অর্ডার',pending:'অপেক্ষমাণ',confirmed:'কনফার্ম',processing:'প্রসেসিং',shipped:'পাঠানো হয়েছে',delivered:'ডেলিভারি সম্পন্ন',cancelled:'বাতিল'};
-  const status=statusMap[order.order_status]||'নতুন অর্ডার';
-
-  const itemRows=items.map(item=>`
-    <tr>
-      <td>
-        ${item.image?`<img class="receipt-image" src="${escapeHTML(item.image)}" alt="">`:''}
-        <strong>${escapeHTML(item.product_name||'পণ্য')}</strong>
-        <br><small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small>
-      </td>
-      <td>${Number(item.quantity||0)}</td>
-      <td>৳${money(item.unit_price)}</td>
-      <td>৳${money(item.line_total)}</td>
-    </tr>
-  `).join('');
-
-  document.getElementById('receiptDetails').innerHTML=`
-    <div class="receipt-meta">
-      <span><strong>অর্ডার নম্বর:</strong> ${escapeHTML(order.order_number||'')}</span>
-      <span><strong>তারিখ:</strong> ${escapeHTML(formatReceiptDate(order.created_at))}</span>
-    </div>
-    <div class="receipt-customer">
-      <strong>গ্রাহকের তথ্য</strong><br>
-      নাম: ${escapeHTML(order.customer_name||'')}<br>
-      মোবাইল: ${escapeHTML(order.customer_phone||'')}<br>
-      ঠিকানা: ${escapeHTML(order.shipping_address||'')}<br>
-      <strong>অর্ডারের অবস্থা:</strong> <span class="status-pill">${escapeHTML(status)}</span><br>
-      <strong>পেমেন্ট:</strong> ক্যাশ অন ডেলিভারি
-    </div>
-    <table class="receipt-table">
-      <thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>দাম</th><th>মোট</th></tr></thead>
-      <tbody>${itemRows}</tbody>
-    </table>
-    <div class="receipt-totals">
-      <div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳${money(order.subtotal)}</strong></div>
-      <div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳${money(order.delivery_charge)}</strong></div>
-      <div class="summary-line"><span>ডিসকাউন্ট</span><strong>৳${money(order.discount)}</strong></div>
-      <div class="summary-line total"><span>সর্বমোট</span><strong>৳${money(order.total_amount)}</strong></div>
-    </div>
-  `;
+const items=Array.isArray(order.order_items)?order.order_items:[];
+const statusMap={new:'নতুন অর্ডার',pending:'অপেক্ষমাণ',confirmed:'কনফার্ম',processing:'প্রসেসিং',shipped:'পাঠানো হয়েছে',delivered:'ডেলিভারি সম্পন্ন',cancelled:'বাতিল'};
+const status=statusMap[order.order_status]||'নতুন অর্ডার';
+const itemRows=items.map(item=>`
+<tr><td>${item.image?`<img class="receipt-image" src="${escapeHTML(item.image)}" alt="">`:''}
+<strong>${escapeHTML(item.product_name||'পণ্য')}</strong><br>
+<small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small></td>
+<td>${Number(item.quantity||0)}</td><td>৳${money(item.unit_price)}</td><td>৳${money(item.line_total)}</td></tr>`).join('');
+document.getElementById('receiptDetails').innerHTML=`
+<div class="receipt-meta"><span><strong>অর্ডার নম্বর:</strong> ${escapeHTML(order.order_number||'')}</span><span><strong>তারিখ:</strong> ${escapeHTML(formatReceiptDate(order.created_at))}</span></div>
+<div class="receipt-customer"><strong>গ্রাহকের তথ্য</strong><br>
+নাম: ${escapeHTML(order.customer_name||'')}<br>
+মোবাইল: ${escapeHTML(order.customer_phone||'')}<br>
+জেলা: ${escapeHTML(order.city||'')}<br>
+থানা: ${escapeHTML(order.area||'')}<br>
+ঠিকানা: ${escapeHTML(order.shipping_address||'')}<br>
+<strong>অর্ডারের অবস্থা:</strong> <span class="status-pill">${escapeHTML(status)}</span><br>
+<strong>পেমেন্ট:</strong> ক্যাশ অন ডেলিভারি</div>
+<table class="receipt-table"><thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>দাম</th><th>মোট</th></tr></thead><tbody>${itemRows}</tbody></table>
+<div class="receipt-totals">
+<div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳${money(order.subtotal)}</strong></div>
+<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳${money(order.delivery_charge)}</strong></div>
+<div class="summary-line"><span>ডিসকাউন্ট</span><strong>৳${money(order.discount)}</strong></div>
+<div class="summary-line total"><span>সর্বমোট</span><strong>৳${money(order.total_amount)}</strong></div>
+</div>`;
 }
-
 function downloadReceipt(){
-  if(!currentReceipt){alert('রসিদ পাওয়া যায়নি।');return;}
-  window.print();
+if(!currentReceipt){alert('রসিদ পাওয়া যায়নি।');return;}
+window.print();
 }
-
 document.addEventListener('keydown',event=>{
-  if(event.key==='Escape'){
-    closeCart();
-    if(document.getElementById('checkoutPage').style.display==='block')backToCart();
-    else if(document.getElementById('productDetailsPage').classList.contains('active'))showHome();
-  }
+if(event.key==='Escape'){
+closeCart();
+if(document.getElementById('checkoutPage').style.display==='block')backToCart();
+else if(document.getElementById('productDetailsPage').classList.contains('active'))showHome();
+}
 });
-
 document.getElementById('year').textContent=new Date().getFullYear();
 updateCart();
 loadProducts();
+loadDistricts();
 </script>
 </body>
 </html>
