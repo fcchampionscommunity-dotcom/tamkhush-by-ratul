@@ -11,15 +11,9 @@
 
 <style>
 :root{
- --bg:#101113;
- --panel:#191b1f;
- --panel2:#202329;
- --silver:#bfc5cc;
- --white:#f5f6f7;
- --muted:#9299a2;
- --border:#30343b;
- --danger:#e45c66;
- --success:#55bd8a;
+ --bg:#101113;--panel:#191b1f;--panel2:#202329;
+ --silver:#bfc5cc;--white:#f5f6f7;--muted:#9299a2;
+ --border:#30343b;--danger:#e45c66;--success:#55bd8a;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
@@ -116,6 +110,8 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
 .report-box strong{display:block;font-size:21px;margin-top:8px;overflow-wrap:anywhere}
 .log-item{border-bottom:1px solid var(--border);padding:12px 0;font-size:12px;line-height:1.6}
 .log-item:last-child{border-bottom:0}
+.copy-link-btn{margin-top:5px;background:#292d34;color:#f5f6f7;border:1px solid #59616b}
+.copy-link-btn:hover{background:#3a4048}
 @media(max-width:900px){
  .app{display:block}
  .sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
@@ -539,6 +535,69 @@ function renderRecentOrders(){
  </tr>`).join(""):'<tr><td colspan="4" class="empty">No orders found.</td></tr>';
 }
 
+/* PRODUCT ORDER LINK SYSTEM */
+
+function getProductOrderLink(productId){
+ if(!productId)throw new Error("Product ID পাওয়া যায়নি।");
+
+ // Admin page এবং customer website একই root folder-এ থাকলে
+ // এই URL customer homepage-এ যাবে।
+ const customerURL=new URL("./",window.location.href);
+
+ // Customer website-এর product details page-এর জন্য product ID
+ customerURL.searchParams.set("product",String(productId));
+ customerURL.hash="";
+
+ return customerURL.toString();
+}
+
+async function copyTextToClipboard(text){
+ if(navigator.clipboard&&window.isSecureContext){
+  await navigator.clipboard.writeText(text);
+  return;
+ }
+
+ const textarea=document.createElement("textarea");
+ textarea.value=text;
+ textarea.style.position="fixed";
+ textarea.style.left="-9999px";
+ textarea.style.top="0";
+ document.body.appendChild(textarea);
+ textarea.focus();
+ textarea.select();
+
+ const successful=document.execCommand("copy");
+ textarea.remove();
+
+ if(!successful)throw new Error("এই Browser-এ Copy করা যায়নি।");
+}
+
+async function copyProductOrderLink(productId,button){
+ const product=adminProducts.find(p=>String(p.id)===String(productId));
+ if(!product){
+  alert("Product পাওয়া যায়নি। Products Refresh করে আবার চেষ্টা করুন।");
+  return;
+ }
+
+ const originalText=button.textContent;
+ button.disabled=true;
+ button.textContent="COPYING...";
+
+ try{
+  const link=getProductOrderLink(product.id);
+  await copyTextToClipboard(link);
+
+  button.textContent="COPIED!";
+  await logActivity("PRODUCT_ORDER_LINK_COPIED",product.name+" | "+link);
+  alert("Order Link Copy হয়েছে!\n\n"+link+"\n\nএখন Facebook পোস্টে Paste করতে পারবেন।");
+ }catch(error){
+  alert("লিংক Copy করা যায়নি: "+error.message);
+ }finally{
+  button.disabled=false;
+  setTimeout(()=>{button.textContent=originalText},1800);
+ }
+}
+
 /* PRODUCTS */
 
 function renderProducts(){
@@ -560,11 +619,20 @@ function renderProducts(){
    <td>${escapeHTML(p.sku||"—")}</td><td>${price}</td>
    <td>${Number(p.stock||0)}</td><td>${labels.join(" ")||"—"}</td>
    <td>${p.is_active?'<span class="badge green">ACTIVE</span>':'<span class="badge red">INACTIVE</span>'}</td>
-   <td><button class="btn btn-small" data-edit="${escapeHTML(p.id)}">Edit</button> <button class="btn btn-small btn-danger" data-delete="${escapeHTML(p.id)}">Delete</button></td>
+   <td>
+    <button class="btn btn-small" data-edit="${escapeHTML(p.id)}">Edit</button>
+    <button class="btn btn-small btn-danger" data-delete="${escapeHTML(p.id)}">Delete</button>
+    <br>
+    <button class="btn btn-small copy-link-btn" data-copy-order-link="${escapeHTML(p.id)}">COPY ORDER LINK</button>
+   </td>
   </tr>`;
  }).join("");
+
  tbody.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editProduct(b.dataset.edit)));
  tbody.querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>deleteProduct(b.dataset.delete)));
+ tbody.querySelectorAll("[data-copy-order-link]").forEach(b=>{
+  b.addEventListener("click",()=>copyProductOrderLink(b.dataset.copyOrderLink,b));
+ });
 }
 $("productSearch").addEventListener("input",renderProducts);
 
