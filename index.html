@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -96,6 +95,7 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .detail-actions button{min-height:49px}
 .buy-button{background:var(--silver);color:#111;border:0;font-weight:bold}
 .add-button{background:transparent;color:white;border:1px solid var(--silver);font-weight:bold}
+.share-link-button{width:100%;margin-top:12px;min-height:47px;font-weight:bold;letter-spacing:1px}
 .detail-benefits{margin-top:30px;padding:20px;background:#191b1f;border:1px solid var(--line);color:#c6c8cc;font-size:12px;line-height:2}
 .detail-benefits div{border-bottom:1px solid #303238;padding:7px 0}
 .detail-benefits div:last-child{border:0}
@@ -225,6 +225,10 @@ header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:cen
 <div class="quantity-row"><button onclick="changeDetailQuantity(-1)">−</button><input class="quantity-input" id="detailQuantity" type="number" min="1" max="99" value="1"><button onclick="changeDetailQuantity(1)">+</button></div>
 <div class="stock-note" id="detailStock"></div>
 <div class="detail-actions"><button class="buy-button" onclick="buySelectedProduct()">BUY NOW</button><button class="add-button" onclick="addSelectedProductToCart()">ADD TO BAG</button></div>
+
+<!-- PRODUCT ORDER LINK BUTTON -->
+<button class="view-btn share-link-button" onclick="copyProductOrderLink()">COPY ORDER LINK</button>
+
 <div class="detail-benefits"><div>✓ Premium fashion collection</div><div>✓ Size and color selection</div><div>✓ Secure order processing</div><div>✓ Delivery information at checkout</div></div>
 </div></div>
 </section>
@@ -311,13 +315,84 @@ if(typeof value==='string'&&value.trim())return value.split(',').map(v=>v.trim()
 return [];
 }
 
+/* LOAD PRODUCTS */
 async function loadProducts(){
 const grid=document.getElementById('productGrid');
 try{
 if(!window.store)throw new Error('Store is not loaded');
 products=await window.store.getProducts();
 renderProducts();
+
+/* OPEN PRODUCT AUTOMATICALLY FROM SHARED LINK */
+openLinkedProductFromURL();
+
 }catch(error){console.error(error);grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';}
+}
+
+/* PRODUCT ORDER LINK SYSTEM */
+function getProductOrderLink(){
+if(!selectedProduct)return '';
+
+const url=new URL(window.location.href);
+url.searchParams.set('product',selectedProduct.id);
+url.hash='';
+
+return url.toString();
+}
+
+async function copyProductOrderLink(){
+const link=getProductOrderLink();
+
+if(!link){
+alert('Product link তৈরি করা যায়নি।');
+return;
+}
+
+try{
+if(navigator.clipboard&&window.isSecureContext){
+await navigator.clipboard.writeText(link);
+}else{
+throw new Error('Clipboard API unavailable');
+}
+
+alert('Product Order Link Copied Successfully!');
+}catch(error){
+try{
+const input=document.createElement('textarea');
+input.value=link;
+input.style.position='fixed';
+input.style.opacity='0';
+document.body.appendChild(input);
+input.focus();
+input.select();
+
+const copied=document.execCommand('copy');
+input.remove();
+
+if(!copied)throw new Error('Copy failed');
+
+alert('Product Order Link Copied Successfully!');
+}catch(copyError){
+prompt('এই লিংকটি কপি করুন:',link);
+}
+}
+}
+
+function openLinkedProductFromURL(){
+const params=new URLSearchParams(window.location.search);
+const productId=params.get('product');
+
+if(!productId)return;
+
+const product=products.find(
+p=>String(p.id)===String(productId)
+);
+
+if(product){
+openProductDetails(productId);
+}else{
+console.warn('Shared product link: Product not found',productId);
+}
 }
 
 /* DROPBAZAR DISTRICT & THANA */
@@ -456,12 +531,24 @@ document.getElementById('receiptPage').style.display='none';
 document.getElementById('productDetailsPage').classList.remove('active');
 }
 function showHome(){
-hideOtherPages();document.getElementById('homePage').style.display='block';
-selectedProduct=null;closeCart();window.scrollTo({top:0,behavior:'smooth'});
+hideOtherPages();
+document.getElementById('homePage').style.display='block';
+selectedProduct=null;
+closeCart();
+
+/* REMOVE PRODUCT PARAMETER WHEN RETURNING HOME */
+const url=new URL(window.location.href);
+if(url.searchParams.has('product')){
+url.searchParams.delete('product');
+history.replaceState({},'',url.pathname+url.search+url.hash);
+}
+
+window.scrollTo({top:0,behavior:'smooth'});
 }
 function openProductDetails(id){
 selectedProduct=products.find(item=>String(item.id)===String(id));
 if(!selectedProduct)return;
+
 detailImages=getProductImages(selectedProduct);
 document.getElementById('detailMainImage').src=detailImages[0];
 document.getElementById('detailMainImage').alt=selectedProduct.name||'Product';
