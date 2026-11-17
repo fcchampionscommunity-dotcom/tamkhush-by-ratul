@@ -540,11 +540,10 @@ function renderRecentOrders(){
 function getProductOrderLink(productId){
  if(!productId)throw new Error("Product ID পাওয়া যায়নি।");
 
- // Admin page এবং customer website একই root folder-এ থাকলে
- // এই URL customer homepage-এ যাবে।
- const customerURL=new URL("./",window.location.href);
+ // Customer Website-এর নির্দিষ্ট URL
+ const customerURL=new URL("https://fcchampionscommunity-dotcom.github.io/tamkhush-by-ratul/");
 
- // Customer website-এর product details page-এর জন্য product ID
+ // Product UUID দিয়ে Customer Details Page খুলবে
  customerURL.searchParams.set("product",String(productId));
  customerURL.hash="";
 
