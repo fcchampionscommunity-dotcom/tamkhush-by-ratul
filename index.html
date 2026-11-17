@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -18,8 +19,9 @@ button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
 header{position:sticky;top:0;z-index:20;background:rgba(16,17,19,.97);border-bottom:1px solid var(--line);padding:17px 6%;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.logo{font-size:19px;font-weight:800;letter-spacing:2px}
-.logo span{display:block;font-size:9px;color:var(--silver);letter-spacing:4px;margin-top:5px}
+.logo{font-size:19px;font-weight:800;letter-spacing:2px;display:flex;align-items:center;gap:12px}
+.logo-mark{width:43px;height:43px;border:1px solid var(--silver);display:grid;place-items:center;color:var(--silver);font-size:13px;letter-spacing:0;border-radius:3px}
+.logo-text span{display:block;font-size:9px;color:var(--silver);letter-spacing:4px;margin-top:5px}
 nav{display:flex;gap:25px;font-size:13px;color:#ddd}
 nav a:hover{color:var(--silver)}
 .header-actions{display:flex;gap:10px;align-items:center}
@@ -64,6 +66,7 @@ nav a:hover{color:var(--silver)}
 .about h2{font-size:30px;margin-bottom:15px}
 .about p{color:#b8bbc0;line-height:1.8;max-width:650px;margin:auto}
 footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-height:2}
+.footer-mark{font-size:16px;letter-spacing:4px;color:var(--silver);margin-bottom:8px}
 #productDetailsPage{display:none;min-height:80vh;padding:25px 6% 75px}
 #productDetailsPage.active{display:block}
 .detail-topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:8px 0 25px;border-bottom:1px solid var(--line);margin-bottom:30px}
@@ -124,11 +127,8 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .field input,.field textarea,.field select{width:100%;padding:13px;background:#101113;color:white;border:1px solid #454950;border-radius:3px;outline:none}
 .field textarea{min-height:95px;resize:vertical}
 .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--silver)}
-.delivery-option{display:flex;gap:12px;align-items:center;padding:15px;border:1px solid #454950;margin:10px 0;border-radius:3px;cursor:pointer}
-.delivery-option:has(input:checked){border-color:var(--silver);background:#24272c}
-.delivery-option input{accent-color:#bfc5cc;width:17px;height:17px}
-.delivery-option span{flex:1}
-.delivery-option strong{color:var(--silver)}
+.delivery-auto-note{padding:14px;background:#22252a;border:1px solid var(--line);color:#c7cbd0;font-size:13px;line-height:1.8;border-radius:3px}
+.delivery-auto-note strong{color:var(--silver)}
 .summary-line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
 .summary-line.total{font-size:19px;font-weight:bold;border:0;padding-top:18px}
 .summary-items{margin-bottom:15px}
@@ -141,6 +141,7 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .receipt-wrap{max-width:780px;margin:0 auto;padding:35px 5% 70px}
 .receipt-card{background:#f7f7f7;color:#171717;padding:35px;border-radius:4px;box-shadow:0 10px 35px #0005}
 .receipt-brand{text-align:center;border-bottom:2px solid #222;padding-bottom:22px;margin-bottom:22px}
+.receipt-monogram{font-size:13px;letter-spacing:5px;border:1px solid #222;display:inline-block;padding:8px 14px;margin-bottom:12px;font-weight:bold}
 .receipt-brand h1{font-size:24px;letter-spacing:2px}
 .receipt-brand p{font-size:11px;letter-spacing:3px;margin-top:7px;color:#555}
 .receipt-title{text-align:center;font-size:20px;margin-bottom:20px}
@@ -159,7 +160,7 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .receipt-image{width:42px;height:48px;object-fit:contain;vertical-align:middle;margin-right:8px;background:#eee}
 @media(max-width:900px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-layout{grid-template-columns:1fr;gap:25px}.main-image-box{height:520px}.detail-info{padding:10px 0}.checkout-grid{grid-template-columns:1fr}}
 @media(max-width:580px){
-header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:center;padding-top:8px;font-size:11px}.logo{font-size:16px}
+header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:center;padding-top:8px;font-size:11px}.logo{font-size:16px}.logo-mark{width:37px;height:37px;font-size:11px}
 .hero{min-height:470px;padding:65px 6%}.section{padding:55px 5%}.categories{grid-template-columns:1fr}.category{min-height:220px}
 .products{gap:10px}.product-image-button{height:205px;padding:8px}.product-info{padding:12px}.product-info h3{font-size:14px}
 .section-head h2{font-size:26px}#productDetailsPage{padding:15px 4% 50px}.detail-topbar{margin-bottom:18px}.detail-breadcrumb{display:none}
@@ -178,7 +179,10 @@ header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:cen
 </head>
 <body>
 <header>
-<a href="#" class="logo" onclick="showHome();return false;">TAMKHUSH BY RATUL<span>PREMIUM FASHION LABEL</span></a>
+<a href="#" class="logo" onclick="showHome();return false;">
+<div class="logo-mark">TKR</div>
+<div class="logo-text">TAMKHUSH BY RATUL<span>PREMIUM FASHION LABEL</span></div>
+</a>
 <nav>
 <a href="#home" onclick="showHome()">HOME</a><a href="#collections" onclick="showHome()">COLLECTIONS</a><a href="#products" onclick="showHome()">SHOP</a><a href="#about" onclick="showHome()">ABOUT</a>
 </nav>
@@ -239,32 +243,31 @@ header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:cen
 <div class="field"><label for="customerArea">থানা / উপজেলা *</label><select id="customerArea" required disabled><option value="">আগে জেলা নির্বাচন করুন</option></select></div>
 <div class="field full"><label for="customerAddress">সম্পূর্ণ ঠিকানা *</label><textarea id="customerAddress" required minlength="8" placeholder="বাসা/বাড়ি নম্বর, রোড, এলাকার নামসহ সম্পূর্ণ ঠিকানা লিখুন"></textarea></div>
 <div class="field full"><label for="customerPostal">পোস্ট কোড (ঐচ্ছিক)</label><input id="customerPostal" type="text" placeholder="পোস্ট কোড"></div>
-<div class="field full"><label>ডেলিভারি এলাকা নির্বাচন করুন *</label>
-<label class="delivery-option"><input type="radio" name="deliveryZone" value="inside_dhaka"><span>ঢাকার ভিতরে</span><strong>৳৭০</strong></label>
-<label class="delivery-option"><input type="radio" name="deliveryZone" value="outside_dhaka"><span>ঢাকার বাইরে</span><strong>৳১২০</strong></label>
+<div class="field full">
+<div class="delivery-auto-note"><strong>অটোমেটিক ডেলিভারি চার্জ</strong><br>ঢাকা জেলা: ৳৭০<br>অন্যান্য জেলা: ৳১২০<br><span id="deliveryHint">জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।</span></div>
 </div>
 <div class="field full"><label for="customerNote">অতিরিক্ত নির্দেশনা (ঐচ্ছিক)</label><textarea id="customerNote" placeholder="অর্ডার সম্পর্কে কোনো কথা থাকলে লিখুন"></textarea></div>
 </div></div>
 <div class="panel"><h2>আপনার অর্ডার</h2><div id="checkoutItems" class="summary-items"></div>
 <div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳<span id="checkoutSubtotal">0</span></strong></div>
-<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">নির্বাচন করুন</span></strong></div>
+<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">জেলা নির্বাচন করুন</span></strong></div>
 <div class="summary-line total"><span>সর্বমোট</span><strong>৳<span id="checkoutTotal">0</span></strong></div>
 <div id="checkoutMessage" class="checkout-message"></div>
 <button type="submit" id="checkoutSubmit" class="btn checkout-submit">অর্ডার কনফার্ম করুন</button>
-<p class="payment-note">পেমেন্ট পদ্ধতি: ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)। ডেলিভারি চার্জ নির্বাচিত এলাকার ভিত্তিতে যোগ হবে।</p>
+<p class="payment-note">পেমেন্ট পদ্ধতি: ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)। ডেলিভারি চার্জ জেলা অনুযায়ী স্বয়ংক্রিয়ভাবে যোগ হবে।</p>
 </div></div></form>
 </section>
 
 <section id="receiptPage" style="display:none"><div class="receipt-wrap">
 <div class="receipt-card" id="receiptContent">
-<div class="receipt-brand"><h1>TAMKHUSH BY RATUL</h1><p>PREMIUM FASHION LABEL</p></div>
+<div class="receipt-brand"><div class="receipt-monogram">TKR</div><h1>TAMKHUSH BY RATUL</h1><p>PREMIUM FASHION LABEL</p></div>
 <h2 class="receipt-title">অর্ডার রসিদ</h2><div id="receiptDetails"></div>
-<div class="receipt-footer"><strong>ধন্যবাদ আমাদের সাথে কেনাকাটা করার জন্য!</strong><br>TAMKHUSH BY RATUL — Discover Your Style.</div>
+<div class="receipt-footer"><strong>ধন্যবাদ আমাদের সাথে কেনাকাটা করার জন্য!</strong><br>TKR — TAMKHUSH BY RATUL — Discover Your Style.</div>
 </div>
 <div class="receipt-actions" id="receiptActions"><button class="btn" onclick="downloadReceipt()">PDF ডাউনলোড / প্রিন্ট</button><button class="btn-outline" onclick="showHome()">হোম পেজে ফিরে যান</button></div>
 </div></section>
 
-<footer><strong>TAMKHUSH BY RATUL</strong><br>PREMIUM FASHION LABEL<br>© <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.</footer>
+<footer><div class="footer-mark">TKR</div><strong>TAMKHUSH BY RATUL</strong><br>PREMIUM FASHION LABEL<br>© <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.</footer>
 
 <div class="drawer" id="cartDrawer" onclick="if(event.target===this)closeCart()"><div class="drawer-content">
 <div class="drawer-head"><h2>YOUR BAG</h2><button class="btn-outline" onclick="closeCart()">CLOSE</button></div>
@@ -281,6 +284,8 @@ let detailImages=[];
 let currentReceipt=null;
 let districtsLoaded=false;
 let districtsLoading=false;
+let selectedDeliveryCharge=null;
+let selectedDeliveryZone=null;
 
 let cart=[];
 try{
@@ -335,9 +340,7 @@ if(context){
 if(typeof context.json==='function'){
 const body=await context.clone().json();
 message=body?.error||body?.message||body?.details||message;
-}else if(typeof context==='string'){
-message=context;
-}
+}else if(typeof context==='string'){message=context;}
 }
 }catch(e){}
 return new Error(String(message));
@@ -355,7 +358,7 @@ thanaSelect.innerHTML='<option value="">আগে জেলা নির্ব�
 try{
 const list=await invokeLocations({});
 districtSelect.innerHTML='<option value="">জেলা নির্বাচন করুন</option>'+
-list.map(item=>`<option value="${Number(item.id)}">${escapeHTML(item.bn_name||item.name)}</option>`).join('');
+list.map(item=>`<option value="${Number(item.id)}" data-name="${escapeHTML(item.name||item.bn_name||'')}">${escapeHTML(item.bn_name||item.name)}</option>`).join('');
 districtsLoaded=true;
 districtSelect.disabled=false;
 }catch(error){
@@ -388,8 +391,34 @@ showCheckoutError('থানা/উপজেলার তালিকা লো�
 }
 }
 
+/* AUTOMATIC DELIVERY CHARGE */
+function calculateDeliveryFromDistrict(){
+const select=document.getElementById('customerDistrict');
+const option=select.options[select.selectedIndex];
+const districtName=String(option?.dataset?.name||option?.textContent||'').trim().toLowerCase();
+
+if(!select.value||!districtName){
+selectedDeliveryCharge=null;
+selectedDeliveryZone=null;
+document.getElementById('deliveryHint').textContent='জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।';
+updateCheckoutSummary();
+return;
+}
+
+const isDhaka=districtName==='dhaka'||districtName==='ঢাকা'||districtName.includes('dhaka')||districtName.includes('ঢাকা');
+selectedDeliveryCharge=isDhaka?70:120;
+selectedDeliveryZone=isDhaka?'inside_dhaka':'outside_dhaka';
+
+document.getElementById('deliveryHint').textContent=isDhaka
+?'ঢাকা জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳৭০।'
+:'ঢাকার বাইরের জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳১২০।';
+
+updateCheckoutSummary();
+}
+
 document.getElementById('customerDistrict').addEventListener('change',event=>{
 document.getElementById('customerArea').value='';
+calculateDeliveryFromDistrict();
 loadThanas(event.target.value);
 });
 
@@ -535,22 +564,18 @@ window.scrollTo({top:0,behavior:'smooth'});
 }
 function backToCart(){document.getElementById('checkoutPage').style.display='none';openCart();}
 function getCartSubtotal(){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.quantity)||0),0);}
-function getSelectedDeliveryCharge(){
-const selected=document.querySelector('input[name="deliveryZone"]:checked');
-if(!selected)return null;
-return selected.value==='inside_dhaka'?70:120;
-}
+
 function updateCheckoutSummary(){
 document.getElementById('checkoutItems').innerHTML=cart.map(item=>`
 <div class="summary-product"><span>${escapeHTML(item.name)} × ${Number(item.quantity)}
 <small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small></span>
 <strong>৳${money(Number(item.price)*Number(item.quantity))}</strong></div>`).join('');
-const subtotal=getCartSubtotal(),delivery=getSelectedDeliveryCharge();
+const subtotal=getCartSubtotal();
 document.getElementById('checkoutSubtotal').textContent=money(subtotal);
-document.getElementById('checkoutDelivery').textContent=delivery===null?'নির্বাচন করুন':money(delivery);
-document.getElementById('checkoutTotal').textContent=money(subtotal+(delivery||0));
+document.getElementById('checkoutDelivery').textContent=selectedDeliveryCharge===null?'জেলা নির্বাচন করুন':money(selectedDeliveryCharge);
+document.getElementById('checkoutTotal').textContent=money(subtotal+(selectedDeliveryCharge||0));
 }
-document.querySelectorAll('input[name="deliveryZone"]').forEach(input=>input.addEventListener('change',updateCheckoutSummary));
+
 function showCheckoutError(message){
 const box=document.getElementById('checkoutMessage');
 box.textContent=message;box.style.display='block';
@@ -572,14 +597,20 @@ return 'অর্ডার জমা দেওয়া যায়নি: '+text;
 async function handleCheckoutSubmit(event){
 event.preventDefault();
 if(!cart.length){showCheckoutError('আপনার ব্যাগে কোনো পণ্য নেই।');return;}
-const deliveryZone=document.querySelector('input[name="deliveryZone"]:checked')?.value;
-if(!deliveryZone){showCheckoutError('অনুগ্রহ করে ডেলিভারি এলাকা নির্বাচন করুন।');return;}
 
 const districtSelect=document.getElementById('customerDistrict');
 const thanaSelect=document.getElementById('customerArea');
+
 if(!districtSelect.value||!thanaSelect.value){
 showCheckoutError('অনুগ্রহ করে জেলা এবং থানা/উপজেলা নির্বাচন করুন।');return;
 }
+
+calculateDeliveryFromDistrict();
+
+if(selectedDeliveryCharge===null||!selectedDeliveryZone){
+showCheckoutError('সঠিক জেলা নির্বাচন করুন।');return;
+}
+
 const districtName=districtSelect.options[districtSelect.selectedIndex]?.textContent.trim();
 const thanaName=thanaSelect.options[thanaSelect.selectedIndex]?.textContent.trim();
 if(!districtName||!thanaName){showCheckoutError('জেলা অথবা থানার সঠিক নাম পাওয়া যায়নি। আবার নির্বাচন করুন।');return;}
@@ -597,7 +628,7 @@ area:thanaName,
 districtId:Number(districtSelect.value),
 thanaId:Number(thanaSelect.value),
 postalCode:document.getElementById('customerPostal').value.trim()||null,
-deliveryZone,
+deliveryZone:selectedDeliveryZone,
 items:cart.map(item=>({productId:String(item.id),quantity:Number(item.quantity),size:item.size||'',color:item.color||''})),
 customerNote:document.getElementById('customerNote').value.trim()||null
 };
@@ -621,7 +652,7 @@ city:payload.city,
 area:payload.area,
 postal_code:payload.postalCode,
 customer_note:payload.customerNote,
-created_at:new Date().toISOString(),
+created_at:serverOrder.created_at||new Date().toISOString(),
 order_status:serverOrder.status||serverOrder.order_status||'new',
 discount:Number(serverOrder.discount||0),
 order_items:cart.map(item=>({
