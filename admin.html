@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,57 +8,145 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="store.js"></script>
+
 <style>
-:root{--bg:#101113;--panel:#191b1f;--panel2:#202329;--silver:#bfc5cc;--white:#f5f6f7;--muted:#9299a2;--border:#30343b;--danger:#e45c66;--success:#55bd8a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+:root{
+ --bg:#101113;
+ --panel:#191b1f;
+ --panel2:#202329;
+ --silver:#bfc5cc;
+ --white:#f5f6f7;
+ --muted:#9299a2;
+ --border:#30343b;
+ --danger:#e45c66;
+ --success:#55bd8a;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+a{color:var(--silver);text-decoration:none}
+a:hover{text-decoration:underline}
 .login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .login-card{width:100%;max-width:410px;background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:0 15px 50px #0006}
-.brand{text-align:center;margin-bottom:25px}.brand-mark{display:inline-flex;align-items:center;justify-content:center;width:62px;height:62px;border:1px solid var(--silver);border-radius:14px;color:var(--silver);font-size:22px;font-weight:bold;margin-bottom:12px}
-.brand h1{font-size:21px;letter-spacing:2px;margin:0}.brand p{font-size:11px;color:var(--silver);letter-spacing:3px}
-.field{margin-bottom:15px}.field label{display:block;font-size:12px;color:var(--silver);margin-bottom:7px;font-weight:bold}
+.brand{text-align:center;margin-bottom:25px}
+.brand-mark{display:inline-flex;align-items:center;justify-content:center;width:62px;height:62px;border:1px solid var(--silver);border-radius:14px;color:var(--silver);font-size:22px;font-weight:bold;margin-bottom:12px}
+.brand h1{font-size:21px;letter-spacing:2px;margin:0}
+.brand p{font-size:11px;color:var(--silver);letter-spacing:3px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:12px;color:var(--silver);margin-bottom:7px;font-weight:bold}
 input,select,textarea{width:100%;background:#111317;border:1px solid var(--border);border-radius:9px;padding:12px;color:var(--white);outline:none;min-width:0}
-input:focus,select:focus,textarea:focus{border-color:var(--silver)}textarea{min-height:85px;resize:vertical}
-.btn{border:0;border-radius:9px;padding:11px 16px;font-weight:bold;background:var(--silver);color:#111}.btn:disabled{opacity:.5;cursor:not-allowed}.btn-block{width:100%}
-.btn-dark{background:#292d34;color:var(--white);border:1px solid var(--border)}.btn-danger{background:#57252a;color:#fff}.btn-small{padding:7px 10px;font-size:12px}
-.message{padding:11px;border-radius:8px;font-size:13px;margin:12px 0;display:none;line-height:1.5}.message.error{display:block;background:#4b2529;color:#ffc5c9}.message.success{display:block;background:#1e4535;color:#b9f3d5}
-.app{display:flex;min-height:100vh}.sidebar{width:235px;background:#15171a;border-right:1px solid var(--border);padding:22px 15px;flex-shrink:0}
-.side-brand{padding:8px 10px 25px}.side-brand strong{display:block;letter-spacing:1.5px;font-size:15px}.side-brand span{color:var(--silver);font-size:10px;letter-spacing:2px}
+input:focus,select:focus,textarea:focus{border-color:var(--silver)}
+textarea{min-height:85px;resize:vertical}
+.btn{border:0;border-radius:9px;padding:11px 16px;font-weight:bold;background:var(--silver);color:#111}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-block{width:100%}
+.btn-dark{background:#292d34;color:var(--white);border:1px solid var(--border)}
+.btn-danger{background:#57252a;color:#fff}
+.btn-small{padding:7px 10px;font-size:12px}
+.message{padding:11px;border-radius:8px;font-size:13px;margin:12px 0;display:none;line-height:1.5;overflow-wrap:anywhere}
+.message.error{display:block;background:#4b2529;color:#ffc5c9}
+.message.success{display:block;background:#1e4535;color:#b9f3d5}
+.app{display:flex;min-height:100vh}
+.sidebar{width:245px;background:#15171a;border-right:1px solid var(--border);padding:22px 15px;flex-shrink:0}
+.side-brand{padding:8px 10px 25px}
+.side-brand strong{display:block;letter-spacing:1.5px;font-size:15px}
+.side-brand span{color:var(--silver);font-size:10px;letter-spacing:2px}
 .nav-btn{width:100%;display:block;text-align:left;padding:12px 13px;margin:5px 0;background:transparent;color:#c5c9ce;border:1px solid transparent;border-radius:9px}
-.nav-btn.active,.nav-btn:hover{background:#25292f;border-color:#3c424a;color:#fff}.sidebar-bottom{margin-top:35px}
-.main{flex:1;min-width:0;padding:25px}.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px;flex-wrap:wrap}
-.topbar h2{margin:0;font-size:23px}.user-info{color:var(--muted);font-size:12px;text-align:right}
-.content-section{display:none}.content-section.active{display:block}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}.stat{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:18px}
-.stat span{color:var(--muted);font-size:12px}.stat strong{display:block;font-size:25px;margin-top:9px}
-.panel{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:18px}.panel h3{margin:0 0 18px;font-size:17px}
-.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px}.full{grid-column:1/-1}
+.nav-btn.active,.nav-btn:hover{background:#25292f;border-color:#3c424a;color:#fff}
+.sidebar-bottom{margin-top:25px}
+.support-box{border-top:1px solid var(--border);padding:16px 10px;margin-top:15px}
+.support-box strong{font-size:12px;color:var(--silver)}
+.support-box a{display:block;font-size:11px;margin-top:10px;overflow-wrap:anywhere}
+.main{flex:1;min-width:0;padding:25px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px;flex-wrap:wrap}
+.topbar h2{margin:0;font-size:23px}
+.user-info{color:var(--muted);font-size:12px;text-align:right}
+.content-section{display:none}
+.content-section.active{display:block}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:22px}
+.stat{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:18px}
+.stat span{color:var(--muted);font-size:12px}
+.stat strong{display:block;font-size:25px;margin-top:9px;overflow-wrap:anywhere}
+.panel{background:var(--panel);border:1px solid var(--border);border-radius:13px;padding:20px;margin-bottom:18px;min-width:0}
+.panel h3{margin:0 0 18px;font-size:17px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 15px}
+.full{grid-column:1/-1}
 .check-row{display:flex;align-items:center;gap:9px;background:#111317;border:1px solid var(--border);padding:12px;border-radius:9px;margin-bottom:12px;min-height:45px}
-.check-row input{width:17px;height:17px;accent-color:#bfc5cc}.check-row label{font-size:13px;color:#e2e5e8}
-.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.image-help{font-size:11px;color:var(--muted);margin-top:7px}
+.check-row input{width:17px;height:17px;accent-color:#bfc5cc}
+.check-row label{font-size:13px;color:#e2e5e8}
+.form-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.image-help{font-size:11px;color:var(--muted);margin-top:7px}
 .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:12px}
 .preview-item{position:relative;height:100px;background:#101113;border:1px solid var(--border);border-radius:9px;overflow:hidden}
-.preview-item img{width:100%;height:100%;object-fit:contain}.preview-item button{position:absolute;top:4px;right:4px;border:0;background:#9d3038;color:white;border-radius:50%;width:23px;height:23px;font-weight:bold}
-.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:760px}
+.preview-item img{width:100%;height:100%;object-fit:contain}
+.preview-item button{position:absolute;top:4px;right:4px;border:0;background:#9d3038;color:white;border-radius:50%;width:23px;height:23px;font-weight:bold}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
 th,td{padding:12px 10px;border-bottom:1px solid var(--border);text-align:left;font-size:12px;vertical-align:middle}
-th{color:var(--silver);font-size:11px;letter-spacing:.5px}.product-thumb{width:48px;height:48px;object-fit:contain;background:#101113;border-radius:7px}
+th{color:var(--silver);font-size:11px;letter-spacing:.5px}
+.product-thumb{width:48px;height:48px;object-fit:contain;background:#101113;border-radius:7px}
 .badge{display:inline-block;padding:4px 7px;border-radius:5px;font-size:10px;background:#303640;color:#e8ebee;margin:2px}
-.badge.green{background:#214a38;color:#b9f3d5}.badge.red{background:#55272c;color:#ffc3c8}.badge.silver{background:#3b4149;color:#f0f2f4}
+.badge.green{background:#214a38;color:#b9f3d5}
+.badge.red{background:#55272c;color:#ffc3c8}
+.badge.silver{background:#3b4149;color:#f0f2f4}
 .empty{padding:28px;text-align:center;color:var(--muted);font-size:13px}
-.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}.toolbar input{max-width:300px}
-.section-note{color:var(--muted);font-size:12px;line-height:1.6}#loadingText,#ordersLoading{color:var(--muted);font-size:13px;padding:15px 0}
-.order-detail{background:#111317;border:1px solid var(--border);border-radius:9px;padding:13px;margin:8px 0;line-height:1.7;white-space:normal}
-.order-detail strong{color:var(--silver)}.order-actions{display:flex;gap:6px;flex-wrap:wrap;min-width:190px}
-.order-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}.order-filter button{width:auto}
-.status-select{min-width:130px;padding:8px}.muted{color:var(--muted)}
-@media(max-width:800px){.app{display:block}.sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--border)}.side-brand{padding:5px 8px 12px}.sidebar nav{display:flex;gap:6px;overflow-x:auto}.nav-btn{white-space:nowrap;width:auto;margin:0;padding:10px}.sidebar-bottom{margin-top:8px}.main{padding:16px}}
-@media(max-width:560px){.stats{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.main{padding:12px}.panel{padding:14px}.topbar h2{font-size:20px}}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}
+.toolbar input{max-width:300px}
+.section-note{color:var(--muted);font-size:12px;line-height:1.6}
+#loadingText,#ordersLoading{color:var(--muted);font-size:13px;padding:15px 0}
+.order-actions{display:flex;gap:6px;flex-wrap:wrap;min-width:190px}
+.order-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.order-filter button{width:auto}
+.status-select{min-width:130px;padding:8px}
+.muted{color:var(--muted)}
+.order-detail{background:#111317;border:1px solid var(--border);border-radius:9px;padding:13px;margin:8px 0;line-height:1.7;white-space:normal;overflow-wrap:anywhere}
+.order-detail strong{color:var(--silver)}
+.item-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:12px 0}
+.item-card{background:#191b1f;border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;gap:12px;min-width:0}
+.item-card img{width:76px;height:90px;object-fit:contain;background:#101113;border-radius:7px;flex-shrink:0}
+.item-card-info{font-size:12px;line-height:1.7;min-width:0;overflow-wrap:anywhere}
+.item-card-info strong{color:var(--silver)}
+.action-links{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.action-link{display:inline-block;background:#292d34;border:1px solid var(--border);padding:7px 10px;border-radius:7px;font-size:11px}
+.report-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.report-box{background:#111317;border:1px solid var(--border);padding:15px;border-radius:10px}
+.report-box span{font-size:11px;color:var(--muted)}
+.report-box strong{display:block;font-size:21px;margin-top:8px;overflow-wrap:anywhere}
+.log-item{border-bottom:1px solid var(--border);padding:12px 0;font-size:12px;line-height:1.6}
+.log-item:last-child{border-bottom:0}
+@media(max-width:900px){
+ .app{display:block}
+ .sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
+ .side-brand{padding:5px 8px 12px}
+ .sidebar nav{display:flex;gap:6px;overflow-x:auto}
+ .nav-btn{white-space:nowrap;width:auto;margin:0;padding:10px}
+ .sidebar-bottom{margin-top:8px}
+ .support-box{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+ .main{padding:16px}
+}
+@media(max-width:560px){
+ .stats{grid-template-columns:1fr 1fr}
+ .form-grid{grid-template-columns:1fr}
+ .full{grid-column:auto}
+ .main{padding:12px}
+ .panel{padding:14px}
+ .topbar h2{font-size:20px}
+ .report-grid{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
+
 <body>
+
 <div id="loginScreen" class="login-wrap">
  <div class="login-card">
-  <div class="brand"><div class="brand-mark">TR</div><h1>TAMKHUSH BY RATUL</h1><p>ADMIN PANEL</p></div>
+  <div class="brand">
+   <div class="brand-mark">TKR</div>
+   <h1>TAMKHUSH BY RATUL</h1>
+   <p>ADMIN PANEL</p>
+  </div>
   <form id="loginForm">
    <div class="field"><label>Email Address</label><input id="loginEmail" type="email" required placeholder="Enter staff email"></div>
    <div class="field"><label>Password</label><input id="loginPassword" type="password" required placeholder="Enter password"></div>
@@ -69,16 +158,36 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}.product-thumb{width:4
 
 <div id="adminApp" class="app hidden">
  <aside class="sidebar">
-  <div class="side-brand"><strong>TAMKHUSH BY RATUL</strong><span>PREMIUM FASHION LABEL</span></div>
+  <div class="side-brand">
+   <strong>TAMKHUSH BY RATUL</strong>
+   <span>PREMIUM FASHION LABEL</span>
+  </div>
   <nav>
    <button class="nav-btn active" data-section="overview">Dashboard</button>
    <button class="nav-btn" data-section="products">Products</button>
-   <button class="nav-btn" data-section="orders">Order Management</button>
+   <button class="nav-btn" data-section="orders">Orders</button>
+   <button class="nav-btn" data-section="customers">Customers</button>
+   <button class="nav-btn" data-section="inventory">Inventory</button>
+   <button class="nav-btn" data-section="reports">Reports</button>
+   <button class="nav-btn" data-section="staff">Staff</button>
+   <button class="nav-btn" data-section="activity">Activity Logs</button>
+   <button class="nav-btn" data-section="settings">Settings</button>
   </nav>
-  <div class="sidebar-bottom"><button id="logoutButton" class="nav-btn">Sign Out</button></div>
+  <div class="support-box">
+   <strong>CONTACT SUPPORT</strong>
+   <a href="tel:01623851172">☎ 01623851172 — Call</a>
+   <a href="tel:01745108935">☎ 01745-108935 — Call</a>
+  </div>
+  <div class="sidebar-bottom">
+   <button id="logoutButton" class="nav-btn">Sign Out</button>
+  </div>
  </aside>
+
  <main class="main">
-  <div class="topbar"><h2 id="pageTitle">Dashboard</h2><div class="user-info"><div id="staffName">Staff</div><strong id="staffRole">STAFF</strong></div></div>
+  <div class="topbar">
+   <h2 id="pageTitle">Dashboard</h2>
+   <div class="user-info"><div id="staffName">Staff</div><strong id="staffRole">STAFF</strong></div>
+  </div>
 
   <section id="overviewSection" class="content-section active">
    <div class="stats">
@@ -89,29 +198,44 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}.product-thumb{width:4
     <div class="stat"><span>New Orders</span><strong id="newOrders">0</strong></div>
     <div class="stat"><span>Confirmed / Submitted</span><strong id="confirmedOrders">0</strong></div>
    </div>
-   <div class="panel"><h3>Welcome to your Admin Dashboard</h3><p class="section-note">এখান থেকে Product, Stock এবং Customer Order পরিচালনা করতে পারবেন। Customer-এর অর্ডার যাচাই না করে Supplier-এর কাছে পাঠানো হবে না।</p><button class="btn" id="goProductsButton">MANAGE PRODUCTS</button> <button class="btn btn-dark" id="goOrdersButton">MANAGE ORDERS</button></div>
+   <div class="panel">
+    <h3>Welcome to your Admin Dashboard</h3>
+    <p class="section-note">এখান থেকে Product, Stock, Customer Order, Reports এবং Staff পরিচালনা করতে পারবেন। Customer-এর অর্ডার যাচাই না করে Supplier-এর কাছে পাঠানো হবে না।</p>
+    <button class="btn" id="goProductsButton">MANAGE PRODUCTS</button>
+    <button class="btn btn-dark" id="goOrdersButton">MANAGE ORDERS</button>
+   </div>
+   <div class="panel">
+    <h3>Recent Orders</h3>
+    <div class="table-wrap"><table><thead><tr><th>ORDER</th><th>CUSTOMER</th><th>TOTAL</th><th>STATUS</th></tr></thead><tbody id="recentOrdersBody"></tbody></table></div>
+   </div>
   </section>
 
   <section id="productsSection" class="content-section">
    <div class="panel">
     <h3 id="formHeading">Add New Product</h3>
-    <form id="productForm"><input type="hidden" id="productId">
+    <form id="productForm">
+     <input type="hidden" id="productId">
      <div class="form-grid">
-      <div class="field"><label>Product Name *</label><input id="productName" required placeholder="Product name"></div>
-      <div class="field"><label>SKU Code</label><input id="productSku" placeholder="Example: TKR-001"></div>
+      <div class="field"><label>Product Name *</label><input id="productName" required></div>
+      <div class="field"><label>SKU Code</label><input id="productSku" placeholder="TKR-001"></div>
       <div class="field"><label>Category *</label><select id="productCategory" required><option value="">Select Category</option><option value="men">Men</option><option value="women">Women</option><option value="unisex">Unisex</option><option value="accessories">Accessories</option></select></div>
-      <div class="field"><label>Selling Price (৳) *</label><input id="sellingPrice" type="number" min="0" step="0.01" required placeholder="0"></div>
-      <div class="field"><label>Discount Price (৳)</label><input id="discountPrice" type="number" min="0" step="0.01" placeholder="Leave empty if no discount"></div>
-      <div class="field"><label>Supplier Cost (৳)</label><input id="supplierCost" type="number" min="0" step="0.01" placeholder="0"></div>
+      <div class="field"><label>Selling Price (৳) *</label><input id="sellingPrice" type="number" min="0" step=".01" required></div>
+      <div class="field"><label>Discount Price (৳)</label><input id="discountPrice" type="number" min="0" step=".01"></div>
+      <div class="field"><label>Supplier Cost (৳)</label><input id="supplierCost" type="number" min="0" step=".01" value="0"></div>
       <div class="field"><label>Stock Quantity *</label><input id="productStock" type="number" min="0" step="1" required value="0"></div>
       <div class="field"><label>Low Stock Minimum Quantity</label><input id="lowStockThreshold" type="number" min="0" step="1" value="5"></div>
-      <div class="field full"><label>Sizes</label><input id="productSizes" placeholder="Example: S, M, L, XL, XXL"></div>
-      <div class="field full"><label>Colors</label><input id="productColors" placeholder="Example: Black, White, Blue"></div>
-      <div class="field full"><label>Supplier Product URL</label><input id="supplierProductUrl" type="url" placeholder="https://dropbazarbd.com/..."></div>
-      <div class="field"><label>DropBazar Product ID</label><input id="dropbazarProductId" placeholder="Example: 4310"></div>
+      <div class="field full"><label>Sizes</label><input id="productSizes" placeholder="S, M, L, XL, XXL"></div>
+      <div class="field full"><label>Colors</label><input id="productColors" placeholder="Black, White, Blue"></div>
+      <div class="field full"><label>Supplier Product URL</label><input id="supplierProductUrl" type="url" placeholder="https://..."></div>
+      <div class="field"><label>DropBazar Product ID</label><input id="dropbazarProductId"></div>
       <div class="field"><label>Product Image URL (Optional)</label><input id="imageUrl" type="url" placeholder="https://..."></div>
-      <div class="field full"><label>Upload Product Images from Gallery</label><input id="productImages" type="file" accept="image/jpeg,image/png,image/webp" multiple><div class="image-help">JPG, PNG অথবা WEBP। প্রতিটি ছবি সর্বোচ্চ 5MB। একাধিক ছবি একসাথে Select করতে পারবেন।</div><div id="imagePreview" class="preview-grid"></div></div>
-      <div class="field full"><label>Product Description</label><textarea id="productDescription" placeholder="Write product details..."></textarea></div>
+      <div class="field full">
+       <label>Upload Product Images</label>
+       <input id="productImages" type="file" accept="image/jpeg,image/png,image/webp" multiple>
+       <div class="image-help">JPG, PNG অথবা WEBP। প্রতিটি ছবি সর্বোচ্চ 5MB। একাধিক ছবি Select করতে পারবেন।</div>
+       <div id="imagePreview" class="preview-grid"></div>
+      </div>
+      <div class="field full"><label>Product Description</label><textarea id="productDescription"></textarea></div>
       <div class="field">
        <div class="check-row"><input id="isFeatured" type="checkbox"><label for="isFeatured">Featured Product</label></div>
        <div class="check-row"><input id="isNewArrival" type="checkbox"><label for="isNewArrival">New Arrival</label></div>
@@ -123,21 +247,27 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}.product-thumb{width:4
       </div>
      </div>
      <div id="formMessage" class="message"></div>
-     <div class="form-actions"><button id="saveProductButton" type="submit" class="btn">SAVE PRODUCT</button><button id="resetFormButton" type="button" class="btn btn-dark">CLEAR FORM</button></div>
+     <div class="form-actions">
+      <button id="saveProductButton" type="submit" class="btn">SAVE PRODUCT</button>
+      <button id="resetFormButton" type="button" class="btn btn-dark">CLEAR FORM</button>
+     </div>
     </form>
    </div>
    <div class="panel">
     <div class="toolbar"><h3 style="margin:0">All Products</h3><input id="productSearch" type="search" placeholder="Search product..."></div>
     <div id="loadingText">Loading products...</div>
-    <div class="table-wrap"><table id="productsTable"><thead><tr><th>IMAGE</th><th>PRODUCT</th><th>SKU</th><th>PRICE</th><th>STOCK</th><th>LABELS</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody id="productsTableBody"></tbody></table></div>
+    <div class="table-wrap"><table><thead><tr><th>IMAGE</th><th>PRODUCT</th><th>SKU</th><th>PRICE</th><th>STOCK</th><th>LABELS</th><th>STATUS</th><th>ACTIONS</th></tr></thead><tbody id="productsTableBody"></tbody></table></div>
    </div>
   </section>
 
   <section id="ordersSection" class="content-section">
    <div class="panel">
-    <div class="toolbar"><div><h3 style="margin:0 0 5px">Order Management</h3><div class="section-note">প্রথমে অর্ডারের তথ্য যাচাই করুন। Confirm Order চাপলে তবেই DropBazar-এ পাঠানোর Backend Function চালু হবে।</div></div><button id="refreshOrdersButton" class="btn btn-dark">REFRESH ORDERS</button></div>
+    <div class="toolbar">
+     <div><h3 style="margin:0 0 5px">Order Management</h3><div class="section-note">অর্ডার যাচাই করে Confirm & Send চাপুন।</div></div>
+     <button id="refreshOrdersButton" class="btn btn-dark">REFRESH ORDERS</button>
+    </div>
     <div class="order-filter">
-     <button class="btn btn-small order-filter-btn" data-filter="all">All Orders</button>
+     <button class="btn btn-small order-filter-btn" data-filter="all">All</button>
      <button class="btn btn-small btn-dark order-filter-btn" data-filter="new">New</button>
      <button class="btn btn-small btn-dark order-filter-btn" data-filter="confirmed">Confirmed</button>
      <button class="btn btn-small btn-dark order-filter-btn" data-filter="processing">Processing</button>
@@ -145,9 +275,83 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}.product-thumb{width:4
      <button class="btn btn-small btn-dark order-filter-btn" data-filter="delivered">Delivered</button>
      <button class="btn btn-small btn-dark order-filter-btn" data-filter="cancelled">Cancelled</button>
     </div>
-    <input id="orderSearch" type="search" placeholder="Search order number, customer name or phone..." style="max-width:420px;margin-bottom:12px">
-    <div id="ordersMessage" class="message"></div><div id="ordersLoading">Loading orders...</div>
+    <input id="orderSearch" type="search" placeholder="Search order, customer or phone..." style="max-width:420px;margin-bottom:12px">
+    <div id="ordersMessage" class="message"></div>
+    <div id="ordersLoading">Loading orders...</div>
     <div class="table-wrap"><table style="min-width:1050px"><thead><tr><th>ORDER</th><th>CUSTOMER</th><th>PRODUCTS</th><th>TOTAL</th><th>PAYMENT</th><th>STATUS</th><th>SUPPLIER</th><th>ACTIONS</th></tr></thead><tbody id="ordersTableBody"></tbody></table></div>
+   </div>
+  </section>
+
+  <section id="customersSection" class="content-section">
+   <div class="panel">
+    <div class="toolbar"><h3 style="margin:0">Customer Directory</h3><input id="customerSearch" type="search" placeholder="Search customer or phone..."></div>
+    <div class="table-wrap"><table><thead><tr><th>CUSTOMER</th><th>PHONE</th><th>ORDERS</th><th>TOTAL PURCHASE</th><th>CONTACT</th><th>HISTORY</th></tr></thead><tbody id="customersTableBody"></tbody></table></div>
+   </div>
+  </section>
+
+  <section id="inventorySection" class="content-section">
+   <div class="panel">
+    <h3>Inventory & Low Stock Alerts</h3>
+    <p class="section-note">যেসব Product-এর Stock নির্ধারিত Minimum Quantity-এর সমান বা কম, সেগুলো Low Stock হিসেবে দেখানো হবে।</p>
+    <div class="toolbar"><input id="inventorySearch" type="search" placeholder="Search inventory..."><button class="btn btn-dark" id="refreshInventoryButton">REFRESH</button></div>
+    <div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>CURRENT STOCK</th><th>MINIMUM</th><th>SUPPLIER COST</th><th>STATUS</th><th>ACTION</th></tr></thead><tbody id="inventoryTableBody"></tbody></table></div>
+   </div>
+  </section>
+
+  <section id="reportsSection" class="content-section">
+   <div class="panel">
+    <h3>Revenue, Cost & Estimated Profit</h3>
+    <p class="section-note">রিপোর্টে অর্ডারের Total Amount এবং পাওয়া Supplier Cost ব্যবহার করা হবে। Supplier Cost না থাকলে Profit কম বা অসম্পূর্ণ দেখাতে পারে।</p>
+    <div class="report-grid">
+     <div class="report-box"><span>Total Revenue</span><strong id="reportRevenue">৳0</strong></div>
+     <div class="report-box"><span>Estimated Cost</span><strong id="reportCost">৳0</strong></div>
+     <div class="report-box"><span>Estimated Profit</span><strong id="reportProfit">৳0</strong></div>
+     <div class="report-box"><span>Today's Revenue</span><strong id="todayRevenue">৳0</strong></div>
+     <div class="report-box"><span>This Month Revenue</span><strong id="monthRevenue">৳0</strong></div>
+     <div class="report-box"><span>Delivered Orders</span><strong id="deliveredCount">0</strong></div>
+    </div>
+   </div>
+   <div class="panel"><h3>Best Selling Products</h3><div id="bestSellingList" class="section-note">No sales data.</div></div>
+   <div class="panel"><h3>Monthly Sales</h3><div id="monthlySalesList" class="section-note">No sales data.</div></div>
+   <div class="panel"><h3>Cancelled Orders</h3><div id="cancelledOrdersList" class="section-note">No cancelled orders.</div></div>
+  </section>
+
+  <section id="staffSection" class="content-section">
+   <div class="panel">
+    <h3>Staff Directory</h3>
+    <p class="section-note">Staff account ও role দেখতে পারবেন। এখানে role পরিবর্তন করা যাবে না; database permission নিরাপদ রাখার জন্য।</p>
+    <div class="table-wrap"><table><thead><tr><th>NAME</th><th>EMAIL</th><th>ROLE</th><th>STAFF ID</th></tr></thead><tbody id="staffTableBody"></tbody></table></div>
+   </div>
+  </section>
+
+  <section id="activitySection" class="content-section">
+   <div class="panel">
+    <h3>Activity Logs</h3>
+    <p class="section-note">Admin-এর করা কাজের Activity Log দেখাবে। activity_logs টেবিল না থাকলে এখানে ডেটা লোড নাও হতে পারে।</p>
+    <button class="btn btn-dark" id="refreshActivityButton">REFRESH LOGS</button>
+    <div id="activityMessage" class="message"></div>
+    <div id="activityList" style="margin-top:12px"></div>
+   </div>
+  </section>
+
+  <section id="settingsSection" class="content-section">
+   <div class="panel">
+    <h3>Account Settings</h3>
+    <p class="section-note">নিজের Admin Account-এর Password পরিবর্তন করুন।</p>
+    <form id="passwordForm">
+     <div class="field"><label>New Password</label><input id="newPassword" type="password" minlength="8" required placeholder="Minimum 8 characters"></div>
+     <div class="field"><label>Confirm New Password</label><input id="confirmPassword" type="password" minlength="8" required placeholder="Enter password again"></div>
+     <button class="btn" type="submit" id="passwordButton">UPDATE PASSWORD</button>
+     <div id="passwordMessage" class="message"></div>
+    </form>
+   </div>
+   <div class="panel">
+    <h3>Contact Support</h3>
+    <p class="section-note">সাপোর্টের জন্য নিচের নম্বরে সরাসরি Call করতে পারবেন।</p>
+    <div class="action-links">
+     <a class="action-link" href="tel:01623851172">☎ 01623851172</a>
+     <a class="action-link" href="tel:01745108935">☎ 01745-108935</a>
+    </div>
    </div>
   </section>
  </main>
@@ -156,20 +360,71 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}.product-thumb{width:4
 <script>
 (function(){
 "use strict";
+
 const supabaseClient=window.supabaseClient;
 const DROPBAZAR_FUNCTION_NAME="dropbazar-order";
-let currentUser=null,currentProfile=null,adminProducts=[],adminOrders=[],orderFilter="all";
-let existingImages=[],selectedImageFiles=[],previewUrls=[];
+let currentUser=null,currentProfile=null;
+let adminProducts=[],adminOrders=[],orderItemsByOrder={};
+let orderFilter="all",existingImages=[],selectedImageFiles=[],previewUrls=[];
 const $=id=>document.getElementById(id);
-function escapeHTML(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));}
-function showMessage(el,msg,type="error"){el.textContent=msg;el.className="message "+type;}
-function clearMessage(el){el.textContent="";el.className="message";}
-function money(v){return "৳"+Number(v||0).toLocaleString("en-BD",{maximumFractionDigits:2});}
-function showSection(section){
- ["overview","products","orders"].forEach(s=>$(s+"Section").classList.toggle("active",s===section));
- document.querySelectorAll(".nav-btn[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===section));
- $("pageTitle").textContent=section==="products"?"Products":section==="orders"?"Order Management":"Dashboard";
- if(section==="orders")loadOrders();
+
+function escapeHTML(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+}
+function money(v){
+ return "৳"+Number(v||0).toLocaleString("en-BD",{maximumFractionDigits:2});
+}
+function showMessage(el,msg,type="error"){
+ el.textContent=msg;el.className="message "+type;
+}
+function clearMessage(el){
+ el.textContent="";el.className="message";
+}
+function digits(v){return String(v||"").replace(/\D/g,"");}
+function phoneLink(v){return "tel:"+digits(v);}
+function waLink(v){
+ const n=digits(v);
+ return "https://wa.me/"+(n.startsWith("0")?"88"+n:n);
+}
+function getImages(p){
+ if(Array.isArray(p.images))return p.images;
+ if(typeof p.images==="string"){try{return JSON.parse(p.images)}catch(e){return []}}
+ return [];
+}
+function getOrderItems(o){
+ let items=orderItemsByOrder[o.id]||o.order_items||o.items||[];
+ if(typeof items==="string"){try{items=JSON.parse(items)}catch(e){items=[]}}
+ return Array.isArray(items)?items:[];
+}
+function orderStatus(o){return String(o.order_status||"new").toLowerCase()}
+function supplierStatus(o){return String(o.submission_status||"not_submitted").toLowerCase()}
+function isSubmitted(o){return supplierStatus(o)==="submitted"||!!o.supplier_order_id}
+function itemName(i){return i.product_name||i.name||"Product"}
+function itemQty(i){return Number(i.quantity||i.qty||1)}
+function itemPrice(i){return Number(i.unit_price??i.price??0)}
+function itemImage(i){
+ if(i.product_image)return i.product_image;
+ if(i.image)return i.image;
+ const p=adminProducts.find(x=>x.id===i.product_id);
+ return getImages(p||{})[0]||"";
+}
+function effectivePrice(p){
+ return Number(p.discount_price)>0?Number(p.discount_price):Number(p.selling_price||0);
+}
+
+const sections=["overview","products","orders","customers","inventory","reports","staff","activity","settings"];
+
+function showSection(s){
+ sections.forEach(x=>$(x+"Section").classList.toggle("active",x===s));
+ document.querySelectorAll(".nav-btn[data-section]").forEach(b=>b.classList.toggle("active",b.dataset.section===s));
+ const titles={overview:"Dashboard",products:"Products",orders:"Order Management",customers:"Customer Directory",inventory:"Inventory",reports:"Reports",staff:"Staff Directory",activity:"Activity Logs",settings:"Settings"};
+ $("pageTitle").textContent=titles[s]||"Dashboard";
+ if(s==="orders")loadOrders();
+ if(s==="customers")renderCustomers();
+ if(s==="inventory")renderInventory();
+ if(s==="reports")renderReports();
+ if(s==="staff")loadStaff();
+ if(s==="activity")loadActivity();
 }
 document.querySelectorAll(".nav-btn[data-section]").forEach(b=>b.addEventListener("click",()=>showSection(b.dataset.section)));
 $("goProductsButton").addEventListener("click",()=>showSection("products"));
@@ -178,208 +433,416 @@ $("goOrdersButton").addEventListener("click",()=>showSection("orders"));
 async function checkStaff(user){
  const {data,error}=await supabaseClient.from("profiles").select("id,full_name,role").eq("id",user.id).maybeSingle();
  if(error)throw new Error("Profile access error: "+error.message);
- if(!data)throw new Error("এই account-এর Staff Profile পাওয়া যায়নি।");
+ if(!data)throw new Error("এই Account-এর Staff Profile পাওয়া যায়নি।");
  if(!["owner","manager","admin"].includes(String(data.role||"").toLowerCase()))throw new Error("আপনার Admin Panel ব্যবহারের permission নেই।");
- currentProfile=data;currentUser=user;$("staffName").textContent=data.full_name||user.email||"Staff";$("staffRole").textContent=String(data.role).toUpperCase();
+ currentProfile=data;currentUser=user;
+ $("staffName").textContent=data.full_name||user.email||"Staff";
+ $("staffRole").textContent=String(data.role).toUpperCase();
 }
+
 async function startApp(user){
- try{await checkStaff(user);$("loginScreen").classList.add("hidden");$("adminApp").classList.remove("hidden");showSection("overview");await loadAdminProducts();await loadOrders();}
- catch(e){$("adminApp").classList.add("hidden");$("loginScreen").classList.remove("hidden");showMessage($("loginMessage"),e.message);}
+ try{
+  await checkStaff(user);
+  $("loginScreen").classList.add("hidden");
+  $("adminApp").classList.remove("hidden");
+  await loadAdminProducts();
+  await loadOrders();
+  showSection("overview");
+  logActivity("LOGIN","Admin logged in");
+ }catch(e){
+  $("adminApp").classList.add("hidden");
+  $("loginScreen").classList.remove("hidden");
+  showMessage($("loginMessage"),e.message);
+ }
 }
+
 $("loginForm").addEventListener("submit",async e=>{
  e.preventDefault();clearMessage($("loginMessage"));
- if(!supabaseClient){showMessage($("loginMessage"),"Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");return;}
+ if(!supabaseClient){showMessage($("loginMessage"),"Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");return}
  const b=$("loginButton");b.disabled=true;b.textContent="LOGGING IN...";
- try{const {data,error}=await supabaseClient.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});if(error)throw error;await startApp(data.user);}
- catch(err){showMessage($("loginMessage"),err.message||"Login failed.");}
- finally{b.disabled=false;b.textContent="LOGIN TO DASHBOARD";}
+ try{
+  const {data,error}=await supabaseClient.auth.signInWithPassword({
+   email:$("loginEmail").value.trim(),
+   password:$("loginPassword").value
+  });
+  if(error)throw error;
+  await startApp(data.user);
+ }catch(err){showMessage($("loginMessage"),err.message||"Login failed.")}
+ finally{b.disabled=false;b.textContent="LOGIN TO DASHBOARD"}
 });
-$("logoutButton").addEventListener("click",async()=>{try{await supabaseClient.auth.signOut();}catch(e){alert("Sign out error: "+e.message);}currentUser=null;currentProfile=null;$("adminApp").classList.add("hidden");$("loginScreen").classList.remove("hidden");});
+
+$("logoutButton").addEventListener("click",async()=>{
+ try{await supabaseClient.auth.signOut()}catch(e){alert(e.message)}
+ currentUser=null;currentProfile=null;
+ $("adminApp").classList.add("hidden");
+ $("loginScreen").classList.remove("hidden");
+});
+
+async function logActivity(action,details){
+ if(!supabaseClient||!currentUser)return;
+ try{
+  await supabaseClient.from("activity_logs").insert([{
+   user_id:currentUser.id,
+   action:String(action),
+   details:String(details||""),
+   created_at:new Date().toISOString()
+  }]);
+ }catch(e){console.warn("Activity log unavailable:",e.message)}
+}
 
 async function loadAdminProducts(){
  $("loadingText").textContent="Loading products...";
- try{adminProducts=await window.store.getAllProducts();renderProducts();updateDashboardStats();$("loadingText").textContent=adminProducts.length?"":"No products found.";}
- catch(e){$("loadingText").textContent="Product loading failed: "+e.message;}
+ try{
+  adminProducts=await window.store.getAllProducts();
+  renderProducts();updateDashboardStats();
+  $("loadingText").textContent=adminProducts.length?"":"No products found.";
+  renderInventory();
+ }catch(e){$("loadingText").textContent="Product loading failed: "+e.message}
 }
+
+async function loadOrderItems(){
+ orderItemsByOrder={};
+ if(!adminOrders.length)return;
+ const ids=adminOrders.map(o=>o.id);
+ try{
+  const {data,error}=await supabaseClient.from("order_items").select("*").in("order_id",ids);
+  if(error)throw error;
+  (data||[]).forEach(item=>{
+   if(!orderItemsByOrder[item.order_id])orderItemsByOrder[item.order_id]=[];
+   orderItemsByOrder[item.order_id].push(item);
+  });
+ }catch(e){
+  console.warn("Relational order_items could not be loaded. Using JSON order_items.",e.message);
+ }
+}
+
 function updateDashboardStats(){
  const active=adminProducts.filter(p=>p.is_active);
  const low=adminProducts.filter(p=>p.is_active&&p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5));
- $("totalProducts").textContent=adminProducts.length;$("activeProducts").textContent=active.length;$("lowStockProducts").textContent=low.length;
+ $("totalProducts").textContent=adminProducts.length;
+ $("activeProducts").textContent=active.length;
+ $("lowStockProducts").textContent=low.length;
  $("totalOrders").textContent=adminOrders.length;
- $("newOrders").textContent=adminOrders.filter(o=>String(o.order_status||"new").toLowerCase()==="new").length;
- $("confirmedOrders").textContent=adminOrders.filter(o=>["confirmed","processing","shipped","delivered"].includes(String(o.order_status||"").toLowerCase())||o.submission_status==="submitted").length;
+ $("newOrders").textContent=adminOrders.filter(o=>orderStatus(o)==="new").length;
+ $("confirmedOrders").textContent=adminOrders.filter(o=>["confirmed","processing","shipped","delivered"].includes(orderStatus(o))||isSubmitted(o)).length;
+ renderRecentOrders();
 }
+
+function renderRecentOrders(){
+ const body=$("recentOrdersBody");
+ const list=adminOrders.slice(0,6);
+ body.innerHTML=list.length?list.map(o=>`<tr>
+ <td>${escapeHTML(o.order_number||o.id)}</td>
+ <td>${escapeHTML(o.customer_name||"—")}</td>
+ <td>${money(o.total_amount)}</td>
+ <td><span class="badge">${escapeHTML(orderStatus(o).toUpperCase())}</span></td>
+ </tr>`).join(""):'<tr><td colspan="4" class="empty">No orders found.</td></tr>';
+}
+
+/* PRODUCTS */
+
 function renderProducts(){
- const tbody=$("productsTableBody"),q=$("productSearch").value.trim().toLowerCase();
+ const tbody=$("productsTableBody");
+ const q=$("productSearch").value.trim().toLowerCase();
  const list=adminProducts.filter(p=>[p.name,p.category,p.sku,p.dropbazar_product_id].join(" ").toLowerCase().includes(q));
- if(!list.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No products found.</td></tr>';return;}
+ if(!list.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No products found.</td></tr>';return}
  tbody.innerHTML=list.map(p=>{
-  const imgs=Array.isArray(p.images)?p.images:[],img=imgs[0]||"",labels=[];
+  const img=getImages(p)[0]||"",labels=[];
   if(p.is_new_arrival)labels.push('<span class="badge silver">NEW</span>');
   if(p.is_best_seller)labels.push('<span class="badge silver">BEST SELLER</span>');
   if(p.is_featured)labels.push('<span class="badge">FEATURED</span>');
-  const low=p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5);if(low)labels.push('<span class="badge red">LOW STOCK</span>');
-  const price=p.discount_price&&Number(p.discount_price)>0?`<strong>${money(p.discount_price)}</strong><br><del>${money(p.selling_price)}</del>`:`<strong>${money(p.selling_price)}</strong>`;
-  return `<tr><td>${img?`<img class="product-thumb" src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}</td><td><strong>${escapeHTML(p.name)}</strong><br><span class="muted">${escapeHTML(p.category||"")}</span></td><td>${escapeHTML(p.sku||"—")}</td><td>${price}</td><td>${Number(p.stock||0)} ${low?'<span class="badge red">LOW</span>':""}</td><td>${labels.join(" ")||"—"}</td><td>${p.is_active?'<span class="badge green">ACTIVE</span>':'<span class="badge red">INACTIVE</span>'}</td><td><button class="btn btn-small" data-edit="${escapeHTML(p.id)}">Edit</button> <button class="btn btn-small btn-danger" data-delete="${escapeHTML(p.id)}">Delete</button></td></tr>`;
+  const low=p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5);
+  if(low)labels.push('<span class="badge red">LOW STOCK</span>');
+  const price=Number(p.discount_price)>0?`<strong>${money(p.discount_price)}</strong><br><del>${money(p.selling_price)}</del>`:`<strong>${money(p.selling_price)}</strong>`;
+  return `<tr>
+   <td>${img?`<img class="product-thumb" src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}</td>
+   <td><strong>${escapeHTML(p.name)}</strong><br><span class="muted">${escapeHTML(p.category||"")}</span></td>
+   <td>${escapeHTML(p.sku||"—")}</td><td>${price}</td>
+   <td>${Number(p.stock||0)}</td><td>${labels.join(" ")||"—"}</td>
+   <td>${p.is_active?'<span class="badge green">ACTIVE</span>':'<span class="badge red">INACTIVE</span>'}</td>
+   <td><button class="btn btn-small" data-edit="${escapeHTML(p.id)}">Edit</button> <button class="btn btn-small btn-danger" data-delete="${escapeHTML(p.id)}">Delete</button></td>
+  </tr>`;
  }).join("");
  tbody.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editProduct(b.dataset.edit)));
  tbody.querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>deleteProduct(b.dataset.delete)));
 }
 $("productSearch").addEventListener("input",renderProducts);
-function clearPreviewUrls(){previewUrls.forEach(u=>URL.revokeObjectURL(u));previewUrls=[];}
+
+function clearPreviewUrls(){
+ previewUrls.forEach(u=>URL.revokeObjectURL(u));previewUrls=[];
+}
 function renderImagePreview(){
  const c=$("imagePreview");clearPreviewUrls();const all=[];
  existingImages.forEach((url,index)=>all.push({url,existing:true,index}));
- selectedImageFiles.forEach((file,index)=>{const url=URL.createObjectURL(file);previewUrls.push(url);all.push({url,existing:false,index});});
+ selectedImageFiles.forEach((file,index)=>{
+  const url=URL.createObjectURL(file);previewUrls.push(url);
+  all.push({url,existing:false,index});
+ });
  c.innerHTML=all.map(x=>`<div class="preview-item"><img src="${x.url}" alt="Product image"><button type="button" data-old="${x.existing?x.index:""}" data-new="${x.existing?"":x.index}">×</button></div>`).join("");
- c.querySelectorAll("[data-old]").forEach(b=>{if(b.dataset.old!=="")b.addEventListener("click",()=>{existingImages.splice(Number(b.dataset.old),1);renderImagePreview();});});
- c.querySelectorAll("[data-new]").forEach(b=>{if(b.dataset.new!=="")b.addEventListener("click",()=>{selectedImageFiles.splice(Number(b.dataset.new),1);renderImagePreview();});});
+ c.querySelectorAll("[data-old]").forEach(b=>{
+  if(b.dataset.old!=="")b.addEventListener("click",()=>{
+   existingImages.splice(Number(b.dataset.old),1);renderImagePreview();
+  });
+ });
+ c.querySelectorAll("[data-new]").forEach(b=>{
+  if(b.dataset.new!=="")b.addEventListener("click",()=>{
+   selectedImageFiles.splice(Number(b.dataset.new),1);renderImagePreview();
+  });
+ });
 }
 $("productImages").addEventListener("change",e=>{
  for(const f of Array.from(e.target.files||[])){
-  if(!["image/jpeg","image/png","image/webp"].includes(f.type)){alert("শুধু JPG, PNG অথবা WEBP ছবি Upload করা যাবে।");continue;}
-  if(f.size>5*1024*1024){alert("প্রতিটি ছবির Size 5MB-এর কম হতে হবে।");continue;}
+  if(!["image/jpeg","image/png","image/webp"].includes(f.type)){alert("শুধু JPG, PNG অথবা WEBP ছবি Upload করা যাবে।");continue}
+  if(f.size>5*1024*1024){alert("প্রতিটি ছবির Size 5MB-এর কম হতে হবে।");continue}
   selectedImageFiles.push(f);
  }
  $("productImages").value="";renderImagePreview();
 });
+
 async function uploadSelectedImages(){
  const urls=[];
  for(const f of selectedImageFiles){
-  const ext=f.name.split(".").pop().toLowerCase(),path=`products/${Date.now()}-${crypto.randomUUID()}.${ext}`;
-  const {error}=await supabaseClient.storage.from("product-images").upload(path,f,{cacheControl:"3600",upsert:false,contentType:f.type});
+  const ext=f.name.split(".").pop().toLowerCase();
+  const path=`products/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+  const {error}=await supabaseClient.storage.from("product-images").upload(path,f,{
+   cacheControl:"3600",upsert:false,contentType:f.type
+  });
   if(error)throw new Error("Image upload failed: "+error.message);
-  const {data}=supabaseClient.storage.from("product-images").getPublicUrl(path);urls.push(data.publicUrl);
+  const {data}=supabaseClient.storage.from("product-images").getPublicUrl(path);
+  urls.push(data.publicUrl);
  }
  return urls;
 }
 function resetProductForm(){
- $("productForm").reset();$("productId").value="";$("formHeading").textContent="Add New Product";$("saveProductButton").textContent="SAVE PRODUCT";
- $("isActive").checked=true;$("lowStockAlert").checked=true;$("lowStockThreshold").value=5;
- existingImages=[];selectedImageFiles=[];clearPreviewUrls();$("imagePreview").innerHTML="";clearMessage($("formMessage"));
+ $("productForm").reset();$("productId").value="";
+ $("formHeading").textContent="Add New Product";
+ $("saveProductButton").textContent="SAVE PRODUCT";
+ $("isActive").checked=true;$("lowStockAlert").checked=true;
+ $("lowStockThreshold").value=5;
+ existingImages=[];selectedImageFiles=[];clearPreviewUrls();
+ $("imagePreview").innerHTML="";clearMessage($("formMessage"));
 }
 $("resetFormButton").addEventListener("click",resetProductForm);
+
 const commaList=v=>v.split(",").map(x=>x.trim()).filter(Boolean);
+
 $("productForm").addEventListener("submit",async e=>{
- e.preventDefault();clearMessage($("formMessage"));if(!currentUser){showMessage($("formMessage"),"Please login again.");return;}
- const name=$("productName").value.trim(),category=$("productCategory").value,selling=Number($("sellingPrice").value);
- const d=$("discountPrice").value.trim(),discount=d===""?null:Number(d),stock=Number($("productStock").value),threshold=Number($("lowStockThreshold").value||5);
- if(!name||!category||!Number.isFinite(selling)||selling<0){showMessage($("formMessage"),"Product Name, Category এবং Selling Price সঠিকভাবে দিন।");return;}
- if(discount!==null&&(!Number.isFinite(discount)||discount<=0||discount>=selling)){showMessage($("formMessage"),"Discount Price অবশ্যই Selling Price-এর চেয়ে কম হতে হবে।");return;}
- if(!Number.isInteger(stock)||stock<0||!Number.isInteger(threshold)||threshold<0){showMessage($("formMessage"),"Stock এবং Minimum Stock সঠিক সংখ্যা হতে হবে।");return;}
+ e.preventDefault();clearMessage($("formMessage"));
+ if(!currentUser){showMessage($("formMessage"),"Please login again.");return}
+ const name=$("productName").value.trim();
+ const category=$("productCategory").value;
+ const selling=Number($("sellingPrice").value);
+ const d=$("discountPrice").value.trim();
+ const discount=d===""?null:Number(d);
+ const stock=Number($("productStock").value);
+ const threshold=Number($("lowStockThreshold").value||5);
+ const supplierCost=Number($("supplierCost").value||0);
+ if(!name||!category||!Number.isFinite(selling)||selling<0){showMessage($("formMessage"),"Product Name, Category এবং Selling Price সঠিকভাবে দিন।");return}
+ if(discount!==null&&(!Number.isFinite(discount)||discount<=0||discount>=selling)){showMessage($("formMessage"),"Discount Price অবশ্যই Selling Price-এর চেয়ে কম হতে হবে।");return}
+ if(!Number.isInteger(stock)||stock<0||!Number.isInteger(threshold)||threshold<0||supplierCost<0){showMessage($("formMessage"),"Stock, Supplier Cost এবং Minimum Stock সঠিক সংখ্যা হতে হবে।");return}
  const b=$("saveProductButton");b.disabled=true;b.textContent="SAVING...";
  try{
-  const uploaded=await uploadSelectedImages(),manual=$("imageUrl").value.trim(),images=[...existingImages,...uploaded];if(manual&&!images.includes(manual))images.push(manual);
-  const id=$("productId").value,old=id?adminProducts.find(p=>p.id===id):null;
-  const data={name,slug:old?.slug||name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Date.now(),category,sku:$("productSku").value.trim()||null,selling_price:selling,discount_price:discount,supplier_cost:Number($("supplierCost").value||0),stock,low_stock_threshold:threshold,low_stock_alert:$("lowStockAlert").checked,sizes:commaList($("productSizes").value),colors:commaList($("productColors").value),images,description:$("productDescription").value.trim(),is_featured:$("isFeatured").checked,is_new_arrival:$("isNewArrival").checked,is_best_seller:$("isBestSeller").checked,is_active:$("isActive").checked,supplier_product_url:$("supplierProductUrl").value.trim()||null,dropbazar_product_id:$("dropbazarProductId").value.trim()||null,updated_at:new Date().toISOString()};
-  if(id){await window.store.updateProduct(id,data);showMessage($("formMessage"),"Product updated successfully!","success");}
-  else{await window.store.addProduct(data);showMessage($("formMessage"),"Product added successfully!","success");}
-  await loadAdminProducts();setTimeout(resetProductForm,900);
- }catch(err){showMessage($("formMessage"),err.message||"Product save failed.");}
- finally{b.disabled=false;b.textContent=$("productId").value?"UPDATE PRODUCT":"SAVE PRODUCT";}
+  const uploaded=await uploadSelectedImages();
+  const manual=$("imageUrl").value.trim();
+  const images=[...existingImages,...uploaded];
+  if(manual&&!images.includes(manual))images.push(manual);
+  const id=$("productId").value;
+  const old=id?adminProducts.find(p=>p.id===id):null;
+  const data={
+   name,slug:old?.slug||name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Date.now(),
+   category,sku:$("productSku").value.trim()||null,
+   selling_price:selling,discount_price:discount,supplier_cost:supplierCost,
+   stock,low_stock_threshold:threshold,low_stock_alert:$("lowStockAlert").checked,
+   sizes:commaList($("productSizes").value),colors:commaList($("productColors").value),
+   images,description:$("productDescription").value.trim(),
+   is_featured:$("isFeatured").checked,is_new_arrival:$("isNewArrival").checked,
+   is_best_seller:$("isBestSeller").checked,is_active:$("isActive").checked,
+   supplier_product_url:$("supplierProductUrl").value.trim()||null,
+   dropbazar_product_id:$("dropbazarProductId").value.trim()||null,
+   updated_at:new Date().toISOString()
+  };
+  if(id){await window.store.updateProduct(id,data);await logActivity("PRODUCT_UPDATED",name)}
+  else{await window.store.addProduct(data);await logActivity("PRODUCT_CREATED",name)}
+  await loadAdminProducts();
+  showMessage($("formMessage"),"Product saved successfully!","success");
+  setTimeout(resetProductForm,1200);
+ }catch(err){showMessage($("formMessage"),err.message||"Product save failed.")}
+ finally{b.disabled=false;b.textContent=$("productId").value?"UPDATE PRODUCT":"SAVE PRODUCT"}
 });
+
 function editProduct(id){
- const p=adminProducts.find(x=>x.id===id);if(!p)return;resetProductForm();
- $("productId").value=p.id;$("productName").value=p.name||"";$("productSku").value=p.sku||"";$("productCategory").value=p.category||"";
- $("sellingPrice").value=p.selling_price??"";$("discountPrice").value=p.discount_price??"";$("supplierCost").value=p.supplier_cost??0;
- $("productStock").value=p.stock??0;$("lowStockThreshold").value=p.low_stock_threshold??5;
- $("productSizes").value=Array.isArray(p.sizes)?p.sizes.join(", "):"";$("productColors").value=Array.isArray(p.colors)?p.colors.join(", "):"";
- $("productDescription").value=p.description||"";$("isFeatured").checked=!!p.is_featured;$("isNewArrival").checked=!!p.is_new_arrival;
- $("isBestSeller").checked=!!p.is_best_seller;$("isActive").checked=!!p.is_active;$("lowStockAlert").checked=p.low_stock_alert!==false;
- $("supplierProductUrl").value=p.supplier_product_url||"";$("dropbazarProductId").value=p.dropbazar_product_id||"";
- existingImages=Array.isArray(p.images)?[...p.images]:[];renderImagePreview();$("formHeading").textContent="Edit Product";$("saveProductButton").textContent="UPDATE PRODUCT";
+ const p=adminProducts.find(x=>x.id===id);if(!p)return;
+ resetProductForm();
+ $("productId").value=p.id;$("productName").value=p.name||"";
+ $("productSku").value=p.sku||"";$("productCategory").value=p.category||"";
+ $("sellingPrice").value=p.selling_price??"";$("discountPrice").value=p.discount_price??"";
+ $("supplierCost").value=p.supplier_cost??0;$("productStock").value=p.stock??0;
+ $("lowStockThreshold").value=p.low_stock_threshold??5;
+ $("productSizes").value=Array.isArray(p.sizes)?p.sizes.join(", "):"";
+ $("productColors").value=Array.isArray(p.colors)?p.colors.join(", "):"";
+ $("productDescription").value=p.description||"";
+ $("isFeatured").checked=!!p.is_featured;$("isNewArrival").checked=!!p.is_new_arrival;
+ $("isBestSeller").checked=!!p.is_best_seller;$("isActive").checked=!!p.is_active;
+ $("lowStockAlert").checked=p.low_stock_alert!==false;
+ $("supplierProductUrl").value=p.supplier_product_url||"";
+ $("dropbazarProductId").value=p.dropbazar_product_id||"";
+ existingImages=getImages(p).slice();renderImagePreview();
+ $("formHeading").textContent="Edit Product";
+ $("saveProductButton").textContent="UPDATE PRODUCT";
  showSection("products");$("productForm").scrollIntoView({behavior:"smooth",block:"start"});
 }
 async function deleteProduct(id){
- const p=adminProducts.find(x=>x.id===id);if(!p||!confirm(`Delete "${p.name}"? এই কাজটি Undo করা যাবে না।`))return;
- try{await window.store.deleteProduct(id);await loadAdminProducts();alert("Product deleted successfully.");}catch(e){alert("Delete failed: "+e.message);}
+ const p=adminProducts.find(x=>x.id===id);
+ if(!p||!confirm(`Delete "${p.name}"? এই কাজটি Undo করা যাবে না।`))return;
+ try{
+  await window.store.deleteProduct(id);
+  await logActivity("PRODUCT_DELETED",p.name);
+  await loadAdminProducts();alert("Product deleted successfully.");
+ }catch(e){alert("Delete failed: "+e.message)}
 }
 
-/* ORDER MANAGEMENT */
-function getOrderItems(order){
- let items=order.order_items??order.items??[];
- if(typeof items==="string"){try{items=JSON.parse(items);}catch(_){items=[];}}
- if(!Array.isArray(items))items=[];
- return items;
+/* ORDERS */
+
+async function loadOrders(){
+ if(!supabaseClient)return;
+ $("ordersLoading").textContent="Loading orders...";
+ try{
+  const {data,error}=await supabaseClient.from("orders").select("*").order("created_at",{ascending:false});
+  if(error)throw error;
+  adminOrders=data||[];
+  await loadOrderItems();
+  renderOrders();updateDashboardStats();
+  $("ordersLoading").textContent=adminOrders.length?"":"No orders found.";
+ }catch(e){$("ordersLoading").textContent="Order loading failed: "+e.message}
 }
-function orderStatus(order){return String(order.order_status||"new").toLowerCase();}
-function supplierStatus(order){return order.submission_status||"not_submitted";}
-function orderItemsText(order){return getOrderItems(order).map(i=>`${i.name||i.product_name||"Product"} × ${i.quantity||i.qty||1}`).join(", ")||"Order items details unavailable";}
+
+function renderOrderProductCards(o){
+ const items=getOrderItems(o);
+ if(!items.length)return '<p class="muted">Order items details unavailable.</p>';
+ return '<div class="item-cards">'+items.map(i=>{
+  const img=itemImage(i);
+  return `<div class="item-card">
+   ${img?`<img src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}
+   <div class="item-card-info">
+    <strong>${escapeHTML(itemName(i))}</strong><br>
+    Size: ${escapeHTML(i.selected_size||i.size||"N/A")}<br>
+    Color: ${escapeHTML(i.selected_color||i.color||"N/A")}<br>
+    Quantity: ${itemQty(i)}<br>
+    Unit Price: ${money(itemPrice(i))}<br>
+    Supplier Cost: ${money(i.supplier_cost)}
+   </div>
+  </div>`;
+ }).join("")+'</div>';
+}
+
 function renderOrders(){
- const tbody=$("ordersTableBody"),q=$("orderSearch").value.trim().toLowerCase();
+ const tbody=$("ordersTableBody");
+ const q=$("orderSearch").value.trim().toLowerCase();
  const rows=adminOrders.filter(o=>{
-  const s=orderStatus(o),matches=orderFilter==="all"||(orderFilter==="new"&&s==="new")||(orderFilter==="confirmed"&&(s==="confirmed"||supplierStatus(o)==="submitted"))||(orderFilter===s);
+  const s=orderStatus(o);
+  const matches=orderFilter==="all"||s===orderFilter||(orderFilter==="confirmed"&&isSubmitted(o));
   const search=[o.order_number,o.customer_name,o.customer_phone,o.customer_email].join(" ").toLowerCase().includes(q);
   return matches&&search;
  });
- if(!rows.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No orders found.</td></tr>';return;}
+ if(!rows.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No orders found.</td></tr>';return}
  tbody.innerHTML=rows.map(o=>{
-  const s=orderStatus(o),submitted=supplierStatus(o)==="submitted"||!!o.supplier_order_id;
+  const s=orderStatus(o),submitted=isSubmitted(o);
   const statusClass=["delivered","shipped","confirmed","processing"].includes(s)?"green":s==="cancelled"?"red":"";
-  const supplier=submitted?`<span class="badge green">SUBMITTED</span><br><small>${escapeHTML(o.supplier_order_id||"Supplier ID saved")}</small>`:`<span class="badge">NOT SUBMITTED</span>`;
-  const items=orderItemsText(o);
-  const details=`
+  const supplier=submitted?`<span class="badge green">SUBMITTED</span><br><small>${escapeHTML(o.supplier_order_id||"Supplier ID saved")}</small>`:'<span class="badge">NOT SUBMITTED</span>';
+  const items=getOrderItems(o);
+  const itemSummary=items.map(i=>`${itemName(i)} × ${itemQty(i)}`).join(", ")||"Items unavailable";
+  const detail=`
    <div class="order-detail">
+    <h3>Order Details — ${escapeHTML(o.order_number||o.id)}</h3>
     <strong>Customer:</strong> ${escapeHTML(o.customer_name||"—")}<br>
-    <strong>Phone:</strong> ${escapeHTML(o.customer_phone||"—")}<br>
+    <strong>Phone:</strong> ${escapeHTML(o.customer_phone||"—")}
+    <div class="action-links">
+     <a class="action-link" href="${phoneLink(o.customer_phone)}">☎ Call Customer</a>
+     <a class="action-link" href="${waLink(o.customer_phone)}" target="_blank" rel="noopener">WhatsApp Customer</a>
+    </div>
     <strong>Email:</strong> ${escapeHTML(o.customer_email||"—")}<br>
     <strong>Address:</strong> ${escapeHTML(o.shipping_address||"—")}<br>
     <strong>City / Area:</strong> ${escapeHTML([o.city,o.area].filter(Boolean).join(" / ")||"—")}<br>
     <strong>Postal Code:</strong> ${escapeHTML(o.postal_code||"—")}<br>
-    <strong>Items:</strong> ${escapeHTML(items)}<br>
-    <strong>Subtotal:</strong> ${money(o.subtotal)} &nbsp; <strong>Delivery:</strong> ${money(o.delivery_charge)}<br>
-    <strong>Discount:</strong> ${money(o.discount)} &nbsp; <strong>Total:</strong> ${money(o.total_amount)}<br>
-    <strong>Payment:</strong> ${escapeHTML(o.payment_method||"—")} / ${escapeHTML(o.payment_status||"—")}<br>
     <strong>Customer Note:</strong> ${escapeHTML(o.customer_note||"—")}<br>
-    <strong>Courier:</strong> ${escapeHTML(o.courier_name||"—")} &nbsp; <strong>Tracking:</strong> ${escapeHTML(o.tracking_number||"—")}
+    ${renderOrderProductCards(o)}
+    <strong>Subtotal:</strong> ${money(o.subtotal)}<br>
+    <strong>Delivery:</strong> ${money(o.delivery_charge)}<br>
+    <strong>Discount:</strong> ${money(o.discount)}<br>
+    <strong>Total:</strong> ${money(o.total_amount)}<br>
+    <strong>Payment:</strong> ${escapeHTML(o.payment_method||"—")} / ${escapeHTML(o.payment_status||"—")}<br>
+    <strong>Courier:</strong> ${escapeHTML(o.courier_name||"—")}<br>
+    <strong>Tracking:</strong> ${escapeHTML(o.tracking_number||"—")}<br>
+    <strong>Supplier Order ID:</strong> ${escapeHTML(o.supplier_order_id||"Not available")}<br>
+    <strong>Submission Status:</strong> ${escapeHTML(supplierStatus(o))}
    </div>`;
   return `<tr>
    <td><strong>${escapeHTML(o.order_number||o.id)}</strong><br><small class="muted">${o.created_at?new Date(o.created_at).toLocaleString("en-BD"):""}</small></td>
    <td>${escapeHTML(o.customer_name||"—")}<br><small>${escapeHTML(o.customer_phone||"")}</small></td>
-   <td>${escapeHTML(items)}</td><td><strong>${money(o.total_amount)}</strong></td>
+   <td>${escapeHTML(itemSummary)}</td>
+   <td><strong>${money(o.total_amount)}</strong></td>
    <td>${escapeHTML(o.payment_method||"—")}<br><span class="badge">${escapeHTML(o.payment_status||"pending")}</span></td>
-   <td><span class="badge ${statusClass}">${escapeHTML(s.toUpperCase())}</span></td><td>${supplier}</td>
-   <td><div class="order-actions"><button class="btn btn-small btn-dark" data-details="${escapeHTML(o.id)}">View Details</button>
-   ${!submitted&&s!=="cancelled"?`<button class="btn btn-small" data-confirm="${escapeHTML(o.id)}">Confirm & Send</button>`:""}
-   <select class="status-select" data-status="${escapeHTML(o.id)}"><option value="new" ${s==="new"?"selected":""}>New</option><option value="confirmed" ${s==="confirmed"?"selected":""}>Confirmed</option><option value="processing" ${s==="processing"?"selected":""}>Processing</option><option value="shipped" ${s==="shipped"?"selected":""}>Shipped</option><option value="delivered" ${s==="delivered"?"selected":""}>Delivered</option><option value="cancelled" ${s==="cancelled"?"selected":""}>Cancelled</option></select></div></td>
-  </tr><tr id="details-${escapeHTML(o.id)}" class="hidden"><td colspan="8">${details}</td></tr>`;
+   <td><span class="badge ${statusClass}">${escapeHTML(s.toUpperCase())}</span></td>
+   <td>${supplier}</td>
+   <td><div class="order-actions">
+    <button class="btn btn-small btn-dark" data-details="${escapeHTML(o.id)}">View Details</button>
+    ${!submitted&&s!=="cancelled"?`<button class="btn btn-small" data-confirm="${escapeHTML(o.id)}">Confirm & Send</button>`:""}
+    <select class="status-select" data-status="${escapeHTML(o.id)}">
+     ${["new","confirmed","processing","shipped","delivered","cancelled"].map(x=>`<option value="${x}" ${s===x?"selected":""}>${x.charAt(0).toUpperCase()+x.slice(1)}</option>`).join("")}
+    </select>
+    <button class="btn btn-small btn-danger" data-delete-order="${escapeHTML(o.id)}">Delete</button>
+   </div></td>
+  </tr>
+  <tr id="details-${escapeHTML(o.id)}" class="hidden"><td colspan="8">${detail}</td></tr>`;
  }).join("");
- tbody.querySelectorAll("[data-details]").forEach(b=>b.addEventListener("click",()=>{$("details-"+b.dataset.details).classList.toggle("hidden");}));
+
+ tbody.querySelectorAll("[data-details]").forEach(b=>b.addEventListener("click",()=>{
+  $("details-"+b.dataset.details).classList.toggle("hidden");
+ }));
  tbody.querySelectorAll("[data-confirm]").forEach(b=>b.addEventListener("click",()=>confirmAndSubmitOrder(b.dataset.confirm,b)));
  tbody.querySelectorAll("[data-status]").forEach(sel=>sel.addEventListener("change",()=>updateOrderStatus(sel.dataset.status,sel.value,sel)));
+ tbody.querySelectorAll("[data-delete-order]").forEach(b=>b.addEventListener("click",()=>deleteOrder(b.dataset.deleteOrder)));
 }
-async function loadOrders(){
- if(!supabaseClient)return;$("ordersLoading").textContent="Loading orders...";
- try{
-  const {data,error}=await supabaseClient.from("orders").select("*").order("created_at",{ascending:false});
-  if(error)throw error;adminOrders=data||[];renderOrders();updateDashboardStats();
-  $("ordersLoading").textContent=adminOrders.length?"":"No orders found.";
- }catch(e){$("ordersLoading").textContent="Order loading failed: "+e.message;}
-}
+
 $("refreshOrdersButton").addEventListener("click",loadOrders);
 $("orderSearch").addEventListener("input",renderOrders);
 document.querySelectorAll(".order-filter-btn").forEach(b=>b.addEventListener("click",()=>{
- orderFilter=b.dataset.filter;document.querySelectorAll(".order-filter-btn").forEach(x=>x.classList.toggle("btn-dark",x!==b));renderOrders();
+ orderFilter=b.dataset.filter;
+ document.querySelectorAll(".order-filter-btn").forEach(x=>x.classList.toggle("btn-dark",x!==b));
+ renderOrders();
 }));
+
 async function updateOrderStatus(id,status,control){
- if(status==="confirmed"){
-  const order=adminOrders.find(o=>o.id===id);
-  if(order&&supplierStatus(order)!=="submitted"&&!order.supplier_order_id){
-   control.value=orderStatus(order);showMessage($("ordersMessage"),"Supplier-এ পাঠানোর জন্য Confirm & Send বাটন ব্যবহার করুন।");return;
-  }
+ const order=adminOrders.find(o=>o.id===id);
+ if(status==="confirmed"&&order&&!isSubmitted(order)){
+  control.value=orderStatus(order);
+  showMessage($("ordersMessage"),"Supplier-এ পাঠানোর জন্য Confirm & Send বাটন ব্যবহার করুন.");
+  return;
  }
  control.disabled=true;
  try{
-  const {error}=await supabaseClient.from("orders").update({order_status:status,updated_at:new Date().toISOString()}).eq("id",id);
-  if(error)throw error;clearMessage($("ordersMessage"));await loadOrders();
- }catch(e){showMessage($("ordersMessage"),"Status update failed: "+e.message);await loadOrders();}
- finally{control.disabled=false;}
+  const {error}=await supabaseClient.from("orders").update({
+   order_status:status,updated_at:new Date().toISOString()
+  }).eq("id",id);
+  if(error)throw error;
+  await logActivity("ORDER_STATUS_UPDATED",id+" → "+status);
+  clearMessage($("ordersMessage"));await loadOrders();
+ }catch(e){
+  showMessage($("ordersMessage"),"Status update failed: "+e.message);
+  await loadOrders();
+ }finally{control.disabled=false}
 }
+
 async function confirmAndSubmitOrder(id,button){
  const order=adminOrders.find(o=>o.id===id);if(!order)return;
- if(supplierStatus(order)==="submitted"||order.supplier_order_id){showMessage($("ordersMessage"),"এই অর্ডারটি ইতিমধ্যে Supplier-এ পাঠানো হয়েছে।");return;}
- const confirmText=`অর্ডার ${order.order_number||id} যাচাই করেছেন?\n\nCustomer: ${order.customer_name||""}\nPhone: ${order.customer_phone||""}\nTotal: ${money(order.total_amount)}\n\nConfirm করলে DropBazar submission function চালু হবে।`;
- if(!confirm(confirmText))return;
+ if(isSubmitted(order)){
+  showMessage($("ordersMessage"),"এই অর্ডারটি ইতিমধ্যে Supplier-এ পাঠানো হয়েছে।");return;
+ }
+ if(!getOrderItems(order).length){
+  showMessage($("ordersMessage"),"এই অর্ডারের Product Items পাওয়া যায়নি। Supplier-এ পাঠানোর আগে Order Items পরীক্ষা করুন।");return;
+ }
+ const text=`অর্ডার ${order.order_number||id} যাচাই করেছেন?\n\nCustomer: ${order.customer_name||""}\nPhone: ${order.customer_phone||""}\nTotal: ${money(order.total_amount)}\n\nConfirm করলে DropBazar submission function চালু হবে।`;
+ if(!confirm(text))return;
  button.disabled=true;button.textContent="SENDING...";
  clearMessage($("ordersMessage"));
  try{
@@ -387,21 +850,217 @@ async function confirmAndSubmitOrder(id,button){
   if(error)throw error;
   if(data&&data.success===false)throw new Error(data.message||"Supplier submission was not successful.");
   showMessage($("ordersMessage"),"Backend response received. Order list refresh করা হচ্ছে। Supplier Order ID ও submission status যাচাই করুন।","success");
+  await logActivity("DROPBAZAR_SUBMISSION",order.order_number||id);
   await loadOrders();
  }catch(e){
   showMessage($("ordersMessage"),"DropBazar-এ পাঠানো যায়নি: "+(e.message||"Unknown error")+". Backend Function deploy ও configuration পরীক্ষা করুন।");
- }finally{button.disabled=false;button.textContent="Confirm & Send";}
+ }finally{button.disabled=false;button.textContent="Confirm & Send"}
 }
-async function initializeAdmin(){
- if(!supabaseClient){showMessage($("loginMessage"),"Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");return;}
- if(!window.store){showMessage($("loginMessage"),"Store functions পাওয়া যায়নি। store.js পরীক্ষা করুন।");return;}
- try{const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;if(data.session?.user)await startApp(data.session.user);}
- catch(e){showMessage($("loginMessage"),e.message||"Session check failed.");}
+
+async function deleteOrder(id){
+ const o=adminOrders.find(x=>x.id===id);
+ if(!o||!confirm("এই Order এবং এর Order Items Delete করবেন? এটি Undo করা যাবে না।"))return;
+ try{
+  const {error}=await supabaseClient.from("orders").delete().eq("id",id);
+  if(error)throw error;
+  await logActivity("ORDER_DELETED",o.order_number||id);
+  await loadOrders();alert("Order deleted successfully.");
+ }catch(e){showMessage($("ordersMessage"),"Order delete failed: "+e.message)}
 }
-if(supabaseClient)supabaseClient.auth.onAuthStateChange(event=>{
- if(event==="SIGNED_OUT"){currentUser=null;currentProfile=null;$("adminApp").classList.add("hidden");$("loginScreen").classList.remove("hidden");}
+
+/* CUSTOMER DIRECTORY */
+
+function getCustomers(){
+ const map=new Map();
+ adminOrders.forEach(o=>{
+  const key=digits(o.customer_phone)||String(o.customer_email||o.customer_name||o.id);
+  if(!map.has(key)){
+   map.set(key,{
+    name:o.customer_name||"Customer",phone:o.customer_phone||"",
+    email:o.customer_email||"",orders:[],total:0
+   });
+  }
+  const c=map.get(key);c.orders.push(o);c.total+=Number(o.total_amount||0);
+ });
+ return Array.from(map.values()).sort((a,b)=>b.orders.length-a.orders.length);
+}
+
+function renderCustomers(){
+ const q=$("customerSearch").value.trim().toLowerCase();
+ const list=getCustomers().filter(c=>[c.name,c.phone,c.email].join(" ").toLowerCase().includes(q));
+ $("customersTableBody").innerHTML=list.length?list.map((c,i)=>{
+  const phone=digits(c.phone);
+  const history=c.orders.map(o=>o.order_number||o.id).join(", ");
+  return `<tr>
+   <td><strong>${escapeHTML(c.name)}</strong><br><small>${escapeHTML(c.email)}</small></td>
+   <td>${escapeHTML(c.phone||"—")}</td>
+   <td>${c.orders.length}</td>
+   <td>${money(c.total)}</td>
+   <td>${phone?`<a class="action-link" href="${phoneLink(c.phone)}">Call</a> <a class="action-link" href="${waLink(c.phone)}" target="_blank" rel="noopener">WhatsApp</a>`:"—"}</td>
+   <td><button class="btn btn-small btn-dark" data-customer="${i}">View History</button><div class="muted hidden" id="customer-history-${i}">${escapeHTML(history)}</div></td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="6" class="empty">No customers found.</td></tr>';
+ $("customersTableBody").querySelectorAll("[data-customer]").forEach(b=>b.addEventListener("click",()=>{
+  $("customer-history-"+b.dataset.customer).classList.toggle("hidden");
+ }));
+}
+$("customerSearch").addEventListener("input",renderCustomers);
+
+/* INVENTORY */
+
+function renderInventory(){
+ const q=$("inventorySearch").value.trim().toLowerCase();
+ const list=adminProducts.filter(p=>[p.name,p.sku,p.category].join(" ").toLowerCase().includes(q));
+ $("inventoryTableBody").innerHTML=list.length?list.map(p=>{
+  const low=p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5);
+  return `<tr>
+   <td>${escapeHTML(p.name)}</td>
+   <td>${escapeHTML(p.sku||"—")}</td>
+   <td><strong>${Number(p.stock||0)}</strong></td>
+   <td>${Number(p.low_stock_threshold??5)}</td>
+   <td>${money(p.supplier_cost)}</td>
+   <td>${low?'<span class="badge red">LOW STOCK</span>':'<span class="badge green">NORMAL</span>'}</td>
+   <td><button class="btn btn-small" data-stock-edit="${escapeHTML(p.id)}">Edit Stock</button></td>
+  </tr>`;
+ }).join(""):'<tr><td colspan="7" class="empty">No inventory found.</td></tr>';
+ $("inventoryTableBody").querySelectorAll("[data-stock-edit]").forEach(b=>b.addEventListener("click",()=>{
+  const p=adminProducts.find(x=>x.id===b.dataset.stockEdit);if(!p)return;
+  const value=prompt("New stock quantity:",String(p.stock??0));
+  if(value===null)return;
+  const n=Number(value);
+  if(!Number.isInteger(n)||n<0){alert("সঠিক Stock Quantity দিন।");return}
+  updateStock(p,n);
+ }));
+}
+async function updateStock(p,n){
+ try{
+  await window.store.updateProduct(p.id,{stock:n,updated_at:new Date().toISOString()});
+  await logActivity("STOCK_UPDATED",p.name+" → "+n);
+  await loadAdminProducts();renderInventory();
+ }catch(e){alert("Stock update failed: "+e.message)}
+}
+$("inventorySearch").addEventListener("input",renderInventory);
+$("refreshInventoryButton").addEventListener("click",loadAdminProducts);
+
+/* REPORTS */
+
+function renderReports(){
+ const valid=adminOrders.filter(o=>orderStatus(o)!=="cancelled");
+ const revenue=valid.reduce((s,o)=>s+Number(o.total_amount||0),0);
+ let cost=0;
+ const sales={};
+ valid.forEach(o=>{
+  getOrderItems(o).forEach(i=>{
+   const qty=itemQty(i);
+   const p=adminProducts.find(x=>x.id===i.product_id);
+   const unitCost=Number(i.supplier_cost??p?.supplier_cost??0);
+   cost+=unitCost*qty;
+   const name=itemName(i);
+   sales[name]=(sales[name]||0)+qty;
+  });
+ });
+ $("reportRevenue").textContent=money(revenue);
+ $("reportCost").textContent=money(cost);
+ $("reportProfit").textContent=money(revenue-cost);
+ const today=new Date();
+ const todayKey=today.toDateString();
+ const monthKey=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0");
+ const todayRev=valid.filter(o=>o.created_at&&new Date(o.created_at).toDateString()===todayKey).reduce((s,o)=>s+Number(o.total_amount||0),0);
+ const monthRev=valid.filter(o=>String(o.created_at||"").slice(0,7)===monthKey).reduce((s,o)=>s+Number(o.total_amount||0),0);
+ $("todayRevenue").textContent=money(todayRev);
+ $("monthRevenue").textContent=money(monthRev);
+ $("deliveredCount").textContent=valid.filter(o=>orderStatus(o)==="delivered").length;
+ const best=Object.entries(sales).sort((a,b)=>b[1]-a[1]).slice(0,10);
+ $("bestSellingList").innerHTML=best.length?best.map((x,i)=>`<div class="log-item">${i+1}. <strong>${escapeHTML(x[0])}</strong> — ${x[1]} sold</div>`).join(""):"No sales data.";
+ const months={};
+ valid.forEach(o=>{
+  const k=String(o.created_at||"").slice(0,7)||"Unknown";
+  months[k]=(months[k]||0)+Number(o.total_amount||0);
+ });
+ const monthRows=Object.entries(months).sort((a,b)=>b[0].localeCompare(a[0]));
+ $("monthlySalesList").innerHTML=monthRows.length?monthRows.map(x=>`<div class="log-item"><strong>${escapeHTML(x[0])}</strong> — ${money(x[1])}</div>`).join(""):"No sales data.";
+ const cancelled=adminOrders.filter(o=>orderStatus(o)==="cancelled");
+ $("cancelledOrdersList").innerHTML=cancelled.length?cancelled.map(o=>`<div class="log-item">${escapeHTML(o.order_number||o.id)} — ${escapeHTML(o.customer_name||"")} — ${money(o.total_amount)}</div>`).join(""):"No cancelled orders.";
+}
+
+/* STAFF DIRECTORY */
+
+async function loadStaff(){
+ const body=$("staffTableBody");body.innerHTML='<tr><td colspan="4" class="empty">Loading staff...</td></tr>';
+ try{
+  const {data,error}=await supabaseClient.from("profiles").select("id,full_name,role").order("full_name");
+  if(error)throw error;
+  body.innerHTML=(data||[]).filter(p=>["owner","manager","admin"].includes(String(p.role||"").toLowerCase())).map(p=>`
+   <tr><td>${escapeHTML(p.full_name||"Staff")}</td>
+   <td>${p.id===currentUser?.id?escapeHTML(currentUser.email||"Current account"):"—"}</td>
+   <td><span class="badge silver">${escapeHTML(String(p.role||"").toUpperCase())}</span></td>
+   <td><small>${escapeHTML(p.id)}</small></td></tr>
+  `).join("")||'<tr><td colspan="4" class="empty">No staff found.</td></tr>';
+ }catch(e){body.innerHTML=`<tr><td colspan="4" class="empty">Staff loading failed: ${escapeHTML(e.message)}</td></tr>`}
+}
+
+/* ACTIVITY LOGS */
+
+async function loadActivity(){
+ const box=$("activityList");box.innerHTML="Loading activity logs...";
+ clearMessage($("activityMessage"));
+ try{
+  const {data,error}=await supabaseClient.from("activity_logs").select("*").order("created_at",{ascending:false}).limit(100);
+  if(error)throw error;
+  box.innerHTML=(data||[]).length?(data||[]).map(x=>`
+   <div class="log-item">
+    <strong>${escapeHTML(x.action||"Activity")}</strong><br>
+    ${escapeHTML(x.details||"")}<br>
+    <span class="muted">${x.created_at?new Date(x.created_at).toLocaleString("en-BD"):""}</span>
+   </div>`).join(""):'<div class="empty">No activity logs found.</div>';
+ }catch(e){
+  box.innerHTML="";
+  showMessage($("activityMessage"),"Activity Logs load করা যায়নি। activity_logs table এবং permission পরীক্ষা করুন। "+e.message);
+ }
+}
+$("refreshActivityButton").addEventListener("click",loadActivity);
+
+/* SETTINGS */
+
+$("passwordForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearMessage($("passwordMessage"));
+ const p=$("newPassword").value;
+ const c=$("confirmPassword").value;
+ if(p.length<8){showMessage($("passwordMessage"),"Password কমপক্ষে 8 characters হতে হবে।");return}
+ if(p!==c){showMessage($("passwordMessage"),"দুইটি Password মিলছে না।");return}
+ const b=$("passwordButton");b.disabled=true;b.textContent="UPDATING...";
+ try{
+  const {error}=await supabaseClient.auth.updateUser({password:p});
+  if(error)throw error;
+  await logActivity("PASSWORD_UPDATED","Admin password updated");
+  showMessage($("passwordMessage"),"Password updated successfully!","success");
+  $("passwordForm").reset();
+ }catch(err){showMessage($("passwordMessage"),err.message)}
+ finally{b.disabled=false;b.textContent="UPDATE PASSWORD"}
 });
+
+/* INITIALIZATION */
+
+async function initializeAdmin(){
+ if(!supabaseClient){showMessage($("loginMessage"),"Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");return}
+ if(!window.store){showMessage($("loginMessage"),"Store functions পাওয়া যায়নি। store.js পরীক্ষা করুন।");return}
+ try{
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error)throw error;
+  if(data.session?.user)await startApp(data.session.user);
+ }catch(e){showMessage($("loginMessage"),e.message||"Session check failed.")}
+}
+if(supabaseClient){
+ supabaseClient.auth.onAuthStateChange(event=>{
+  if(event==="SIGNED_OUT"){
+   currentUser=null;currentProfile=null;
+   $("adminApp").classList.add("hidden");
+   $("loginScreen").classList.remove("hidden");
+  }
+ });
+}
 initializeAdmin();
+
 })();
 </script>
 </body>
