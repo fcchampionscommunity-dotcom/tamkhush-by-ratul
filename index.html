@@ -285,6 +285,10 @@ let districtsLoading=false;
 let selectedDeliveryCharge=null;
 let selectedDeliveryZone=null;
 
+/* PRODUCT LINK SUPPORT */
+const requestedProductId=new URLSearchParams(window.location.search).get('product');
+let productLinkHandled=false;
+
 let cart=[];
 try{
 const savedCart=JSON.parse(localStorage.getItem('tkr_cart')||'[]');
@@ -309,6 +313,27 @@ if(typeof value==='string'&&value.trim())return value.split(',').map(v=>v.trim()
 return [];
 }
 
+/* AUTO OPEN PRODUCT FROM FACEBOOK LINK */
+function openRequestedProduct(){
+if(productLinkHandled||!requestedProductId)return;
+productLinkHandled=true;
+
+const matchedProduct=products.find(item=>String(item.id)===String(requestedProductId));
+
+if(matchedProduct){
+openProductDetails(matchedProduct.id);
+return;
+}
+
+document.getElementById('homePage').style.display='block';
+document.getElementById('productDetailsPage').classList.remove('active');
+
+const grid=document.getElementById('productGrid');
+grid.innerHTML='<div class="empty">এই প্রোডাক্টটি পাওয়া যায়নি অথবা বর্তমানে উপলভ্য নেই। <br><br><button class="btn" onclick="showHome()">BACK TO SHOP</button></div>';
+
+document.getElementById('products').scrollIntoView({behavior:'smooth'});
+}
+
 /* LOAD PRODUCTS */
 async function loadProducts(){
 const grid=document.getElementById('productGrid');
@@ -316,7 +341,14 @@ try{
 if(!window.store)throw new Error('Store is not loaded');
 products=await window.store.getProducts();
 renderProducts();
-}catch(error){console.error(error);grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';}
+
+/* Wait until products are loaded, then open the exact linked product */
+openRequestedProduct();
+
+}catch(error){
+console.error(error);
+grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';
+}
 }
 
 /* DROPBAZAR DISTRICT & THANA */
