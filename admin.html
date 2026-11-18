@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -223,7 +222,10 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
      <input type="hidden" id="productId">
      <div class="form-grid">
       <div class="field"><label>Product Name *</label><input id="productName" required></div>
-      <div class="field"><label>SKU Code</label><input id="productSku" placeholder="TKR-001"></div>
+
+      <!-- শুধু এই Parent Product label পরিবর্তন করা হয়েছে -->
+      <div class="field"><label>TKR Product Code</label><input id="productSku" placeholder="TKR-001"></div>
+
       <div class="field"><label>Category *</label><select id="productCategory" required><option value="">Select Category</option><option value="men">Men</option><option value="women">Women</option><option value="unisex">Unisex</option><option value="accessories">Accessories</option></select></div>
       <div class="field"><label>Selling Price (৳) *</label><input id="sellingPrice" type="number" min="0" step=".01" required></div>
       <div class="field"><label>Discount Price (৳)</label><input id="discountPrice" type="number" min="0" step=".01"></div>
@@ -249,7 +251,8 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
        </div>
       </div>
 
-      <div class="field full"><label>Supplier Product URL (Default / Legacy)</label><input id="supplierProductUrl" type="url" placeholder="https://..."></div>
+      <!-- Parent-level Supplier Product URL (Default / Legacy) ফিল্ড বাদ দেওয়া হয়েছে -->
+
       <div class="field"><label>DropBazar Product ID</label><input id="dropbazarProductId"></div>
       <div class="field"><label>Product Image URL (Optional)</label><input id="imageUrl" type="url" placeholder="https://..."></div>
       <div class="field full">
@@ -611,7 +614,7 @@ function renderVariations(){
     </div>
     <div class="field">
      <label>Supplier SKU</label>
-     <input data-vfield="supplier_sku" data-index="${i}" value="${escapeHTML(v.supplier_sku)}" placeholder="TKR-BLK-001">
+     <input data-vfield="supplier_sku" data-index="${i}" value="${escapeHTML(v.supplier_sku)}" placeholder="SUP-BLK-001">
     </div>
     <div class="field full">
      <label>Supplier Product URL</label>
@@ -684,12 +687,15 @@ async function loadVariationsForEdit(product){
    image_url:v.image_url||"",image_file:null
   }));
  }else{
+  // পুরোনো Product-এর Colors থেকে Variation তৈরি হবে।
+  // Parent product.sku বা parent supplier_product_url এখানে ব্যবহার হবে না।
   const colors=Array.isArray(product.colors)?product.colors:[];
-  productVariations=colors.map((color,index)=>({
-   id:null,color_name:color||"",
-   supplier_sku:index===0?(product.sku||""):"",
-   supplier_product_url:index===0?(product.supplier_product_url||""):"",
-   image_url:index===0?(getImages(product)[0]||""):"",
+  productVariations=colors.map(color=>({
+   id:null,
+   color_name:color||"",
+   supplier_sku:"",
+   supplier_product_url:"",
+   image_url:"",
    image_file:null
   }));
  }
@@ -772,7 +778,6 @@ $("productForm").addEventListener("submit",async e=>{
    description:$("productDescription").value.trim(),
    is_featured:$("isFeatured").checked,is_new_arrival:$("isNewArrival").checked,
    is_best_seller:$("isBestSeller").checked,is_active:$("isActive").checked,
-   supplier_product_url:$("supplierProductUrl").value.trim()||null,
    dropbazar_product_id:$("dropbazarProductId").value.trim()||null,
    updated_at:new Date().toISOString()
   };
@@ -808,7 +813,9 @@ async function editProduct(id){
  $("isFeatured").checked=!!p.is_featured;$("isNewArrival").checked=!!p.is_new_arrival;
  $("isBestSeller").checked=!!p.is_best_seller;$("isActive").checked=!!p.is_active;
  $("lowStockAlert").checked=p.low_stock_alert!==false;
- $("supplierProductUrl").value=p.supplier_product_url||"";
+
+ // Parent-level Supplier Product URL field আর নেই।
+
  $("dropbazarProductId").value=p.dropbazar_product_id||"";
  $("imageUrl").value="";
  existingImages=getImages(p).slice();renderImagePreview();
@@ -919,7 +926,7 @@ async function updateOrderStatus(id,status,control){
  const order=adminOrders.find(o=>o.id===id);
  if(status==="confirmed"&&order&&!isSubmitted(order)){
   control.value=orderStatus(order);
-  showMessage($("ordersMessage"),"Supplier-এ পাঠানোর জন্য Confirm & Send বাটন ব্যবহার করুন.");return;
+  showMessage($("ordersMessage"),"Supplier-এ পাঠানোর জন্য Confirm & Send বাটন ব্যবহার করুন।");return;
  }
  control.disabled=true;
  try{
