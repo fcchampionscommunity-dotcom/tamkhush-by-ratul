@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -13,12 +12,11 @@
 --green:#123b31;--green2:#0d3028;--orange:#f47b20;
 --blue:#174f8a;--bg:#f3f6f7;--white:#fff;
 --text:#17232b;--muted:#687783;--line:#dce4e9;
---red:#d64545;--shadow:0 5px 22px #173c3010;
+--red:#d64545;--shadow:0 5px 22px #173c3010
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
 .hidden{display:none!important}
 #loginScreen{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,var(--green),#174f8a)}
 .login-card{width:min(420px,100%);background:white;padding:35px;border-radius:12px;box-shadow:0 20px 60px #0003}
@@ -34,8 +32,7 @@ button{cursor:pointer}
 .field textarea{min-height:90px;resize:vertical}
 .btn{border:0;background:var(--orange);color:white;padding:11px 17px;border-radius:6px;font-weight:700}
 .btn:hover{background:#d96812}
-.btn-green{background:var(--green)}
-.btn-blue{background:var(--blue)}
+.btn-green{background:var(--green)}.btn-blue{background:var(--blue)}
 .btn-red{background:var(--red)}
 .btn-light{background:white;color:var(--green);border:1px solid var(--line)}
 .btn-small{padding:7px 10px;font-size:12px}
@@ -58,8 +55,7 @@ button{cursor:pointer}
 .main{padding:27px;min-width:0}
 .page{display:none}.page.active{display:block}
 .page-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:23px}
-.page-head h1{font-size:25px}
-.page-head p{font-size:12px;color:var(--muted);margin-top:6px}
+.page-head h1{font-size:25px}.page-head p{font-size:12px;color:var(--muted);margin-top:6px}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
 .stat-card{background:white;border:1px solid var(--line);padding:19px;border-radius:9px;box-shadow:var(--shadow)}
 .stat-card small{color:var(--muted);font-size:12px}
@@ -85,7 +81,7 @@ td strong{font-size:12px}
 .empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
 .modal{position:fixed;inset:0;background:#0008;z-index:50;display:none;align-items:center;justify-content:center;padding:15px}
 .modal.open{display:flex}
-.modal-box{background:white;border-radius:10px;width:min(850px,100%);max-height:92vh;overflow:auto;padding:23px}
+.modal-box{background:white;border-radius:10px;width:min(950px,100%);max-height:92vh;overflow:auto;padding:23px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .modal-head h2{font-size:19px}
 .close-btn{border:0;background:#edf1f3;border-radius:5px;padding:8px 12px}
@@ -96,39 +92,28 @@ td strong{font-size:12px}
 .image-item{position:relative;background:#f1f4f6;border:1px solid var(--line);border-radius:6px;padding:5px}
 .image-item img{width:100%;height:95px;object-fit:contain}
 .image-item button{position:absolute;top:3px;right:3px;background:var(--red);color:white;border:0;border-radius:4px;padding:3px 7px}
-.variation-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:7px;margin:10px 0;align-items:center}
-.variation-row input{min-width:0;width:100%;padding:9px;border:1px solid var(--line);border-radius:5px;font-size:12px}
+.variation-card{border:1px solid var(--line);border-radius:8px;padding:15px;margin:12px 0;background:#fbfcfc}
+.variation-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.variation-card-head strong{color:var(--green)}
+.variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+.variation-size-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:7px;margin:8px 0}
+.variation-size-row input,.variation-card input{min-width:0}
 .notice{padding:12px;border-radius:6px;background:#eaf2ef;color:var(--green);font-size:12px;line-height:1.7;margin-bottom:15px}
 .notice.warn{background:#fff3e8;color:#9b5118}
 .order-detail{line-height:1.9;font-size:13px}
 .order-detail strong{color:var(--green)}
 .setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .mobile-menu{display:none}
-@media(max-width:950px){
-.layout{grid-template-columns:205px 1fr}
-.cards{grid-template-columns:repeat(2,1fr)}
-.main{padding:20px}
-}
+@media(max-width:950px){.layout{grid-template-columns:205px 1fr}.cards{grid-template-columns:repeat(2,1fr)}.main{padding:20px}}
 @media(max-width:650px){
-.topbar{padding:0 13px;height:60px}
-.top-brand{font-size:12px}.top-mark{width:34px;height:34px}
-.top-brand small{font-size:8px}
-.role-pill{display:none}
-.layout{display:block}
-.sidebar{position:fixed;z-index:30;top:60px;left:-260px;width:245px;height:calc(100vh - 60px);transition:.25s;box-shadow:0 10px 30px #0002}
-.sidebar.open{left:0}
-.mobile-menu{display:inline-block;background:transparent;color:white;border:0;font-size:23px;margin-right:8px}
-.main{padding:15px}
-.page-head h1{font-size:21px}
-.cards{gap:9px}
-.stat-card{padding:13px}
-.stat-card strong{font-size:22px}
-.stat-card small{font-size:10px}
-.panel{padding:13px}
-.form-grid,.setting-grid{grid-template-columns:1fr}
-.full{grid-column:auto}
-.variation-row{grid-template-columns:1fr 1fr}
-.variation-row button{grid-column:1/-1}
+.topbar{padding:0 13px;height:60px}.top-brand{font-size:12px}.top-mark{width:34px;height:34px}
+.top-brand small{font-size:8px}.role-pill{display:none}
+.layout{display:block}.sidebar{position:fixed;z-index:30;top:60px;left:-260px;width:245px;height:calc(100vh - 60px);transition:.25s;box-shadow:0 10px 30px #0002}
+.sidebar.open{left:0}.mobile-menu{display:inline-block;background:transparent;color:white;border:0;font-size:23px;margin-right:8px}
+.main{padding:15px}.page-head h1{font-size:21px}.cards{gap:9px}.stat-card{padding:13px}
+.stat-card strong{font-size:22px}.stat-card small{font-size:10px}.panel{padding:13px}
+.form-grid,.setting-grid,.variation-grid{grid-template-columns:1fr}.full{grid-column:auto}
+.variation-size-row{grid-template-columns:1fr 1fr}.variation-size-row button{grid-column:1/-1}
 }
 </style>
 </head>
@@ -167,17 +152,17 @@ td strong{font-size:12px}
 <div class="layout">
 <aside class="sidebar" id="sidebar">
 <div class="side-label">MAIN MENU</div>
-<button class="nav-btn active" data-page="dashboard" onclick="navigate('dashboard',this)"><span class="nav-icon">▦</span> Dashboard</button>
-<button class="nav-btn" data-page="products" onclick="navigate('products',this)"><span class="nav-icon">◈</span> Products</button>
-<button class="nav-btn" data-page="variations" onclick="navigate('variations',this)"><span class="nav-icon">◉</span> Variations & SKU</button>
-<button class="nav-btn" data-page="orders" onclick="navigate('orders',this)"><span class="nav-icon">▤</span> Orders</button>
-<button class="nav-btn" data-page="customers" onclick="navigate('customers',this)"><span class="nav-icon">♙</span> Customers</button>
-<button class="nav-btn" data-page="inventory" onclick="navigate('inventory',this)"><span class="nav-icon">▣</span> Inventory</button>
+<button class="nav-btn active" data-page="dashboard" onclick="navigate('dashboard',this)">▦ Dashboard</button>
+<button class="nav-btn" data-page="products" onclick="navigate('products',this)">◈ Products</button>
+<button class="nav-btn" data-page="variations" onclick="navigate('variations',this)">◉ Variations & SKU</button>
+<button class="nav-btn" data-page="orders" onclick="navigate('orders',this)">▤ Orders</button>
+<button class="nav-btn" data-page="customers" onclick="navigate('customers',this)">♙ Customers</button>
+<button class="nav-btn" data-page="inventory" onclick="navigate('inventory',this)">▣ Inventory</button>
 <div class="side-label">MANAGEMENT</div>
-<button class="nav-btn" data-page="reports" onclick="navigate('reports',this)"><span class="nav-icon">▥</span> Reports</button>
-<button class="nav-btn" data-page="staff" onclick="navigate('staff',this)"><span class="nav-icon">♧</span> Staff & Roles</button>
-<button class="nav-btn" data-page="activity" onclick="navigate('activity',this)"><span class="nav-icon">◷</span> Activity Logs</button>
-<button class="nav-btn" data-page="settings" onclick="navigate('settings',this)"><span class="nav-icon">⚙</span> Settings</button>
+<button class="nav-btn" data-page="reports" onclick="navigate('reports',this)">▥ Reports</button>
+<button class="nav-btn" data-page="staff" onclick="navigate('staff',this)">♧ Staff & Roles</button>
+<button class="nav-btn" data-page="activity" onclick="navigate('activity',this)">◷ Activity Logs</button>
+<button class="nav-btn" data-page="settings" onclick="navigate('settings',this)">⚙ Settings</button>
 </aside>
 
 <main class="main">
@@ -185,10 +170,10 @@ td strong{font-size:12px}
 <section class="page active" id="page-dashboard">
 <div class="page-head"><div><h1>Dashboard Overview</h1><p>Welcome to TAMKHUSH BY RATUL management panel.</p></div><button class="btn" onclick="refreshAll()">↻ Refresh Data</button></div>
 <div class="cards">
-<div class="stat-card"><span class="stat-icon">৳</span><small>Total Revenue</small><strong id="statRevenue">৳0</strong></div>
-<div class="stat-card"><span class="stat-icon">▤</span><small>Total Orders</small><strong id="statOrders">0</strong></div>
-<div class="stat-card"><span class="stat-icon">◈</span><small>Total Products</small><strong id="statProducts">0</strong></div>
-<div class="stat-card"><span class="stat-icon">♙</span><small>Customers</small><strong id="statCustomers">0</strong></div>
+<div class="stat-card"><small>Total Revenue</small><strong id="statRevenue">৳0</strong></div>
+<div class="stat-card"><small>Total Orders</small><strong id="statOrders">0</strong></div>
+<div class="stat-card"><small>Total Products</small><strong id="statProducts">0</strong></div>
+<div class="stat-card"><small>Customers</small><strong id="statCustomers">0</strong></div>
 </div>
 <div class="cards">
 <div class="stat-card"><small>Pending Orders</small><strong id="statPending">0</strong></div>
@@ -196,45 +181,36 @@ td strong{font-size:12px}
 <div class="stat-card"><small>Delivered Orders</small><strong id="statDelivered">0</strong></div>
 <div class="stat-card"><small>Cancelled Orders</small><strong id="statCancelled">0</strong></div>
 </div>
-<div class="panel"><div class="panel-head"><h2>Recent Orders</h2><button class="btn btn-small btn-light" onclick="navigate('orders')">View All</button></div>
-<div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
+<div class="panel"><div class="panel-head"><h2>Recent Orders</h2><button class="btn btn-small btn-light" onclick="navigate('orders')">View All</button></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
 <div class="panel"><div class="panel-head"><h2>Low Stock Alerts</h2><button class="btn btn-small btn-light" onclick="navigate('inventory')">Inventory</button></div><div id="lowStockList"></div></div>
 </section>
 
 <section class="page" id="page-products">
 <div class="page-head"><div><h1>Products</h1><p>Add, edit and manage your fashion collection.</p></div><button class="btn" onclick="openProductModal()">+ Add Product</button></div>
-<div class="panel">
-<div class="toolbar"><input id="productSearch" class="search" placeholder="Search product name or SKU..." oninput="renderProducts()"><select id="productCategoryFilter" class="search" onchange="renderProducts()"><option value="">All Categories</option><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
-<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div>
-</div>
+<div class="panel"><div class="toolbar"><input id="productSearch" class="search" placeholder="Search product name or SKU..." oninput="renderProducts()"><select id="productCategoryFilter" class="search" onchange="renderProducts()"><option value="">All Categories</option><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Discount</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
 </section>
 
 <section class="page" id="page-variations">
-<div class="page-head"><div><h1>Variations & Supplier SKU</h1><p>Manage product color images and supplier details.</p></div></div>
-<div class="panel">
-<div class="toolbar"><input id="variationSearch" class="search" placeholder="Search product..." oninput="renderVariations()"></div>
-<div class="table-wrap"><table><thead><tr><th>Product</th><th>Color</th><th>Supplier SKU</th><th>Supplier URL</th><th>Image</th></tr></thead><tbody id="variationsTable"></tbody></table></div>
-</div>
+<div class="page-head"><div><h1>Variations & Supplier SKU</h1><p>Manage color-wise images, sizes, stock and supplier details.</p></div></div>
+<div class="panel"><div class="toolbar"><input id="variationSearch" class="search" placeholder="Search product..." oninput="renderVariations()"></div>
+<div class="table-wrap"><table><thead><tr><th>Product</th><th>Color</th><th>Sizes / Stock</th><th>Supplier SKU</th><th>DropBazar ID</th><th>Supplier URL</th></tr></thead><tbody id="variationsTable"></tbody></table></div></div>
 </section>
 
 <section class="page" id="page-orders">
 <div class="page-head"><div><h1>Orders Management</h1><p>View orders and update order status.</p></div><button class="btn btn-light" onclick="loadOrders()">↻ Refresh</button></div>
-<div class="panel">
-<div class="toolbar"><input id="orderSearch" class="search" placeholder="Search order, name or phone..." oninput="renderOrders()"><select id="orderStatusFilter" class="search" onchange="renderOrders()"><option value="">All Status</option><option value="new">New</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
-<div class="table-wrap"><table><thead><tr><th>Order No.</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table></div>
-</div>
+<div class="panel"><div class="toolbar"><input id="orderSearch" class="search" placeholder="Search order, name or phone..." oninput="renderOrders()"><select id="orderStatusFilter" class="search" onchange="renderOrders()"><option value="">All Status</option><option value="new">New</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Order No.</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table></div></div>
 </section>
 
 <section class="page" id="page-customers">
 <div class="page-head"><div><h1>Customers</h1><p>Customer information collected from orders.</p></div></div>
-<div class="panel"><div class="toolbar"><input id="customerSearch" class="search" placeholder="Search customer..." oninput="renderCustomers()"></div>
-<div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></div>
+<div class="panel"><div class="toolbar"><input id="customerSearch" class="search" placeholder="Search customer..." oninput="renderCustomers()"></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></div>
 </section>
 
 <section class="page" id="page-inventory">
 <div class="page-head"><div><h1>Inventory Management</h1><p>Monitor stock levels and low-stock products.</p></div></div>
-<div class="panel"><div class="toolbar"><input id="inventorySearch" class="search" placeholder="Search inventory..." oninput="renderInventory()"></div>
-<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Stock</th><th>Alert Level</th><th>Stock Status</th><th>Action</th></tr></thead><tbody id="inventoryTable"></tbody></table></div></div>
+<div class="panel"><div class="toolbar"><input id="inventorySearch" class="search" placeholder="Search inventory..." oninput="renderInventory()"></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Stock</th><th>Alert Level</th><th>Stock Status</th><th>Action</th></tr></thead><tbody id="inventoryTable"></tbody></table></div></div>
 </section>
 
 <section class="page" id="page-reports">
@@ -251,8 +227,7 @@ td strong{font-size:12px}
 <section class="page" id="page-staff">
 <div class="page-head"><div><h1>Staff & Roles</h1><p>Manage dashboard access by assigned profile roles.</p></div></div>
 <div class="notice">Owner has full access. Manager and Admin access depend on their assigned role. Role changes should be performed only by the Owner.</div>
-<div class="panel"><div class="panel-head"><h2>Staff Accounts</h2><button class="btn btn-light btn-small" onclick="loadStaff()">Refresh</button></div>
-<div class="table-wrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Account</th></tr></thead><tbody id="staffTable"></tbody></table></div></div>
+<div class="panel"><div class="panel-head"><h2>Staff Accounts</h2><button class="btn btn-light btn-small" onclick="loadStaff()">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Account</th></tr></thead><tbody id="staffTable"></tbody></table></div></div>
 </section>
 
 <section class="page" id="page-activity">
@@ -262,20 +237,12 @@ td strong{font-size:12px}
 
 <section class="page" id="page-settings">
 <div class="page-head"><div><h1>Store Settings</h1><p>Manage customer contact information.</p></div></div>
-<div class="panel">
-<h2 style="margin-bottom:18px">Customer Contact Settings</h2>
-<div class="setting-grid">
+<div class="panel"><h2 style="margin-bottom:18px">Customer Contact Settings</h2><div class="setting-grid">
 <div class="field"><label>WhatsApp Order Number</label><input id="settingWhatsapp" placeholder="016XXXXXXXX"></div>
 <div class="field"><label>Customer Support Number</label><input id="settingSupport1" placeholder="016XXXXXXXX"></div>
 <div class="field"><label>Secondary Support Number</label><input id="settingSupport2" placeholder="017XXXXXXXX"></div>
-</div>
-<button class="btn" onclick="saveSettings()">Save Settings</button>
-</div>
-<div class="panel">
-<h2 style="margin-bottom:15px">Change Password</h2>
-<div class="field"><label>New Password</label><input id="newPassword" type="password" minlength="6" placeholder="At least 6 characters"></div>
-<button class="btn btn-blue" onclick="changePassword()">Update Password</button>
-</div>
+</div><button class="btn" onclick="saveSettings()">Save Settings</button></div>
+<div class="panel"><h2 style="margin-bottom:15px">Change Password</h2><div class="field"><label>New Password</label><input id="newPassword" type="password" minlength="6" placeholder="At least 6 characters"></div><button class="btn btn-blue" onclick="changePassword()">Update Password</button></div>
 </section>
 
 </main>
@@ -283,49 +250,53 @@ td strong{font-size:12px}
 </div>
 
 <!-- PRODUCT MODAL -->
-<div class="modal" id="productModal">
-<div class="modal-box">
+<div class="modal" id="productModal"><div class="modal-box">
 <div class="modal-head"><h2 id="productModalTitle">Add New Product</h2><button class="close-btn" onclick="closeModal('productModal')">✕</button></div>
 <form id="productForm">
 <input type="hidden" id="editProductId">
 <div class="form-grid">
 <div class="field"><label>Product Name *</label><input id="pName" required></div>
-<div class="field"><label>Product SKU</label><input id="pSku"></div>
+<div class="field"><label>Product TKR SKU / Code</label><input id="pSku" placeholder="TKR-001"></div>
 <div class="field"><label>Category *</label><select id="pCategory" required><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
 <div class="field"><label>Selling Price (৳) *</label><input id="pPrice" type="number" min="0" required></div>
+<div class="field"><label>Discount Price (৳)</label><input id="pDiscount" type="number" min="0" placeholder="0 = No discount"></div>
 <div class="field"><label>Supplier Cost (৳)</label><input id="pCost" type="number" min="0" value="0"></div>
-<div class="field"><label>Stock Quantity</label><input id="pStock" type="number" min="0" value="0"></div>
-<div class="field"><label>Low Stock Alert Level</label><input id="pAlert" type="number" min="0" value="5"></div>
+<div class="field"><label>Parent Stock Quantity</label><input id="pStock" type="number" min="0" value="0"></div>
+<div class="field"><label>Low Stock Alert / Minimum Stock</label><input id="pAlert" type="number" min="0" value="5"></div>
 <div class="field"><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL"></div>
+<div class="field"><label>Supplier Product URL (optional)</label><input id="pSupplierUrl" type="url" placeholder="https://..."></div>
+<div class="field"><label>DropBazar Product ID</label><input id="pDropbazarId" placeholder="DropBazar Product ID"></div>
 <div class="field full"><label>Product Description</label><textarea id="pDescription"></textarea></div>
-<div class="field full"><label>Product Images (Select multiple from Gallery)</label><input id="pImages" type="file" accept="image/png,image/jpeg,image/webp" multiple><small style="color:var(--muted)">Maximum 5MB per image. Images upload to Supabase Storage.</small><div id="imagePreview" class="image-preview"></div></div>
-<div class="field full"><label><input id="pActive" type="checkbox" checked style="width:auto"> Show this product on customer website</label></div>
-<div class="field full"><hr style="border:0;border-top:1px solid var(--line);margin:8px 0 16px"><div class="panel-head"><h2>Color Variations & Supplier Information</h2><button type="button" class="btn btn-small" onclick="addVariationRow()">+ Add Color</button></div><div id="variationEditor"></div></div>
+<div class="field full"><label>Product Images (Select multiple)</label><input id="pImages" type="file" accept="image/png,image/jpeg,image/webp" multiple><small style="color:var(--muted)">Maximum 5MB per image. Images upload to Supabase Storage.</small><div id="imagePreview" class="image-preview"></div></div>
+<div class="field full">
+<label><input id="pNewArrival" type="checkbox" style="width:auto"> New Arrival</label>
+<label><input id="pBestSeller" type="checkbox" style="width:auto"> Best Seller</label>
+<label><input id="pActive" type="checkbox" checked style="width:auto"> Show this product on customer website</label>
+</div>
+<div class="field full"><hr style="border:0;border-top:1px solid var(--line);margin:8px 0 16px">
+<div class="panel-head"><h2>Color Variations & Supplier Information</h2><button type="button" class="btn btn-small" onclick="addVariationRow()">+ Add Color</button></div>
+<div class="notice">প্রতিটি Color Variation-এর জন্য আলাদা Supplier SKU, Supplier URL, DropBazar Product ID, ছবি, Size এবং Size-wise Stock দিতে পারবে।</div>
+<div id="variationEditor"></div>
+</div>
 </div>
 <div class="form-actions"><button type="button" class="btn btn-light" onclick="closeModal('productModal')">Cancel</button><button type="submit" class="btn" id="saveProductButton">Save Product</button></div>
 <div id="productFormError" class="error"></div>
 </form>
-</div>
-</div>
+</div></div>
 
 <!-- ORDER MODAL -->
-<div class="modal" id="orderModal">
-<div class="modal-box">
+<div class="modal" id="orderModal"><div class="modal-box">
 <div class="modal-head"><h2 id="orderModalTitle">Order Details</h2><button class="close-btn" onclick="closeModal('orderModal')">✕</button></div>
 <div id="orderModalContent" class="order-detail"></div>
 <div class="form-actions"><button class="btn btn-light" onclick="closeModal('orderModal')">Close</button></div>
-</div>
-</div>
+</div></div>
 
 <script>
 const client=window.supabaseClient;
-const DROPBAZAR_FUNCTION_URL='https://sifxuupldjriaedqztmd.supabase.co/functions/v1/dropbazar-order';
-
 let currentUser=null,currentProfile=null,currentRole='';
 let products=[],orders=[],customers=[],variations=[];
-let existingImages=[];
-let variationDraft=[];
-let settingsRow=null;
+let existingImages=[],variationDraft=[],settingsRow=null;
+let sendingOrders=new Set();
 
 const $=id=>document.getElementById(id);
 const money=v=>Number(v||0).toLocaleString('en-BD');
@@ -353,8 +324,7 @@ if(!['owner','manager','admin'].includes(role))throw new Error('আপনার 
 currentUser=user;currentProfile=data;currentRole=role;
 $('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');
 $('roleBadge').textContent=roleName(role).toUpperCase();
-applyRolePermissions();
-await refreshAll();
+applyRolePermissions();await refreshAll();
 }catch(error){
 await client.auth.signOut();
 $('loginError').textContent=error.message||'Login verification failed.';
@@ -362,12 +332,10 @@ $('loginScreen').classList.remove('hidden');$('app').classList.add('hidden');
 }
 }
 $('loginForm').addEventListener('submit',async e=>{
-e.preventDefault();
-$('loginButton').disabled=true;$('loginButton').textContent='PLEASE WAIT...';$('loginError').textContent='';
+e.preventDefault();$('loginButton').disabled=true;$('loginButton').textContent='PLEASE WAIT...';$('loginError').textContent='';
 try{
 const {data,error}=await client.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});
-if(error)throw error;
-await verifyUser(data.user);
+if(error)throw error;await verifyUser(data.user);
 }catch(error){$('loginError').textContent=error.message||'Login failed.'}
 finally{$('loginButton').disabled=false;$('loginButton').textContent='LOGIN TO DASHBOARD'}
 });
@@ -386,8 +354,7 @@ function navigate(name,button){
 document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 $('page-'+name)?.classList.add('active');
 document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-const nav=button||document.querySelector(`[data-page="${name}"]`);
-nav?.classList.add('active');
+(button||document.querySelector(`[data-page="${name}"]`))?.classList.add('active');
 $('sidebar').classList.remove('open');
 }
 function toggleSidebar(){$('sidebar').classList.toggle('open')}
@@ -401,27 +368,21 @@ renderDashboard();renderCustomers();renderInventory();renderReports();renderVari
 }
 async function loadProducts(){
 const {data,error}=await client.from('products').select('*').order('created_at',{ascending:false});
-if(error)throw error;
-products=data||[];
-renderProducts();renderInventory();renderDashboard();
+if(error)throw error;products=data||[];renderProducts();renderInventory();renderDashboard();
 }
 async function loadOrders(){
 const {data,error}=await client.from('orders').select('*').order('created_at',{ascending:false});
-if(error)throw error;
-orders=data||[];
-renderOrders();renderDashboard();renderCustomers();renderReports();
+if(error)throw error;orders=data||[];renderOrders();renderDashboard();renderCustomers();renderReports();
 }
-
 function renderDashboard(){
 const revenue=orders.filter(o=>orderStatus(o)!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
 $('statRevenue').textContent='৳'+money(revenue);
-$('statOrders').textContent=orders.length;
-$('statProducts').textContent=products.length;
+$('statOrders').textContent=orders.length;$('statProducts').textContent=products.length;
 $('statCustomers').textContent=buildCustomers().length;
 $('statPending').textContent=orders.filter(o=>['new','pending'].includes(orderStatus(o))).length;
 $('statDelivered').textContent=orders.filter(o=>orderStatus(o)==='delivered').length;
 $('statCancelled').textContent=orders.filter(o=>orderStatus(o)==='cancelled').length;
-const low=products.filter(p=>Number(p.stock||0)<=Number(p.low_stock_threshold??p.alert_level??5));
+const low=products.filter(p=>Number(p.stock||0)<=Number(p.low_stock_threshold??p.low_stock_alert??p.alert_level??5));
 $('statLowStock').textContent=low.length;
 $('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders yet</td></tr>';
 $('lowStockList').innerHTML=low.slice(0,6).map(p=>`<div style="padding:10px;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between"><span>${esc(p.name)}</span><strong style="color:var(--red)">${Number(p.stock||0)} left</strong></div>`).join('')||'<div class="empty">No low stock alerts</div>';
@@ -432,71 +393,85 @@ const label={new:'New',pending:'Pending',confirmed:'Confirmed',processing:'Proce
 const cls=['cancelled'].includes(s)?'red':['new','pending'].includes(s)?'orange':['shipped','processing'].includes(s)?'blue':'';
 return `<span class="badge ${cls}">${esc(label)}</span>`;
 }
-
 function productImages(p){
 if(Array.isArray(p.images))return p.images;
-if(typeof p.images==='string'){try{return JSON.parse(p.images)}catch(e){return p.images?[p.images]:[]}}
+if(typeof p.images==='string'){try{const parsed=JSON.parse(p.images);return Array.isArray(parsed)?parsed:[]}catch(e){return p.images?[p.images]:[]}}
 return [];
 }
 function getProductUrl(productId){
-const url=new URL('index.html',window.location.href);
-url.search='';
-url.searchParams.set('product',productId);
-return url.href;
+const url=new URL('index.html',window.location.href);url.search='';url.searchParams.set('product',productId);return url.href;
 }
 async function copyProductUrl(id){
 try{
 const url=getProductUrl(id);
-if(navigator.clipboard&&window.isSecureContext){
-await navigator.clipboard.writeText(url);
-}else{
-const input=document.createElement('textarea');
-input.value=url;input.style.position='fixed';input.style.opacity='0';
-document.body.appendChild(input);input.select();
-const copied=document.execCommand('copy');input.remove();
-if(!copied)throw new Error('Copy failed');
-}
+if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(url);
+else{const input=document.createElement('textarea');input.value=url;input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();const copied=document.execCommand('copy');input.remove();if(!copied)throw new Error('Copy failed')}
 notify('Product URL copied successfully!');
 }catch(error){notify('URL copy করা যায়নি: '+error.message)}
 }
 function renderProducts(){
-const term=($('productSearch')?.value||'').toLowerCase();
-const cat=$('productCategoryFilter')?.value||'';
+const term=($('productSearch')?.value||'').toLowerCase(),cat=$('productCategoryFilter')?.value||'';
 const list=products.filter(p=>(!cat||p.category===cat)&&(`${p.name} ${p.sku||''}`).toLowerCase().includes(term));
 $('productsTable').innerHTML=list.map(p=>{
 const imgs=productImages(p);
-return `<tr>
-<td><div class="product-cell"><img src="${esc(imgs[0]||'')}" onerror="this.style.visibility='hidden'"><strong>${esc(p.name)}</strong></div></td>
-<td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td>
-<td>৳${money(p.selling_price)}</td><td>${Number(p.stock||0)}</td>
+return `<tr><td><div class="product-cell"><img src="${esc(imgs[0]||'')}" onerror="this.style.visibility='hidden'"><strong>${esc(p.name)}</strong></div></td>
+<td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td><td>৳${money(p.selling_price)}</td>
+<td>${Number(p.discount_price||0)>0?'৳'+money(p.discount_price):'—'}</td><td>${Number(p.stock||0)}</td>
 <td>${p.is_active===false?'<span class="badge red">Hidden</span>':'<span class="badge">Active</span>'}</td>
-<td><div class="actions">
-<button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Edit</button>
+<td><div class="actions"><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Edit</button>
 <button class="btn btn-small btn-light" onclick="copyProductUrl('${esc(p.id)}')">Copy URL</button>
-<button class="btn btn-small btn-red" onclick="deleteProduct('${esc(p.id)}')">Delete</button>
-</div></td></tr>`;
-}).join('')||'<tr><td colspan="7" class="empty">No products found</td></tr>';
+<button class="btn btn-small btn-red" onclick="deleteProduct('${esc(p.id)}')">Delete</button></div></td></tr>`;
+}).join('')||'<tr><td colspan="8" class="empty">No products found</td></tr>';
+}
+
+function parseJsonArray(value){
+if(Array.isArray(value))return value;
+if(!value)return [];
+if(typeof value==='string'){try{const p=JSON.parse(value);return Array.isArray(p)?p:[]}catch(e){return value.split(',').map(x=>x.trim()).filter(Boolean)}}
+return [];
+}
+function normalizeSizes(value){
+if(Array.isArray(value))return value.map(v=>typeof v==='object'?v:{size:String(v),stock:0});
+if(value&&typeof value==='object')return Object.entries(value).map(([size,stock])=>({size,stock:Number(stock||0)}));
+if(typeof value==='string')return value.split(',').map(x=>x.trim()).filter(Boolean).map(size=>({size,stock:0}));
+return [];
 }
 function openProductModal(){
-$('productForm').reset();$('editProductId').value='';$('productModalTitle').textContent='Add New Product';
-$('pActive').checked=true;existingImages=[];variationDraft=[];
-$('imagePreview').innerHTML='';$('variationEditor').innerHTML='';$('productFormError').textContent='';
+$('productForm').reset();$('editProductId').value='';
+$('productModalTitle').textContent='Add New Product';
+$('pActive').checked=true;$('pNewArrival').checked=false;$('pBestSeller').checked=false;
+existingImages=[];variationDraft=[];$('imagePreview').innerHTML='';
+$('variationEditor').innerHTML='';$('productFormError').textContent='';
 openModal('productModal');
 }
 async function editProduct(id){
 const p=products.find(x=>String(x.id)===String(id));if(!p)return;
-$('productForm').reset();$('editProductId').value=p.id;$('productModalTitle').textContent='Edit Product';
+$('productForm').reset();$('editProductId').value=p.id;
+$('productModalTitle').textContent='Edit Product';
 $('pName').value=p.name||'';$('pSku').value=p.sku||'';$('pCategory').value=p.category||'men';
-$('pPrice').value=p.selling_price||0;$('pCost').value=p.supplier_cost||0;$('pStock').value=p.stock||0;
-$('pAlert').value=p.low_stock_threshold??p.alert_level??5;
+$('pPrice').value=p.selling_price||0;$('pDiscount').value=p.discount_price||'';
+$('pCost').value=p.supplier_cost||0;$('pStock').value=p.stock||0;
+$('pAlert').value=p.low_stock_threshold??p.low_stock_alert??p.alert_level??5;
 $('pSizes').value=Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||'';
-$('pDescription').value=p.description||'';$('pActive').checked=p.is_active!==false;
+$('pSupplierUrl').value=p.supplier_product_url||'';
+$('pDropbazarId').value=p.dropbazar_product_id||'';
+$('pDescription').value=p.description||'';
+$('pActive').checked=p.is_active!==false;
+$('pNewArrival').checked=!!p.is_new_arrival;
+$('pBestSeller').checked=!!p.is_best_seller;
 existingImages=productImages(p).slice();renderImagePreview();
 variationDraft=[];
 try{
 const {data,error}=await client.from('product_variations').select('*').eq('product_id',p.id).order('sort_order',{ascending:true});
-if(error)throw error;variationDraft=data||[];
-}catch(e){console.warn(e)}
+if(error)throw error;
+variationDraft=(data||[]).map(v=>({
+...v,
+sizes:normalizeSizes(v.sizes||v.size_stock||v.stock_by_size),
+images:parseJsonArray(v.images||v.gallery_images),
+dropbazar_product_id:v.dropbazar_product_id||'',
+supplier_cost:v.supplier_cost||0
+}));
+}catch(e){console.warn('Variation load:',e)}
 renderVariationEditor();$('productFormError').textContent='';openModal('productModal');
 }
 function renderImagePreview(){
@@ -504,35 +479,67 @@ $('imagePreview').innerHTML=existingImages.map((url,i)=>`<div class="image-item"
 }
 function removeExistingImage(i){existingImages.splice(i,1);renderImagePreview()}
 $('pImages').addEventListener('change',()=>{
-const files=[...$('pImages').files];
-for(const file of files){
+for(const file of [...$('pImages').files]){
 if(file.size>5*1024*1024){notify(file.name+' is larger than 5MB');continue}
-const reader=new FileReader();
-reader.onload=e=>{
+const reader=new FileReader();reader.onload=e=>{
 const box=document.createElement('div');box.className='image-item';
 const img=document.createElement('img');img.src=e.target.result;box.appendChild(img);
 const tag=document.createElement('small');tag.textContent=file.name;box.appendChild(tag);
 $('imagePreview').appendChild(box);
-};
-reader.readAsDataURL(file);
+};reader.readAsDataURL(file);
 }
 });
+
 function addVariationRow(item={}){
-variationDraft.push({color_name:item.color_name||'',supplier_sku:item.supplier_sku||'',supplier_product_url:item.supplier_product_url||'',image_url:item.image_url||'',id:item.id||null});
+variationDraft.push({
+id:item.id||null,color_name:item.color_name||'',
+supplier_sku:item.supplier_sku||'',
+supplier_product_url:item.supplier_product_url||'',
+dropbazar_product_id:item.dropbazar_product_id||'',
+supplier_cost:item.supplier_cost||0,
+image_url:item.image_url||'',
+images:parseJsonArray(item.images||item.gallery_images),
+sizes:normalizeSizes(item.sizes||item.size_stock||item.stock_by_size)
+});
 renderVariationEditor();
 }
+function addVariationSize(index,item={}){
+variationDraft[index].sizes=variationDraft[index].sizes||[];
+variationDraft[index].sizes.push({size:item.size||'',stock:Number(item.stock||0)});
+renderVariationEditor();
+}
+function removeVariationSize(index,sizeIndex){
+variationDraft[index].sizes.splice(sizeIndex,1);renderVariationEditor();
+}
 function renderVariationEditor(){
-$('variationEditor').innerHTML=variationDraft.map((v,i)=>`<div class="variation-row">
-<input placeholder="Color name" value="${esc(v.color_name)}" oninput="variationDraft[${i}].color_name=this.value">
-<input placeholder="Supplier SKU" value="${esc(v.supplier_sku)}" oninput="variationDraft[${i}].supplier_sku=this.value">
-<input placeholder="Supplier product URL" value="${esc(v.supplier_product_url)}" oninput="variationDraft[${i}].supplier_product_url=this.value">
-<input placeholder="Color image URL" value="${esc(v.image_url)}" oninput="variationDraft[${i}].image_url=this.value">
-<button type="button" class="btn btn-small btn-red" onclick="variationDraft.splice(${i},1);renderVariationEditor()">Remove</button>
+$('variationEditor').innerHTML=variationDraft.map((v,i)=>`
+<div class="variation-card">
+<div class="variation-card-head"><strong>COLOR VARIATION ${i+1}</strong>
+<button type="button" class="btn btn-small btn-red" onclick="variationDraft.splice(${i},1);renderVariationEditor()">Remove Color</button></div>
+<div class="variation-grid">
+<div class="field"><label>Color Name *</label><input value="${esc(v.color_name)}" placeholder="Black / White / Navy" oninput="variationDraft[${i}].color_name=this.value"></div>
+<div class="field"><label>Supplier SKU (this color)</label><input value="${esc(v.supplier_sku)}" placeholder="Supplier SKU" oninput="variationDraft[${i}].supplier_sku=this.value"></div>
+<div class="field"><label>Supplier Product URL</label><input value="${esc(v.supplier_product_url)}" placeholder="https://..." oninput="variationDraft[${i}].supplier_product_url=this.value"></div>
+<div class="field"><label>DropBazar Product ID</label><input value="${esc(v.dropbazar_product_id)}" placeholder="DropBazar ID" oninput="variationDraft[${i}].dropbazar_product_id=this.value"></div>
+<div class="field"><label>Supplier Cost (৳)</label><input type="number" min="0" value="${Number(v.supplier_cost||0)}" oninput="variationDraft[${i}].supplier_cost=Number(this.value||0)"></div>
+<div class="field"><label>Color Main Image URL</label><input value="${esc(v.image_url)}" placeholder="https://..." oninput="variationDraft[${i}].image_url=this.value"></div>
+<div class="field full"><label>Additional Gallery Image URLs (one URL per line)</label><textarea placeholder="https://image1.jpg&#10;https://image2.jpg" oninput="variationDraft[${i}].images=this.value.split('\\n').map(x=>x.trim()).filter(Boolean)">${esc((v.images||[]).join('\n'))}</textarea></div>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0 7px">
+<strong style="font-size:13px;color:var(--green)">Size-wise Stock</strong>
+<button type="button" class="btn btn-small btn-light" onclick="addVariationSize(${i})">+ Add Size</button>
+</div>
+${(v.sizes||[]).map((s,j)=>`<div class="variation-size-row">
+<input placeholder="Size (S / M / L)" value="${esc(s.size||'')}" oninput="variationDraft[${i}].sizes[${j}].size=this.value">
+<input type="number" min="0" placeholder="Stock" value="${Number(s.stock||0)}" oninput="variationDraft[${i}].sizes[${j}].stock=Number(this.value||0)">
+<input placeholder="Size SKU (optional)" value="${esc(s.supplier_sku||'')}" oninput="variationDraft[${i}].sizes[${j}].supplier_sku=this.value">
+<button type="button" class="btn btn-small btn-red" onclick="removeVariationSize(${i},${j})">×</button>
+</div>`).join('')}
 </div>`).join('');
 }
+
 async function uploadProductImages(productId){
 const files=[...$('pImages').files];
-if(!files.length)return existingImages;
 for(const file of files){
 if(file.size>5*1024*1024)throw new Error(file.name+' is larger than 5MB');
 const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
@@ -551,12 +558,22 @@ $('productFormError').textContent='';
 try{
 const id=$('editProductId').value;
 const payload={
-name:$('pName').value.trim(),sku:$('pSku').value.trim()||null,
-category:$('pCategory').value,selling_price:Number($('pPrice').value),
-supplier_cost:Number($('pCost').value||0),stock:Number($('pStock').value||0),
+name:$('pName').value.trim(),
+sku:$('pSku').value.trim()||null,
+category:$('pCategory').value,
+selling_price:Number($('pPrice').value),
+discount_price:Number($('pDiscount').value||0),
+supplier_cost:Number($('pCost').value||0),
+stock:Number($('pStock').value||0),
 low_stock_threshold:Number($('pAlert').value||5),
+low_stock_alert:Number($('pAlert').value||5),
 sizes:$('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),
-description:$('pDescription').value.trim(),is_active:$('pActive').checked,
+description:$('pDescription').value.trim(),
+is_active:$('pActive').checked,
+is_new_arrival:$('pNewArrival').checked,
+is_best_seller:$('pBestSeller').checked,
+supplier_product_url:$('pSupplierUrl').value.trim()||null,
+dropbazar_product_id:$('pDropbazarId').value.trim()||null,
 images:existingImages
 };
 let productId=id;
@@ -571,14 +588,20 @@ payload.images=await uploadProductImages(productId);
 const {error:imageError}=await client.from('products').update({images:payload.images}).eq('id',productId);
 if(imageError)throw imageError;
 
-const rows=variationDraft.filter(v=>v.color_name.trim()).map((v,index)=>({
-...(v.id?{id:v.id}:{}),product_id:productId,
+const rows=variationDraft.filter(v=>String(v.color_name||'').trim()).map((v,index)=>({
+...(v.id?{id:v.id}:{}),
+product_id:productId,
 color_name:v.color_name.trim(),
-supplier_sku:v.supplier_sku.trim()||null,
-supplier_product_url:v.supplier_product_url.trim()||null,
-image_url:v.image_url.trim()||null,
+supplier_sku:String(v.supplier_sku||'').trim()||null,
+supplier_product_url:String(v.supplier_product_url||'').trim()||null,
+dropbazar_product_id:String(v.dropbazar_product_id||'').trim()||null,
+supplier_cost:Number(v.supplier_cost||0),
+image_url:String(v.image_url||'').trim()||null,
+images:Array.isArray(v.images)?v.images:[],
+sizes:Array.isArray(v.sizes)?v.sizes:[],
 sort_order:index
 }));
+
 const {data:oldVariations,error:oldError}=await client.from('product_variations').select('id').eq('product_id',productId);
 if(oldError)throw oldError;
 const keepIds=rows.filter(v=>v.id).map(v=>v.id);
@@ -597,11 +620,13 @@ closeModal('productModal');$('pImages').value='';
 await loadProducts();await loadVariations();
 notify('Product saved successfully.');
 }catch(error){
-console.error(error);$('productFormError').textContent=error.message||'Could not save product.';
+console.error(error);
+$('productFormError').textContent=error.message||'Could not save product.';
 }finally{
 $('saveProductButton').disabled=false;$('saveProductButton').textContent='Save Product';
 }
 });
+
 async function deleteProduct(id){
 if(!canManage()){notify('You do not have permission.');return}
 if(!confirm('এই Product Delete করতে চাও?'))return;
@@ -611,259 +636,144 @@ if(window.store)window.store.clearProductCache();
 await logActivity('Deleted product',id);await loadProducts();await loadVariations();
 notify('Product deleted.');
 }
-
 async function loadVariations(){
 const {data,error}=await client.from('product_variations').select('*').order('sort_order',{ascending:true});
 if(error){console.warn(error);variations=[]}else variations=data||[];
 renderVariations();
 }
 function renderVariations(){
-if(!variations.length){$('variationsTable').innerHTML='<tr><td colspan="5" class="empty">No variations loaded</td></tr>';return}
+if(!variations.length){$('variationsTable').innerHTML='<tr><td colspan="6" class="empty">No variations loaded</td></tr>';return}
 const term=($('variationSearch')?.value||'').toLowerCase();
 $('variationsTable').innerHTML=variations.filter(v=>{
 const p=products.find(x=>String(x.id)===String(v.product_id));
 return (`${p?.name||''} ${v.color_name||''} ${v.supplier_sku||''}`).toLowerCase().includes(term);
 }).map(v=>{
 const p=products.find(x=>String(x.id)===String(v.product_id));
-return `<tr><td>${esc(p?.name||v.product_id)}</td><td>${esc(v.color_name)}</td><td>${esc(v.supplier_sku||'—')}</td><td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open Link</a>`:'—'}</td><td>${v.image_url?`<a href="${esc(v.image_url)}" target="_blank" rel="noopener">View Image</a>`:'—'}</td></tr>`;
-}).join('')||'<tr><td colspan="5" class="empty">No variations found</td></tr>';
+const sizes=normalizeSizes(v.sizes||v.size_stock||v.stock_by_size);
+return `<tr><td>${esc(p?.name||v.product_id)}</td><td>${esc(v.color_name)}</td>
+<td>${sizes.map(s=>`${esc(s.size)}: ${Number(s.stock||0)}`).join(', ')||'—'}</td>
+<td>${esc(v.supplier_sku||'—')}</td><td>${esc(v.dropbazar_product_id||'—')}</td>
+<td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open Link</a>`:'—'}</td></tr>`;
+}).join('')||'<tr><td colspan="6" class="empty">No variations found</td></tr>';
 }
 
 function renderOrders(){
-const term=($('orderSearch')?.value||'').toLowerCase();
-const status=$('orderStatusFilter')?.value||'';
+const term=($('orderSearch')?.value||'').toLowerCase(),status=$('orderStatusFilter')?.value||'';
 const list=orders.filter(o=>(!status||orderStatus(o)===status)&&(`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`).toLowerCase().includes(term));
 $('ordersTable').innerHTML=list.map(o=>{
 const submitted=String(o.submission_status||'').toLowerCase()==='submitted';
+const sending=sendingOrders.has(String(o.id));
 return `<tr>
 <td><strong>${esc(o.order_number||o.id)}</strong><br><small>${submitted?'<span class="badge">Sent to DropBazar</span>':'<span class="badge orange">Not sent</span>'}</small></td>
 <td>${esc(o.customer_name||'')}</td><td>${esc(o.customer_phone||'')}</td>
-<td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td>
-<td>${dateText(o.created_at)}</td>
+<td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td>
 <td><div class="actions">
 <button class="btn btn-small btn-blue" onclick="viewOrder('${esc(o.id)}')">Details</button>
-<button class="btn btn-small" onclick="sendAndConfirm('${esc(o.id)}')" ${submitted?'disabled title="Already submitted"':''}>${submitted?'Sent':'Send & Confirm'}</button>
+<button class="btn btn-small" onclick="sendAndConfirm('${esc(o.id)}')" ${(submitted||sending)?'disabled':''}>${submitted?'Sent':sending?'Sending...':'Send & Confirm'}</button>
 <button class="btn btn-small btn-light" onclick="editOrder('${esc(o.id)}')">Edit</button>
 <button class="btn btn-small btn-red" onclick="deleteOrder('${esc(o.id)}')">Delete</button>
 </div></td></tr>`;
 }).join('')||'<tr><td colspan="7" class="empty">No orders found</td></tr>';
 }
 
-/* ===========================
-   DROPBAZAR ITEM DATA MAPPING
-=========================== */
-
-function getDropBazarItemData(item) {
-  const product = products.find(p =>
-    String(p.id) === String(item.product_id || item.productId) ||
-    ((item.product_name || item.name) &&
-    String(p.name).toLowerCase() ===
-    String(item.product_name || item.name).toLowerCase())
-  );
-
-  const variation = variations.find(v => {
-    const sameProduct = product &&
-      String(v.product_id) === String(product.id);
-
-    const sameVariation =
-      item.variation_id &&
-      String(v.id) === String(item.variation_id);
-
-    const sameSku = item.supplier_sku &&
-      String(v.supplier_sku || '').toLowerCase() ===
-      String(item.supplier_sku).toLowerCase();
-
-    const sameColor = item.selected_color &&
-      String(v.color_name || '').toLowerCase() ===
-      String(item.selected_color).toLowerCase();
-
-    return sameVariation || sameSku || (sameProduct && sameColor);
-  });
-
-  return {
-    ...item,
-    product_id: item.product_id || product?.id || null,
-    supplier_sku:
-      item.supplier_sku ||
-      variation?.supplier_sku ||
-      product?.sku ||
-      null,
-    supplier_product_url:
-      item.supplier_product_url ||
-      variation?.supplier_product_url ||
-      null,
-    selected_color:
-      item.selected_color ||
-      variation?.color_name ||
-      null,
-    selected_size: item.selected_size || null,
-    image_url:
-      item.image_url ||
-      variation?.image_url ||
-      null
-  };
+/* DropBazar item mapping */
+function getDropBazarItemData(item){
+const product=products.find(p=>
+String(p.id)===String(item.product_id||item.productId)||
+((item.product_name||item.name)&&String(p.name).toLowerCase()===String(item.product_name||item.name).toLowerCase())
+);
+const variation=variations.find(v=>{
+const sameProduct=product&&String(v.product_id)===String(product.id);
+const sameVariation=item.variation_id&&String(v.id)===String(item.variation_id);
+const sameSku=item.supplier_sku&&String(v.supplier_sku||'').toLowerCase()===String(item.supplier_sku).toLowerCase();
+const sameColor=(item.selected_color||item.color)&&String(v.color_name||'').toLowerCase()===String(item.selected_color||item.color).toLowerCase();
+return sameVariation||sameSku||(sameProduct&&sameColor);
+});
+const variationSizes=normalizeSizes(variation?.sizes||variation?.size_stock||variation?.stock_by_size);
+const chosenSize=String(item.selected_size||item.size||'').toLowerCase();
+const sizeInfo=variationSizes.find(s=>String(s.size||'').toLowerCase()===chosenSize)||{};
+return {
+...item,
+product_id:item.product_id||product?.id||null,
+supplier_sku:item.supplier_sku||sizeInfo.supplier_sku||variation?.supplier_sku||product?.sku||null,
+supplier_product_url:item.supplier_product_url||variation?.supplier_product_url||product?.supplier_product_url||null,
+dropbazar_product_id:item.dropbazar_product_id||variation?.dropbazar_product_id||product?.dropbazar_product_id||null,
+selected_color:item.selected_color||item.color||variation?.color_name||null,
+selected_size:item.selected_size||item.size||null,
+image_url:item.image_url||variation?.image_url||null
+};
+}
+async function getFunctionErrorMessage(error){
+let message=error?.message||'Unknown error';
+try{
+const response=error?.context;
+if(response&&typeof response.clone==='function'){
+const body=await response.clone().json();
+message=body.error||body.message||body.details||message;
+}
+}catch(e){}
+return message;
 }
 
-async function getFunctionErrorMessage(error) {
-  let message = error?.message || 'Unknown error';
-
-  try {
-    const response = error?.context;
-
-    if (response && typeof response.clone === 'function') {
-      const body = await response.clone().json();
-      message =
-        body.error ||
-        body.message ||
-        body.details ||
-        message;
-    }
-  } catch (e) {
-    // Keep the original error message.
-  }
-
-  return message;
+/* SEND & CONFIRM: Edge Function receives order_id only */
+async function sendAndConfirm(id){
+if(!canManage()){notify('You do not have permission.');return}
+const key=String(id);
+if(sendingOrders.has(key))return;
+const order=orders.find(x=>String(x.id)===key);
+if(!order)return;
+if(String(order.submission_status||'').toLowerCase()==='submitted'){
+notify('এই Order ইতিমধ্যে DropBazar-এ পাঠানো হয়েছে।');return;
 }
-
-/* ===========================
-   DROPBAZAR SEND & CONFIRM
-=========================== */
-
-async function sendAndConfirm(id) {
-  if (!canManage()) {
-    notify('You do not have permission.');
-    return;
-  }
-
-  const order = orders.find(x => String(x.id) === String(id));
-  if (!order) return;
-
-  if (String(order.submission_status || '').toLowerCase() === 'submitted') {
-    notify('এই Order ইতিমধ্যে DropBazar-এ পাঠানো হয়েছে।');
-    return;
-  }
-
-  if (!Array.isArray(order.order_items) || !order.order_items.length) {
-    notify('এই Order-এ কোনো Product Item পাওয়া যায়নি।');
-    return;
-  }
-
-  if (!order.customer_name || !order.customer_phone || !order.shipping_address) {
-    notify('এই Order-এর Customer Name, Phone অথবা Shipping Address পাওয়া যায়নি। আগে Order Details ঠিক করো।');
-    return;
-  }
-
-  if (!confirm(
-    `Order ${order.order_number || order.id} DropBazar-এ Send & Confirm করতে চাও?`
-  )) return;
-
-  const button = [...document.querySelectorAll('#ordersTable button')]
-    .find(b => b.getAttribute('onclick') === `sendAndConfirm('${id}')`);
-
-  if (button) {
-    button.disabled = true;
-    button.textContent = 'Sending...';
-  }
-
-  try {
-    const orderItems = order.order_items.map(getDropBazarItemData);
-
-    const missingSku = orderItems.filter(item => !item.supplier_sku);
-
-    if (missingSku.length) {
-      throw new Error(
-        'কিছু Product-এর Supplier SKU পাওয়া যায়নি। Product Variations & SKU থেকে SKU ঠিক করো।'
-      );
-    }
-
-    // DropBazar payload with required shipping and cart fields.
-    const payload = {
-      ...order,
-      external_order_id: String(order.order_number || order.id),
-
-      shipping_name: order.customer_name || '',
-      shipping_phone: order.customer_phone || '',
-      shipping_address: order.shipping_address || '',
-      shipping_city: order.city || '',
-      shipping_area: order.area || '',
-      shipping_postal_code: order.postal_code || '',
-
-      order_items: orderItems,
-      cart_items: orderItems
-    };
-
-    // Existing Edge Function connection remains unchanged.
-    const { data, error } = await client.functions.invoke(
-      'dropbazar-order',
-      { body: payload }
-    );
-
-    if (error) {
-      throw new Error(await getFunctionErrorMessage(error));
-    }
-
-    if (data?.success === false || data?.error) {
-      throw new Error(
-        data.error || data.message ||
-        'DropBazar order submission failed.'
-      );
-    }
-
-    const supplierOrderId =
-      data?.supplier_order_id ||
-      data?.order_id ||
-      data?.id ||
-      data?.data?.order_id ||
-      null;
-
-    const updates = {
-      submission_status: 'submitted',
-      order_status: 'confirmed',
-      ...(supplierOrderId
-        ? { supplier_order_id: String(supplierOrderId) }
-        : {})
-    };
-
-    const { error: updateError } = await client
-      .from('orders')
-      .update(updates)
-      .eq('id', id);
-
-    if (updateError) throw updateError;
-
-    await logActivity(
-      'Sent order to DropBazar',
-      `${order.order_number || id}${supplierOrderId
-        ? ' | Supplier ID: ' + supplierOrderId
-        : ''}`
-    );
-
-    await loadOrders();
-
-    notify('Order successfully sent to DropBazar and confirmed!');
-
-  } catch (error) {
-    console.error('DropBazar submission error:', error);
-
-    const message = await getFunctionErrorMessage(error);
-
-    notify('DropBazar Send failed: ' + message);
-
-    if (button) {
-      button.disabled = false;
-      button.textContent = 'Send & Confirm';
-    }
-  }
+if(!Array.isArray(order.order_items)||!order.order_items.length){
+notify('এই Order-এ কোনো Product Item পাওয়া যায়নি।');return;
 }
+if(!order.customer_name||!order.customer_phone||!order.shipping_address){
+notify('এই Order-এর Customer Name, Phone অথবা Shipping Address পাওয়া যায়নি।');return;
+}
+if(!confirm(`Order ${order.order_number||order.id} DropBazar-এ Send & Confirm করতে চাও?`))return;
 
-async function updateOrderStatus(id,status){
-if(!status)return;
-if(!canManage()){notify('You do not have permission.');renderOrders();return}
-if(!confirm('Order status '+status+' করতে চাও?')){renderOrders();return}
-const {error}=await client.from('orders').update({order_status:status}).eq('id',id);
-if(error){notify(error.message);return}
-await logActivity('Updated order status',id+' → '+status);
-await loadOrders();notify('Order status updated.');
+sendingOrders.add(key);renderOrders();
+try{
+/*
+  Edge Function নিজেই orders টেবিল থেকে order_id দিয়ে
+  order এবং order_items সংগ্রহ করবে।
+  এখানে আর পুরো order payload পাঠানো হচ্ছে না।
+*/
+const {data,error}=await client.functions.invoke(
+'dropbazar-order',
+{body:{order_id:id}}
+);
+if(error)throw new Error(await getFunctionErrorMessage(error));
+if(data?.success===false||data?.error){
+throw new Error(data.error||data.message||'DropBazar order submission failed.');
+}
+const supplierOrderId=
+data?.supplier_order_id||
+data?.order_id||
+data?.id||
+data?.data?.supplier_order_id||
+data?.data?.order_id||
+data?.data?.id||
+null;
+
+const updates={
+submission_status:'submitted',
+order_status:'confirmed',
+...(supplierOrderId?{supplier_order_id:String(supplierOrderId)}:{})
+};
+const {error:updateError}=await client.from('orders').update(updates).eq('id',id);
+if(updateError)throw updateError;
+
+await logActivity('Sent order to DropBazar',`${order.order_number||id}${supplierOrderId?' | Supplier ID: '+supplierOrderId:''}`);
+await loadOrders();
+notify('Order successfully sent to DropBazar and confirmed!');
+}catch(error){
+console.error('DropBazar submission error:',error);
+notify('DropBazar Send failed: '+(await getFunctionErrorMessage(error)));
+}finally{
+sendingOrders.delete(key);renderOrders();
+}
 }
 
 function viewOrder(id){
@@ -879,20 +789,18 @@ $('orderModalContent').innerHTML=`
 <p><strong>Postal Code:</strong> ${esc(o.postal_code||'—')}</p>
 <p><strong>Order Status:</strong> ${statusBadge(orderStatus(o))}</p>
 <p><strong>Submission Status:</strong> ${esc(o.submission_status||'pending')}</p>
+<p><strong>Supplier Order ID:</strong> ${esc(o.supplier_order_id||'—')}</p>
 <p><strong>Payment Method:</strong> ${esc(o.payment_method||'Cash on Delivery')}</p>
 <p><strong>Payment Status:</strong> ${esc(o.payment_status||'pending')}</p>
-<p><strong>Supplier Order ID:</strong> ${esc(o.supplier_order_id||'—')}</p>
-<p><strong>Courier:</strong> ${esc(o.courier_name||'—')}</p>
-<p><strong>Tracking Number:</strong> ${esc(o.tracking_number||'—')}</p>
 <p><strong>Customer Note:</strong> ${esc(o.customer_note||'—')}</p>
 <p><strong>Date:</strong> ${dateText(o.created_at)}</p>
 <hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
 <strong>Order Items</strong>
 ${items.map(i=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)">
 <p><strong>${esc(i.product_name||i.name||'Product')}</strong> × ${Number(i.quantity||1)}</p>
-<p>Price: ৳${money(i.unit_price)} | Size: ${esc(i.selected_size||'—')} | Color: ${esc(i.selected_color||'—')}</p>
+<p>Price: ৳${money(i.unit_price)} | Size: ${esc(i.selected_size||i.size||'—')} | Color: ${esc(i.selected_color||i.color||'—')}</p>
 <p>Supplier SKU: ${esc(i.supplier_sku||'—')}</p>
-<p>Supplier Cost: ৳${money(i.supplier_cost)}</p>
+<p>DropBazar Product ID: ${esc(i.dropbazar_product_id||'—')}</p>
 ${i.supplier_product_url?`<p><a href="${esc(i.supplier_product_url)}" target="_blank" rel="noopener">Supplier Product Link</a></p>`:''}
 </div>`).join('')||'<p>No order items found.</p>'}
 <hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
@@ -902,15 +810,13 @@ ${i.supplier_product_url?`<p><a href="${esc(i.supplier_product_url)}" target="_b
 <p><strong>Total:</strong> ৳${money(o.total_amount)}</p>`;
 openModal('orderModal');
 }
-
 function editOrder(id){
 const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
 if(!canManage()){notify('You do not have permission.');return}
 const statuses=['new','confirmed','processing','shipped','delivered','cancelled'];
 $('orderModalTitle').textContent='Edit Order';
 $('orderModalContent').innerHTML=`
-<form id="editOrderForm">
-<input type="hidden" id="editOrderId" value="${esc(o.id)}">
+<form id="editOrderForm"><input type="hidden" id="editOrderId" value="${esc(o.id)}">
 <div class="form-grid">
 <div class="field"><label>Customer Name</label><input id="eCustomerName" value="${esc(o.customer_name||'')}"></div>
 <div class="field"><label>Phone</label><input id="eCustomerPhone" value="${esc(o.customer_phone||'')}"></div>
@@ -927,34 +833,23 @@ $('orderModalContent').innerHTML=`
 <div class="field"><label>Total Amount</label><input id="eTotal" type="number" min="0" value="${Number(o.total_amount||0)}"></div>
 <div class="field full"><label>Customer Note</label><textarea id="eCustomerNote">${esc(o.customer_note||'')}</textarea></div>
 </div>
-<div class="form-actions">
-<button type="button" class="btn btn-light" onclick="viewOrder('${esc(o.id)}')">Cancel</button>
-<button type="submit" class="btn" id="saveOrderButton">Update Order</button>
-</div>
-<div id="editOrderError" class="error"></div>
-</form>`;
-$('editOrderForm').addEventListener('submit',saveOrderEdit);
-openModal('orderModal');
+<div class="form-actions"><button type="button" class="btn btn-light" onclick="viewOrder('${esc(o.id)}')">Cancel</button><button type="submit" class="btn" id="saveOrderButton">Update Order</button></div>
+<div id="editOrderError" class="error"></div></form>`;
+$('editOrderForm').addEventListener('submit',saveOrderEdit);openModal('orderModal');
 }
-
 async function saveOrderEdit(e){
-e.preventDefault();
-if(!canManage())return;
-const id=$('editOrderId').value;
-const button=$('saveOrderButton');
-button.disabled=true;button.textContent='Updating...';
-$('editOrderError').textContent='';
+e.preventDefault();if(!canManage())return;
+const id=$('editOrderId').value,button=$('saveOrderButton');
+button.disabled=true;button.textContent='Updating...';$('editOrderError').textContent='';
 try{
 const payload={
 customer_name:$('eCustomerName').value.trim(),
 customer_phone:$('eCustomerPhone').value.trim(),
 customer_email:$('eCustomerEmail').value.trim()||null,
-city:$('eCity').value.trim(),
-area:$('eArea').value.trim(),
+city:$('eCity').value.trim(),area:$('eArea').value.trim(),
 postal_code:$('ePostalCode').value.trim()||null,
 shipping_address:$('eAddress').value.trim(),
-order_status:$('eOrderStatus').value,
-payment_status:$('ePaymentStatus').value,
+order_status:$('eOrderStatus').value,payment_status:$('ePaymentStatus').value,
 payment_method:$('ePaymentMethod').value.trim(),
 delivery_charge:Number($('eDelivery').value||0),
 discount:Number($('eDiscount').value||0),
@@ -963,24 +858,17 @@ customer_note:$('eCustomerNote').value.trim()
 };
 const {error}=await client.from('orders').update(payload).eq('id',id);
 if(error)throw error;
-await logActivity('Updated order',id);
-await loadOrders();closeModal('orderModal');notify('Order updated successfully.');
-}catch(error){
-$('editOrderError').textContent=error.message||'Could not update order.';
-button.disabled=false;button.textContent='Update Order';
+await logActivity('Updated order',id);await loadOrders();closeModal('orderModal');notify('Order updated successfully.');
+}catch(error){$('editOrderError').textContent=error.message||'Could not update order.';button.disabled=false;button.textContent='Update Order'}
 }
-}
-
 async function deleteOrder(id){
 if(!canManage()){notify('You do not have permission.');return}
 const order=orders.find(o=>String(o.id)===String(id));
 if(!confirm(`Order ${order?.order_number||id} Delete করতে চাও?`))return;
 const {error}=await client.from('orders').delete().eq('id',id);
 if(error){notify(error.message);return}
-await logActivity('Deleted order',order?.order_number||id);
-await loadOrders();notify('Order deleted successfully.');
+await logActivity('Deleted order',order?.order_number||id);await loadOrders();notify('Order deleted successfully.');
 }
-
 function buildCustomers(){
 const map=new Map();
 orders.forEach(o=>{
@@ -998,7 +886,7 @@ $('customersTable').innerHTML=customers.filter(c=>(`${c.name} ${c.phone} ${c.ema
 function renderInventory(){
 const term=($('inventorySearch')?.value||'').toLowerCase();
 $('inventoryTable').innerHTML=products.filter(p=>(`${p.name} ${p.sku||''}`).toLowerCase().includes(term)).map(p=>{
-const stock=Number(p.stock||0),alertLevel=Number(p.low_stock_threshold??p.alert_level??5);
+const stock=Number(p.stock||0),alertLevel=Number(p.low_stock_threshold??p.low_stock_alert??p.alert_level??5);
 return `<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'—')}</td><td><strong>${stock}</strong></td><td>${alertLevel}</td><td>${stock<=alertLevel?'<span class="badge red">Low Stock</span>':'<span class="badge">In Stock</span>'}</td><td><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Update</button></td></tr>`;
 }).join('')||'<tr><td colspan="6" class="empty">No inventory records</td></tr>';
 }
@@ -1041,7 +929,11 @@ $('settingSupport2').value=data.customer_support_number_2||'';
 }
 async function saveSettings(){
 if(!isOwner())return;
-const payload={whatsapp_order_number:$('settingWhatsapp').value.trim(),customer_support_number:$('settingSupport1').value.trim(),customer_support_number_2:$('settingSupport2').value.trim()};
+const payload={
+whatsapp_order_number:$('settingWhatsapp').value.trim(),
+customer_support_number:$('settingSupport1').value.trim(),
+customer_support_number_2:$('settingSupport2').value.trim()
+};
 let result;
 if(settingsRow?.id)result=await client.from('store_settings').update(payload).eq('id',settingsRow.id);
 else result=await client.from('store_settings').insert(payload);
