@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -747,6 +748,11 @@ async function sendAndConfirm(id) {
     return;
   }
 
+  if (!order.customer_name || !order.customer_phone || !order.shipping_address) {
+    notify('এই Order-এর Customer Name, Phone অথবা Shipping Address পাওয়া যায়নি। আগে Order Details ঠিক করো।');
+    return;
+  }
+
   if (!confirm(
     `Order ${order.order_number || order.id} DropBazar-এ Send & Confirm করতে চাও?`
   )) return;
@@ -770,10 +776,18 @@ async function sendAndConfirm(id) {
       );
     }
 
-    // Updated DropBazar payload
+    // DropBazar payload with shipping details from existing orders columns.
     const payload = {
       ...order,
       external_order_id: String(order.order_number || order.id),
+
+      shipping_name: order.customer_name,
+      shipping_phone: order.customer_phone,
+      shipping_address: order.shipping_address,
+      shipping_city: order.city || '',
+      shipping_area: order.area || '',
+      shipping_postal_code: order.postal_code || '',
+
       order_items: orderItems
     };
 
