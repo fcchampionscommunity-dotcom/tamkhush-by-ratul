@@ -776,19 +776,20 @@ async function sendAndConfirm(id) {
       );
     }
 
-    // DropBazar payload with shipping details from existing orders columns.
+    // DropBazar payload with required shipping and cart fields.
     const payload = {
       ...order,
       external_order_id: String(order.order_number || order.id),
 
-      shipping_name: order.customer_name,
-      shipping_phone: order.customer_phone,
-      shipping_address: order.shipping_address,
+      shipping_name: order.customer_name || '',
+      shipping_phone: order.customer_phone || '',
+      shipping_address: order.shipping_address || '',
       shipping_city: order.city || '',
       shipping_area: order.area || '',
       shipping_postal_code: order.postal_code || '',
 
-      order_items: orderItems
+      order_items: orderItems,
+      cart_items: orderItems
     };
 
     // Existing Edge Function connection remains unchanged.
