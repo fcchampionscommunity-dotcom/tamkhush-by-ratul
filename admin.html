@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -29,9 +28,7 @@ button{cursor:pointer}
 .login-card h2{font-size:19px;margin-bottom:20px}
 .field{margin-bottom:15px}
 .field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
-.field input,.field select,.field textarea{
-width:100%;padding:12px;border:1px solid #cbd5de;border-radius:6px;background:white;color:var(--text);outline:none
-}
+.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #cbd5de;border-radius:6px;background:white;color:var(--text);outline:none}
 .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange)}
 .field textarea{min-height:90px;resize:vertical}
 .btn{border:0;background:var(--orange);color:white;padding:11px 17px;border-radius:6px;font-weight:700}
@@ -313,7 +310,7 @@ td strong{font-size:12px}
 <!-- ORDER MODAL -->
 <div class="modal" id="orderModal">
 <div class="modal-box">
-<div class="modal-head"><h2>Order Details</h2><button class="close-btn" onclick="closeModal('orderModal')">✕</button></div>
+<div class="modal-head"><h2 id="orderModalTitle">Order Details</h2><button class="close-btn" onclick="closeModal('orderModal')">✕</button></div>
 <div id="orderModalContent" class="order-detail"></div>
 <div class="form-actions"><button class="btn btn-light" onclick="closeModal('orderModal')">Close</button></div>
 </div>
@@ -321,6 +318,8 @@ td strong{font-size:12px}
 
 <script>
 const client=window.supabaseClient;
+const DROPBAZAR_FUNCTION_URL='https://sifxuupldjriaedqztmd.supabase.co/functions/v1/dropbazar-order';
+
 let currentUser=null,currentProfile=null,currentRole='';
 let products=[],orders=[],customers=[],variations=[];
 let existingImages=[];
@@ -332,6 +331,7 @@ const money=v=>Number(v||0).toLocaleString('en-BD');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const dateText=v=>v?new Date(v).toLocaleString('en-BD'):'—';
 const roleName=r=>({owner:'Owner',manager:'Manager',admin:'Admin'}[String(r||'').toLowerCase()]||r||'Unknown');
+const orderStatus=o=>String(o?.order_status||'new').toLowerCase();
 
 function notify(message){alert(message)}
 function canManage(){return ['owner','manager'].includes(currentRole)}
@@ -354,7 +354,11 @@ $('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');
 $('roleBadge').textContent=roleName(role).toUpperCase();
 applyRolePermissions();
 await refreshAll();
-}catch(error){await client.auth.signOut();$('loginError').textContent=error.message||'Login verification failed.';$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden')}
+}catch(error){
+await client.auth.signOut();
+$('loginError').textContent=error.message||'Login verification failed.';
+$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden');
+}
 }
 $('loginForm').addEventListener('submit',async e=>{
 e.preventDefault();
@@ -390,7 +394,8 @@ function openModal(id){$(id).classList.add('open')}
 function closeModal(id){$(id).classList.remove('open')}
 
 async function refreshAll(){
-await Promise.allSettled([loadProducts(),loadOrders(),loadSettings()]);
+const results=await Promise.allSettled([loadProducts(),loadOrders(),loadSettings(),loadVariations()]);
+results.filter(x=>x.status==='rejected').forEach(x=>console.error(x.reason));
 renderDashboard();renderCustomers();renderInventory();renderReports();renderVariations();
 }
 async function loadProducts(){
@@ -400,23 +405,24 @@ products=data||[];
 renderProducts();renderInventory();renderDashboard();
 }
 async function loadOrders(){
-const {data,error}=await client.from('orders').select('*,order_items(*)').order('created_at',{ascending:false});
+const {data,error}=await client.from('orders').select('*').order('created_at',{ascending:false});
 if(error)throw error;
 orders=data||[];
 renderOrders();renderDashboard();renderCustomers();renderReports();
 }
+
 function renderDashboard(){
-const revenue=orders.filter(o=>o.status!=='cancelled'&&o.order_status!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
+const revenue=orders.filter(o=>orderStatus(o)!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
 $('statRevenue').textContent='৳'+money(revenue);
 $('statOrders').textContent=orders.length;
 $('statProducts').textContent=products.length;
 $('statCustomers').textContent=buildCustomers().length;
-$('statPending').textContent=orders.filter(o=>['new','pending'].includes(o.status||o.order_status)).length;
-$('statDelivered').textContent=orders.filter(o=>(o.status||o.order_status)==='delivered').length;
-$('statCancelled').textContent=orders.filter(o=>(o.status||o.order_status)==='cancelled').length;
+$('statPending').textContent=orders.filter(o=>['new','pending'].includes(orderStatus(o))).length;
+$('statDelivered').textContent=orders.filter(o=>orderStatus(o)==='delivered').length;
+$('statCancelled').textContent=orders.filter(o=>orderStatus(o)==='cancelled').length;
 const low=products.filter(p=>Number(p.stock||0)<=Number(p.low_stock_threshold??p.alert_level??5));
 $('statLowStock').textContent=low.length;
-$('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(o.status||o.order_status)}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders yet</td></tr>';
+$('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders yet</td></tr>';
 $('lowStockList').innerHTML=low.slice(0,6).map(p=>`<div style="padding:10px;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between"><span>${esc(p.name)}</span><strong style="color:var(--red)">${Number(p.stock||0)} left</strong></div>`).join('')||'<div class="empty">No low stock alerts</div>';
 }
 function statusBadge(status){
@@ -425,13 +431,49 @@ const label={new:'New',pending:'Pending',confirmed:'Confirmed',processing:'Proce
 const cls=['cancelled'].includes(s)?'red':['new','pending'].includes(s)?'orange':['shipped','processing'].includes(s)?'blue':'';
 return `<span class="badge ${cls}">${esc(label)}</span>`;
 }
+
+function productImages(p){
+if(Array.isArray(p.images))return p.images;
+if(typeof p.images==='string'){try{return JSON.parse(p.images)}catch(e){return p.images?[p.images]:[]}}
+return [];
+}
+function getProductUrl(productId){
+const url=new URL('index.html',window.location.href);
+url.search='';
+url.searchParams.set('product',productId);
+return url.href;
+}
+async function copyProductUrl(id){
+try{
+const url=getProductUrl(id);
+if(navigator.clipboard&&window.isSecureContext){
+await navigator.clipboard.writeText(url);
+}else{
+const input=document.createElement('textarea');
+input.value=url;input.style.position='fixed';input.style.opacity='0';
+document.body.appendChild(input);input.select();
+const copied=document.execCommand('copy');input.remove();
+if(!copied)throw new Error('Copy failed');
+}
+notify('Product URL copied successfully!');
+}catch(error){notify('URL copy করা যায়নি: '+error.message)}
+}
 function renderProducts(){
 const term=($('productSearch')?.value||'').toLowerCase();
 const cat=$('productCategoryFilter')?.value||'';
 const list=products.filter(p=>(!cat||p.category===cat)&&(`${p.name} ${p.sku||''}`).toLowerCase().includes(term));
 $('productsTable').innerHTML=list.map(p=>{
-let imgs=Array.isArray(p.images)?p.images:typeof p.images==='string'?(()=>{try{return JSON.parse(p.images)}catch(e){return [p.images]}})():[];
-return `<tr><td><div class="product-cell"><img src="${esc(imgs[0]||'')}" onerror="this.style.visibility='hidden'"><strong>${esc(p.name)}</strong></div></td><td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td><td>৳${money(p.selling_price)}</td><td>${Number(p.stock||0)}</td><td>${p.is_active===false?'<span class="badge red">Hidden</span>':'<span class="badge">Active</span>'}</td><td><div class="actions"><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Edit</button><button class="btn btn-small btn-red" onclick="deleteProduct('${esc(p.id)}')">Delete</button></div></td></tr>`;
+const imgs=productImages(p);
+return `<tr>
+<td><div class="product-cell"><img src="${esc(imgs[0]||'')}" onerror="this.style.visibility='hidden'"><strong>${esc(p.name)}</strong></div></td>
+<td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td>
+<td>৳${money(p.selling_price)}</td><td>${Number(p.stock||0)}</td>
+<td>${p.is_active===false?'<span class="badge red">Hidden</span>':'<span class="badge">Active</span>'}</td>
+<td><div class="actions">
+<button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Edit</button>
+<button class="btn btn-small btn-light" onclick="copyProductUrl('${esc(p.id)}')">Copy URL</button>
+<button class="btn btn-small btn-red" onclick="deleteProduct('${esc(p.id)}')">Delete</button>
+</div></td></tr>`;
 }).join('')||'<tr><td colspan="7" class="empty">No products found</td></tr>';
 }
 function openProductModal(){
@@ -445,14 +487,13 @@ const p=products.find(x=>String(x.id)===String(id));if(!p)return;
 $('productForm').reset();$('editProductId').value=p.id;$('productModalTitle').textContent='Edit Product';
 $('pName').value=p.name||'';$('pSku').value=p.sku||'';$('pCategory').value=p.category||'men';
 $('pPrice').value=p.selling_price||0;$('pCost').value=p.supplier_cost||0;$('pStock').value=p.stock||0;
-$('pAlert').value=p.low_stock_threshold??p.alert_level??5;$('pSizes').value=Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||'';
+$('pAlert').value=p.low_stock_threshold??p.alert_level??5;
+$('pSizes').value=Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||'';
 $('pDescription').value=p.description||'';$('pActive').checked=p.is_active!==false;
-existingImages=Array.isArray(p.images)?p.images.slice():[];
-if(typeof p.images==='string'){try{existingImages=JSON.parse(p.images)}catch(e){existingImages=[p.images]}}
-renderImagePreview();
+existingImages=productImages(p).slice();renderImagePreview();
 variationDraft=[];
 try{
-const {data,error}=await client.from('product_variations').select('*').eq('product_id',p.id);
+const {data,error}=await client.from('product_variations').select('*').eq('product_id',p.id).order('sort_order',{ascending:true});
 if(error)throw error;variationDraft=data||[];
 }catch(e){console.warn(e)}
 renderVariationEditor();$('productFormError').textContent='';openModal('productModal');
@@ -465,12 +506,14 @@ $('pImages').addEventListener('change',()=>{
 const files=[...$('pImages').files];
 for(const file of files){
 if(file.size>5*1024*1024){notify(file.name+' is larger than 5MB');continue}
-const reader=new FileReader();reader.onload=e=>{
+const reader=new FileReader();
+reader.onload=e=>{
 const box=document.createElement('div');box.className='image-item';
 const img=document.createElement('img');img.src=e.target.result;box.appendChild(img);
 const tag=document.createElement('small');tag.textContent=file.name;box.appendChild(tag);
 $('imagePreview').appendChild(box);
-};reader.readAsDataURL(file);
+};
+reader.readAsDataURL(file);
 }
 });
 function addVariationRow(item={}){
@@ -526,30 +569,50 @@ if(error)throw error;productId=data.id;
 payload.images=await uploadProductImages(productId);
 const {error:imageError}=await client.from('products').update({images:payload.images}).eq('id',productId);
 if(imageError)throw imageError;
-const {error:deleteError}=await client.from('product_variations').delete().eq('product_id',productId);
-if(deleteError)throw deleteError;
-const rows=variationDraft.filter(v=>v.color_name.trim()).map(v=>({
-product_id:productId,color_name:v.color_name.trim(),
+
+const rows=variationDraft.filter(v=>v.color_name.trim()).map((v,index)=>({
+...(v.id?{id:v.id}:{}),product_id:productId,
+color_name:v.color_name.trim(),
 supplier_sku:v.supplier_sku.trim()||null,
 supplier_product_url:v.supplier_product_url.trim()||null,
-image_url:v.image_url.trim()||null
+image_url:v.image_url.trim()||null,
+sort_order:index
 }));
-if(rows.length){const {error}=await client.from('product_variations').insert(rows);if(error)throw error}
+const {data:oldVariations,error:oldError}=await client.from('product_variations').select('id').eq('product_id',productId);
+if(oldError)throw oldError;
+const keepIds=rows.filter(v=>v.id).map(v=>v.id);
+const removeIds=(oldVariations||[]).map(v=>v.id).filter(v=>!keepIds.includes(v));
+if(removeIds.length){
+const {error}=await client.from('product_variations').delete().eq('product_id',productId).in('id',removeIds);
+if(error)throw error;
+}
+if(rows.length){
+const {error}=await client.from('product_variations').upsert(rows,{onConflict:'id'});
+if(error)throw error;
+}
+if(window.store)window.store.clearProductCache();
 await logActivity(id?'Updated product':'Created product',payload.name);
-closeModal('productModal');$('pImages').value='';await loadProducts();await loadVariations();
+closeModal('productModal');$('pImages').value='';
+await loadProducts();await loadVariations();
 notify('Product saved successfully.');
-}catch(error){console.error(error);$('productFormError').textContent=error.message||'Could not save product.'}
-finally{$('saveProductButton').disabled=false;$('saveProductButton').textContent='Save Product'}
+}catch(error){
+console.error(error);$('productFormError').textContent=error.message||'Could not save product.';
+}finally{
+$('saveProductButton').disabled=false;$('saveProductButton').textContent='Save Product';
+}
 });
 async function deleteProduct(id){
-if(!isOwner()&&!canManage()){notify('You do not have permission.');return}
+if(!canManage()){notify('You do not have permission.');return}
 if(!confirm('এই Product Delete করতে চাও?'))return;
 const {error}=await client.from('products').delete().eq('id',id);
 if(error){notify(error.message);return}
-await logActivity('Deleted product',id);await loadProducts();notify('Product deleted.');
+if(window.store)window.store.clearProductCache();
+await logActivity('Deleted product',id);await loadProducts();await loadVariations();
+notify('Product deleted.');
 }
+
 async function loadVariations(){
-const {data,error}=await client.from('product_variations').select('*');
+const {data,error}=await client.from('product_variations').select('*').order('sort_order',{ascending:true});
 if(error){console.warn(error);variations=[]}else variations=data||[];
 renderVariations();
 }
@@ -558,49 +621,195 @@ if(!variations.length){$('variationsTable').innerHTML='<tr><td colspan="5" class
 const term=($('variationSearch')?.value||'').toLowerCase();
 $('variationsTable').innerHTML=variations.filter(v=>{
 const p=products.find(x=>String(x.id)===String(v.product_id));
-return (`${p?.name||''} ${v.color_name||''} ${v.supplier_sku||''}`).toLowerCase().includes(term)
+return (`${p?.name||''} ${v.color_name||''} ${v.supplier_sku||''}`).toLowerCase().includes(term);
 }).map(v=>{
 const p=products.find(x=>String(x.id)===String(v.product_id));
-return `<tr><td>${esc(p?.name||v.product_id)}</td><td>${esc(v.color_name)}</td><td>${esc(v.supplier_sku||'—')}</td><td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open Link</a>`:'—'}</td><td>${v.image_url?`<a href="${esc(v.image_url)}" target="_blank">View Image</a>`:'—'}</td></tr>`
+return `<tr><td>${esc(p?.name||v.product_id)}</td><td>${esc(v.color_name)}</td><td>${esc(v.supplier_sku||'—')}</td><td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open Link</a>`:'—'}</td><td>${v.image_url?`<a href="${esc(v.image_url)}" target="_blank" rel="noopener">View Image</a>`:'—'}</td></tr>`;
 }).join('')||'<tr><td colspan="5" class="empty">No variations found</td></tr>';
 }
-async function loadOrders(){
-const {data,error}=await client.from('orders').select('*,order_items(*)').order('created_at',{ascending:false});
-if(error)throw error;orders=data||[];renderOrders();renderDashboard();renderCustomers();renderReports();
-}
+
 function renderOrders(){
-const term=($('orderSearch')?.value||'').toLowerCase(),status=$('orderStatusFilter')?.value||'';
-const list=orders.filter(o=>(!status||(o.status||o.order_status)===status)&&(`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`).toLowerCase().includes(term));
-$('ordersTable').innerHTML=list.map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name||'')}</td><td>${esc(o.customer_phone||'')}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(o.status||o.order_status)}</td><td>${dateText(o.created_at)}</td><td><div class="actions"><button class="btn btn-small btn-blue" onclick="viewOrder('${esc(o.id)}')">View</button><select onchange="updateOrderStatus('${esc(o.id)}',this.value)" style="padding:6px;border:1px solid var(--line);border-radius:5px"><option value="">Update</option>${['new','confirmed','processing','shipped','delivered','cancelled'].map(s=>`<option value="${s}">${s}</option>`).join('')}</select></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No orders found</td></tr>';
+const term=($('orderSearch')?.value||'').toLowerCase();
+const status=$('orderStatusFilter')?.value||'';
+const list=orders.filter(o=>(!status||orderStatus(o)===status)&&(`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`).toLowerCase().includes(term));
+$('ordersTable').innerHTML=list.map(o=>{
+const submitted=String(o.submission_status||'').toLowerCase()==='submitted';
+return `<tr>
+<td><strong>${esc(o.order_number||o.id)}</strong><br><small>${submitted?'<span class="badge">Sent to DropBazar</span>':'<span class="badge orange">Not sent</span>'}</small></td>
+<td>${esc(o.customer_name||'')}</td><td>${esc(o.customer_phone||'')}</td>
+<td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td>
+<td>${dateText(o.created_at)}</td>
+<td><div class="actions">
+<button class="btn btn-small btn-blue" onclick="viewOrder('${esc(o.id)}')">Details</button>
+<button class="btn btn-small" onclick="sendAndConfirm('${esc(o.id)}')" ${submitted?'disabled title="Already submitted"':''}>${submitted?'Sent':'Send & Confirm'}</button>
+<button class="btn btn-small btn-light" onclick="editOrder('${esc(o.id)}')">Edit</button>
+<button class="btn btn-small btn-red" onclick="deleteOrder('${esc(o.id)}')">Delete</button>
+</div></td></tr>`;
+}).join('')||'<tr><td colspan="7" class="empty">No orders found</td></tr>';
 }
+
+async function sendAndConfirm(id){
+if(!canManage()){notify('You do not have permission.');return}
+const order=orders.find(x=>String(x.id)===String(id));
+if(!order)return;
+if(String(order.submission_status||'').toLowerCase()==='submitted'){
+notify('এই Order ইতিমধ্যে DropBazar-এ পাঠানো হয়েছে।');return;
+}
+if(!confirm(`Order ${order.order_number||order.id} DropBazar-এ Send & Confirm করতে চাও?`))return;
+
+const button=[...document.querySelectorAll('#ordersTable button')].find(b=>b.getAttribute('onclick')===`sendAndConfirm('${id}')`);
+if(button){button.disabled=true;button.textContent='Sending...'}
+try{
+const {data,error}=await client.functions.invoke('dropbazar-order',{
+body:order
+});
+if(error)throw error;
+if(data?.success===false||data?.error)throw new Error(data.error||data.message||'DropBazar order submission failed.');
+
+const supplierOrderId=data?.supplier_order_id||data?.order_id||data?.id||data?.data?.order_id||null;
+const updates={
+submission_status:'submitted',
+order_status:'confirmed',
+...(supplierOrderId?{supplier_order_id:String(supplierOrderId)}:{})
+};
+const {error:updateError}=await client.from('orders').update(updates).eq('id',id);
+if(updateError)throw updateError;
+
+await logActivity('Sent order to DropBazar',`${order.order_number||id}${supplierOrderId?' | Supplier ID: '+supplierOrderId:''}`);
+await loadOrders();
+notify('Order successfully sent to DropBazar and confirmed!');
+}catch(error){
+console.error('DropBazar submission error:',error);
+notify('DropBazar Send failed: '+(error.message||'Unknown error'));
+if(button){button.disabled=false;button.textContent='Send & Confirm'}
+}
+}
+
 async function updateOrderStatus(id,status){
 if(!status)return;
+if(!canManage()){notify('You do not have permission.');renderOrders();return}
 if(!confirm('Order status '+status+' করতে চাও?')){renderOrders();return}
-const {error}=await client.from('orders').update({status}).eq('id',id);
+const {error}=await client.from('orders').update({order_status:status}).eq('id',id);
 if(error){notify(error.message);return}
-await logActivity('Updated order status',id+' → '+status);await loadOrders();notify('Order status updated.');
+await logActivity('Updated order status',id+' → '+status);
+await loadOrders();notify('Order status updated.');
 }
+
 function viewOrder(id){
 const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
 const items=Array.isArray(o.order_items)?o.order_items:[];
+$('orderModalTitle').textContent='Order Details';
 $('orderModalContent').innerHTML=`
 <p><strong>Order:</strong> ${esc(o.order_number||o.id)}</p>
 <p><strong>Customer:</strong> ${esc(o.customer_name||'')}</p>
 <p><strong>Phone:</strong> ${esc(o.customer_phone||'')}</p>
 <p><strong>Email:</strong> ${esc(o.customer_email||'—')}</p>
 <p><strong>Address:</strong> ${esc(o.shipping_address||'')} — ${esc(o.area||'')}, ${esc(o.city||'')}</p>
-<p><strong>Status:</strong> ${statusBadge(o.status||o.order_status)}</p>
-<p><strong>Payment:</strong> ${esc(o.payment_method||'Cash on Delivery')}</p>
+<p><strong>Postal Code:</strong> ${esc(o.postal_code||'—')}</p>
+<p><strong>Order Status:</strong> ${statusBadge(orderStatus(o))}</p>
+<p><strong>Submission Status:</strong> ${esc(o.submission_status||'pending')}</p>
+<p><strong>Payment Method:</strong> ${esc(o.payment_method||'Cash on Delivery')}</p>
+<p><strong>Payment Status:</strong> ${esc(o.payment_status||'pending')}</p>
+<p><strong>Supplier Order ID:</strong> ${esc(o.supplier_order_id||'—')}</p>
+<p><strong>Courier:</strong> ${esc(o.courier_name||'—')}</p>
+<p><strong>Tracking Number:</strong> ${esc(o.tracking_number||'—')}</p>
+<p><strong>Customer Note:</strong> ${esc(o.customer_note||'—')}</p>
 <p><strong>Date:</strong> ${dateText(o.created_at)}</p>
 <hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
 <strong>Order Items</strong>
-${items.map(i=>`<p>${esc(i.product_name||i.name||'Product')} × ${Number(i.quantity||1)} — ৳${money(i.line_total||i.total_price)}</p>`).join('')}
+${items.map(i=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)">
+<p><strong>${esc(i.product_name||i.name||'Product')}</strong> × ${Number(i.quantity||1)}</p>
+<p>Price: ৳${money(i.unit_price)} | Size: ${esc(i.selected_size||'—')} | Color: ${esc(i.selected_color||'—')}</p>
+<p>Supplier SKU: ${esc(i.supplier_sku||'—')}</p>
+<p>Supplier Cost: ৳${money(i.supplier_cost)}</p>
+${i.supplier_product_url?`<p><a href="${esc(i.supplier_product_url)}" target="_blank" rel="noopener">Supplier Product Link</a></p>`:''}
+</div>`).join('')||'<p>No order items found.</p>'}
 <hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
 <p><strong>Subtotal:</strong> ৳${money(o.subtotal)}</p>
+<p><strong>Discount:</strong> ৳${money(o.discount)}</p>
 <p><strong>Delivery:</strong> ৳${money(o.delivery_charge)}</p>
 <p><strong>Total:</strong> ৳${money(o.total_amount)}</p>`;
 openModal('orderModal');
 }
+
+function editOrder(id){
+const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
+if(!canManage()){notify('You do not have permission.');return}
+const statuses=['new','confirmed','processing','shipped','delivered','cancelled'];
+$('orderModalTitle').textContent='Edit Order';
+$('orderModalContent').innerHTML=`
+<form id="editOrderForm">
+<input type="hidden" id="editOrderId" value="${esc(o.id)}">
+<div class="form-grid">
+<div class="field"><label>Customer Name</label><input id="eCustomerName" value="${esc(o.customer_name||'')}"></div>
+<div class="field"><label>Phone</label><input id="eCustomerPhone" value="${esc(o.customer_phone||'')}"></div>
+<div class="field"><label>Email</label><input id="eCustomerEmail" type="email" value="${esc(o.customer_email||'')}"></div>
+<div class="field"><label>City</label><input id="eCity" value="${esc(o.city||'')}"></div>
+<div class="field"><label>Area</label><input id="eArea" value="${esc(o.area||'')}"></div>
+<div class="field"><label>Postal Code</label><input id="ePostalCode" value="${esc(o.postal_code||'')}"></div>
+<div class="field full"><label>Shipping Address</label><textarea id="eAddress">${esc(o.shipping_address||'')}</textarea></div>
+<div class="field"><label>Order Status</label><select id="eOrderStatus">${statuses.map(s=>`<option value="${s}" ${orderStatus(o)===s?'selected':''}>${s}</option>`).join('')}</select></div>
+<div class="field"><label>Payment Status</label><select id="ePaymentStatus">${['pending','paid','failed','refunded'].map(s=>`<option value="${s}" ${String(o.payment_status||'pending')===s?'selected':''}>${s}</option>`).join('')}</select></div>
+<div class="field"><label>Payment Method</label><input id="ePaymentMethod" value="${esc(o.payment_method||'')}"></div>
+<div class="field"><label>Delivery Charge</label><input id="eDelivery" type="number" min="0" value="${Number(o.delivery_charge||0)}"></div>
+<div class="field"><label>Discount</label><input id="eDiscount" type="number" min="0" value="${Number(o.discount||0)}"></div>
+<div class="field"><label>Total Amount</label><input id="eTotal" type="number" min="0" value="${Number(o.total_amount||0)}"></div>
+<div class="field full"><label>Customer Note</label><textarea id="eCustomerNote">${esc(o.customer_note||'')}</textarea></div>
+</div>
+<div class="form-actions">
+<button type="button" class="btn btn-light" onclick="viewOrder('${esc(o.id)}')">Cancel</button>
+<button type="submit" class="btn" id="saveOrderButton">Update Order</button>
+</div>
+<div id="editOrderError" class="error"></div>
+</form>`;
+$('editOrderForm').addEventListener('submit',saveOrderEdit);
+openModal('orderModal');
+}
+
+async function saveOrderEdit(e){
+e.preventDefault();
+if(!canManage())return;
+const id=$('editOrderId').value;
+const button=$('saveOrderButton');
+button.disabled=true;button.textContent='Updating...';
+$('editOrderError').textContent='';
+try{
+const payload={
+customer_name:$('eCustomerName').value.trim(),
+customer_phone:$('eCustomerPhone').value.trim(),
+customer_email:$('eCustomerEmail').value.trim()||null,
+city:$('eCity').value.trim(),
+area:$('eArea').value.trim(),
+postal_code:$('ePostalCode').value.trim()||null,
+shipping_address:$('eAddress').value.trim(),
+order_status:$('eOrderStatus').value,
+payment_status:$('ePaymentStatus').value,
+payment_method:$('ePaymentMethod').value.trim(),
+delivery_charge:Number($('eDelivery').value||0),
+discount:Number($('eDiscount').value||0),
+total_amount:Number($('eTotal').value||0),
+customer_note:$('eCustomerNote').value.trim()
+};
+const {error}=await client.from('orders').update(payload).eq('id',id);
+if(error)throw error;
+await logActivity('Updated order',id);
+await loadOrders();closeModal('orderModal');notify('Order updated successfully.');
+}catch(error){
+$('editOrderError').textContent=error.message||'Could not update order.';
+button.disabled=false;button.textContent='Update Order';
+}
+}
+
+async function deleteOrder(id){
+if(!canManage()){notify('You do not have permission.');return}
+const order=orders.find(o=>String(o.id)===String(id));
+if(!confirm(`Order ${order?.order_number||id} Delete করতে চাও?`))return;
+const {error}=await client.from('orders').delete().eq('id',id);
+if(error){notify(error.message);return}
+await logActivity('Deleted order',order?.order_number||id);
+await loadOrders();notify('Order deleted successfully.');
+}
+
 function buildCustomers(){
 const map=new Map();
 orders.forEach(o=>{
@@ -623,14 +832,14 @@ return `<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'—')}</td><td><strong>${st
 }).join('')||'<tr><td colspan="6" class="empty">No inventory records</td></tr>';
 }
 function renderReports(){
-const sales=orders.filter(o=>(o.status||o.order_status)!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
-const delivered=orders.filter(o=>(o.status||o.order_status)==='delivered').reduce((s,o)=>s+Number(o.total_amount||0),0);
+const sales=orders.filter(o=>orderStatus(o)!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
+const delivered=orders.filter(o=>orderStatus(o)==='delivered').reduce((s,o)=>s+Number(o.total_amount||0),0);
 $('reportSales').textContent='৳'+money(sales);
 $('reportAverage').textContent='৳'+money(orders.length?sales/orders.length:0);
 $('reportDelivered').textContent='৳'+money(delivered);
 $('reportStock').textContent=products.reduce((s,p)=>s+Number(p.stock||0),0);
 const statuses=['new','confirmed','processing','shipped','delivered','cancelled'];
-$('reportStatuses').innerHTML=statuses.map(s=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line)"><span>${s.toUpperCase()}</span><strong>${orders.filter(o=>(o.status||o.order_status)===s).length}</strong></div>`).join('');
+$('reportStatuses').innerHTML=statuses.map(s=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line)"><span>${s.toUpperCase()}</span><strong>${orders.filter(o=>orderStatus(o)===s).length}</strong></div>`).join('');
 }
 async function loadStaff(){
 if(!isOwner())return;
@@ -639,7 +848,8 @@ if(error){$('staffTable').innerHTML=`<tr><td colspan="3">${esc(error.message)}</
 $('staffTable').innerHTML=(data||[]).map(p=>`<tr><td>${esc(p.id)}</td><td><span class="badge">${esc(roleName(p.role))}</span></td><td>${p.id===currentUser.id?'Current User':'Profile'}</td></tr>`).join('')||'<tr><td colspan="3" class="empty">No staff profiles</td></tr>';
 }
 async function logActivity(action,details){
-try{await client.from('activity_logs').insert({user_id:currentUser?.id,action,details:String(details||'')})}catch(e){console.warn('Activity log not saved:',e.message)}
+try{await client.from('activity_logs').insert({user_id:currentUser?.id,action,details:String(details||'')})}
+catch(e){console.warn('Activity log not saved:',e.message)}
 }
 async function loadActivity(){
 if(!isOwner())return;
@@ -675,12 +885,12 @@ if(error){notify(error.message);return}
 $('newPassword').value='';notify('Password updated successfully.');
 }
 function exportOrdersCSV(){
-const rows=[['Order Number','Customer','Phone','Total','Status','Date'],...orders.map(o=>[o.order_number||o.id,o.customer_name,o.customer_phone,o.total_amount,o.status||o.order_status,o.created_at])];
+const rows=[['Order Number','Customer','Phone','Total','Status','Submission Status','Date'],...orders.map(o=>[o.order_number||o.id,o.customer_name,o.customer_phone,o.total_amount,orderStatus(o),o.submission_status,o.created_at])];
 const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
 const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
 const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TKR-orders.csv';a.click();URL.revokeObjectURL(a.href);
 }
-async function loadVariationsSafe(){await loadVariations()}
+
 init().catch(e=>console.error(e));
 </script>
 </body>
