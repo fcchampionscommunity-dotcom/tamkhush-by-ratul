@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -73,7 +72,6 @@ footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-
 .detail-breadcrumb{color:var(--muted);font-size:12px}
 .detail-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:55px;max-width:1250px;margin:0 auto}
 .gallery{min-width:0}
-.gallery-main{min-width:0;grid-area:main}
 .main-image-box{height:620px;background:#1a1c20;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:20px}
 #detailMainImage{width:100%;height:100%;object-fit:contain;display:block}
 .thumbnail-list{display:flex;gap:12px;overflow-x:auto;padding:15px 0}
@@ -169,6 +167,12 @@ header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:cen
 .receipt-wrap{padding:20px 3% 50px}.receipt-card{padding:18px 13px}.receipt-brand h1{font-size:19px}.receipt-table{font-size:11px}
 .receipt-table th,.receipt-table td{padding:8px 4px}
 }
+@media print{
+@page{size:A4;margin:12mm}body{background:#fff!important;color:#111!important}body *{visibility:hidden!important}
+#receiptPage,#receiptPage *{visibility:visible!important}
+#receiptPage{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:0!important;margin:0!important}
+#receiptContent{box-shadow:none!important;border-radius:0!important;padding:10px!important}#receiptActions{display:none!important}
+}
 
 /* TKR PREMIUM ORANGE / WHITE / DARK GREEN / BLUE THEME */
 :root{--bg:#f5f7f8;--panel:#fff;--silver:#f47b20;--white:#17232b;--muted:#667684;--line:#dce4e9}
@@ -181,21 +185,13 @@ header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-colo
 .search,.option-select,.quantity-input,.field input,.field textarea,.field select{background:#fff;color:#17232b;border-color:#cbd5de}.back-button{background:#fff;color:#174f8a;border-color:#174f8a}
 .detail-benefits{background:#edf5f1;border-color:#d6e5dd;color:#31584a}.detail-benefits div{border-color:#d6e5dd}.add-button{color:#174f8a;border-color:#174f8a}
 .gallery{display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-areas:"thumb main";gap:12px;align-items:start}
-.gallery-main{grid-area:main}
-.main-image-box{grid-area:main}
-.thumbnail-list{grid-area:thumb;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;max-height:620px;padding:0;gap:10px}
+.main-image-box{grid-area:main}.thumbnail-list{grid-area:thumb;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;max-height:620px;padding:0;gap:10px}
 .thumbnail{flex:0 0 82px;width:82px;height:92px}.brand-label{margin-top:12px;text-align:center;color:#174f8a;font-size:11px;letter-spacing:3px;font-weight:800}
 .detail-actions .buy-button,.detail-actions .add-button{border-radius:5px}.cart-total{color:#123b31}
 .whatsapp-order-button{display:block;text-align:center;margin-top:10px;padding:14px 16px;border-radius:5px;background:#168653;color:#fff;font-weight:800}
 .whatsapp-order-button:hover{background:#116b42}
 @media(max-width:900px){.gallery{grid-template-columns:1fr;grid-template-areas:"main" "thumb"}.main-image-box{height:520px}.thumbnail-list{flex-direction:row;max-height:none;overflow-x:auto;overflow-y:hidden}.thumbnail{flex:0 0 78px;width:78px;height:85px}}
 @media(max-width:580px){header{gap:8px}.header-actions{margin-left:auto}.main-image-box{height:390px}.thumbnail-list{padding:10px 0}.thumbnail{flex-basis:68px;width:68px;height:78px}.detail-layout{gap:20px}.brand-label{font-size:10px}.detail-actions{grid-template-columns:1fr}}
-@media print{
-@page{size:A4;margin:12mm}body{background:#fff!important;color:#111!important}body *{visibility:hidden!important}
-#receiptPage,#receiptPage *{visibility:visible!important}
-#receiptPage{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:0!important;margin:0!important}
-#receiptContent{box-shadow:none!important;border-radius:0!important;padding:10px!important}#receiptActions{display:none!important}
-}
 </style>
 </head>
 <body>
@@ -236,10 +232,7 @@ header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-colo
 <section id="productDetailsPage">
 <div class="detail-topbar"><button class="back-button" onclick="showHome()">← BACK TO SHOP</button><div class="detail-breadcrumb">HOME / COLLECTION / PRODUCT</div></div>
 <div class="detail-layout">
-<div class="gallery">
-<div class="thumbnail-list" id="detailThumbnails"></div>
-<div class="gallery-main"><div class="main-image-box"><img id="detailMainImage" src="" alt="Product"></div><div class="brand-label">TKR BRAND LABEL</div></div>
-</div>
+<div class="gallery"><div class="thumbnail-list" id="detailThumbnails"></div><div><div class="main-image-box"><img id="detailMainImage" src="" alt="Product"></div><div class="brand-label">TKR BRAND LABEL</div></div></div>
 <div class="detail-info">
 <div class="detail-category" id="detailCategory"></div><h1 id="detailName"></h1><div class="detail-price">৳<span id="detailPrice"></span></div>
 <p class="detail-description" id="detailDescription"></p><hr class="detail-divider">
@@ -344,30 +337,24 @@ if(typeof value==='string'&&value.trim())return value.split(',').map(v=>v.trim()
 return [];
 }
 
-/* Normalize variation values from Supabase rows */
-function getVariationId(variation){return variation?.id??variation?.variation_id??null;}
-function getVariationSku(variation){return variation?.supplier_sku??variation?.supplierSku??'';}
-function getVariationUrl(variation){return variation?.supplier_product_url??variation?.supplierProductUrl??'';}
-function findVariation(color){
-return productVariations.find(v=>String(v.color_name||'').trim()===String(color||'').trim())||null;
-}
-function cartVariationMatches(item,options){
-const itemVariationId=item.variation_id??null;
-const optionVariationId=options.variation_id??null;
-if(itemVariationId||optionVariationId)return String(itemVariationId||'')===String(optionVariationId||'');
-return String(item.color||'')===String(options.color||'')&&String(item.size||'')===String(options.size||'');
-}
-
 /* AUTO OPEN PRODUCT FROM FACEBOOK LINK */
 function openRequestedProduct(){
 if(productLinkHandled||!requestedProductId)return;
 productLinkHandled=true;
+
 const matchedProduct=products.find(item=>String(item.id)===String(requestedProductId));
-if(matchedProduct){openProductDetails(matchedProduct.id);return;}
+
+if(matchedProduct){
+openProductDetails(matchedProduct.id);
+return;
+}
+
 document.getElementById('homePage').style.display='block';
 document.getElementById('productDetailsPage').classList.remove('active');
+
 const grid=document.getElementById('productGrid');
 grid.innerHTML='<div class="empty">এই প্রোডাক্টটি পাওয়া যায়নি অথবা বর্তমানে উপলভ্য নেই। <br><br><button class="btn" onclick="showHome()">BACK TO SHOP</button></div>';
+
 document.getElementById('products').scrollIntoView({behavior:'smooth'});
 }
 
@@ -378,7 +365,10 @@ try{
 if(!window.store)throw new Error('Store is not loaded');
 products=await window.store.getProducts();
 renderProducts();
+
+/* Wait until products are loaded, then open the exact linked product */
 openRequestedProduct();
+
 }catch(error){
 console.error(error);
 grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';
@@ -391,9 +381,12 @@ const client=window.supabaseClient;
 if(!client||!client.functions)throw new Error('Supabase client is not available');
 const {data,error}=await client.functions.invoke('dropbazar-locations',{body});
 if(error)throw await getUsefulFunctionError(error);
-if(!data||data.success!==true||!Array.isArray(data.data))throw new Error(data?.error||'Location service returned an invalid response');
+if(!data||data.success!==true||!Array.isArray(data.data)){
+throw new Error(data?.error||'Location service returned an invalid response');
+}
 return data.data;
 }
+
 async function getUsefulFunctionError(error){
 let message=error?.message||'Function request failed';
 try{
@@ -407,6 +400,7 @@ message=body?.error||body?.message||body?.details||message;
 }catch(e){}
 return new Error(String(message));
 }
+
 async function loadDistricts(){
 if(districtsLoaded||districtsLoading)return;
 districtsLoading=true;
@@ -429,11 +423,15 @@ districtSelect.disabled=false;
 showCheckoutError('জেলার তালিকা লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
 }finally{districtsLoading=false;}
 }
+
 async function loadThanas(districtId){
 const thanaSelect=document.getElementById('customerArea');
 thanaSelect.disabled=true;
 thanaSelect.innerHTML='<option value="">থানা লোড হচ্ছে...</option>';
-if(!districtId){thanaSelect.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';return;}
+if(!districtId){
+thanaSelect.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';
+return;
+}
 try{
 const list=await invokeLocations({district_id:Number(districtId)});
 thanaSelect.innerHTML='<option value="">থানা / উপজেলা নির্বাচন করুন</option>'+
@@ -453,17 +451,26 @@ function calculateDeliveryFromDistrict(){
 const select=document.getElementById('customerDistrict');
 const option=select.options[select.selectedIndex];
 const districtName=String(option?.dataset?.name||option?.textContent||'').trim().toLowerCase();
+
 if(!select.value||!districtName){
-selectedDeliveryCharge=null;selectedDeliveryZone=null;
+selectedDeliveryCharge=null;
+selectedDeliveryZone=null;
 document.getElementById('deliveryHint').textContent='জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।';
-updateCheckoutSummary();return;
+updateCheckoutSummary();
+return;
 }
+
 const isDhaka=districtName==='dhaka'||districtName==='ঢাকা'||districtName.includes('dhaka')||districtName.includes('ঢাকা');
 selectedDeliveryCharge=isDhaka?70:120;
 selectedDeliveryZone=isDhaka?'inside_dhaka':'outside_dhaka';
-document.getElementById('deliveryHint').textContent=isDhaka?'ঢাকা জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳৭০।':'ঢাকার বাইরের জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳১২০।';
+
+document.getElementById('deliveryHint').textContent=isDhaka
+?'ঢাকা জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳৭০।'
+:'ঢাকার বাইরের জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳১২০।';
+
 updateCheckoutSummary();
 }
+
 document.getElementById('customerDistrict').addEventListener('change',event=>{
 document.getElementById('customerArea').value='';
 calculateDeliveryFromDistrict();
@@ -487,6 +494,7 @@ grid.innerHTML=filtered.map(p=>`
 <div class="price">৳${money(p.selling_price)}</div><button class="view-btn" onclick="openProductDetails('${escapeHTML(p.id)}')">VIEW DETAILS</button></div>
 </article>`).join('');
 }
+
 function selectCategory(category,button){
 activeCategory=category;
 document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
@@ -505,24 +513,17 @@ document.getElementById('productDetailsPage').classList.remove('active');
 function showHome(){
 hideOtherPages();
 document.getElementById('homePage').style.display='block';
-selectedProduct=null;selectedVariation=null;
+selectedProduct=null;
 closeCart();
 window.scrollTo({top:0,behavior:'smooth'});
 }
-
 async function openProductDetails(id){
 selectedProduct=products.find(item=>String(item.id)===String(id));
 if(!selectedProduct)return;
 productVariations=[];selectedVariation=null;
-try{
-if(window.store?.getProductVariations)productVariations=await window.store.getProductVariations(selectedProduct.id)||[];
-}catch(error){console.warn('Product variations unavailable:',error.message);}
-if(!productVariations.length){
-const legacy=getOptions(selectedProduct.colors);
-productVariations=legacy.map(color=>({color_name:color,image_url:''}));
-}
-baseDetailImages=getProductImages(selectedProduct);
-detailImages=baseDetailImages.slice();
+try{if(window.store?.getProductVariations)productVariations=await window.store.getProductVariations(selectedProduct.id)||[]}catch(error){console.warn('Product variations unavailable:',error.message)}
+if(!productVariations.length){const legacy=getOptions(selectedProduct.colors);productVariations=legacy.map(color=>({color_name:color,image_url:''}));}
+baseDetailImages=getProductImages(selectedProduct);detailImages=baseDetailImages.slice();
 document.getElementById('detailMainImage').src=detailImages[0];
 document.getElementById('detailMainImage').alt=selectedProduct.name||'Product';
 document.getElementById('detailCategory').textContent=selectedProduct.category||'Fashion';
@@ -530,38 +531,22 @@ document.getElementById('detailName').textContent=selectedProduct.name||'Product
 document.getElementById('detailPrice').textContent=money(selectedProduct.selling_price);
 document.getElementById('detailDescription').textContent=selectedProduct.description||'Discover this item from the TAMKHUSH BY RATUL collection.';
 renderDetailGallery();
-const sizes=getOptions(selectedProduct.sizes);
-const colors=productVariations.map(v=>v.color_name).filter(Boolean);
+const sizes=getOptions(selectedProduct.sizes),colors=productVariations.map(v=>v.color_name).filter(Boolean);
 document.getElementById('detailSizeWrap').style.display=sizes.length?'block':'none';
 document.getElementById('detailColorWrap').style.display=colors.length?'block':'none';
 document.getElementById('detailSize').innerHTML=sizes.length?'<option value="">Choose size</option>'+sizes.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join(''):'';
 document.getElementById('detailColor').innerHTML=colors.length?'<option value="">Choose color</option>'+colors.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join(''):'';
 document.getElementById('detailColor').onchange=()=>selectProductColor(document.getElementById('detailColor').value);
 document.getElementById('detailQuantity').value=1;
-const stock=Number(selectedProduct.stock);
-document.getElementById('detailStock').textContent=Number.isFinite(stock)?(stock>0?`Available stock: ${stock}`:'Out of stock'): '';
-document.getElementById('homePage').style.display='none';
-document.getElementById('checkoutPage').style.display='none';
-document.getElementById('receiptPage').style.display='none';
-document.getElementById('productDetailsPage').classList.add('active');
-window.scrollTo({top:0,behavior:'smooth'});
+const stock=Number(selectedProduct.stock);document.getElementById('detailStock').textContent=Number.isFinite(stock)?(stock>0?`Available stock: ${stock}`:'Stock availability: Please contact us'):'';
+document.getElementById('homePage').style.display='none';document.getElementById('checkoutPage').style.display='none';document.getElementById('receiptPage').style.display='none';document.getElementById('productDetailsPage').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});
 }
-
 function renderDetailGallery(){
-const variationImage=selectedVariation?.image_url||'';
-const images=[...new Set([...(variationImage?[variationImage]:[]),...baseDetailImages])];
-detailImages=images;
+const images=[...new Set([...(selectedVariation?.image_url?[selectedVariation.image_url]:[]),...baseDetailImages])];detailImages=images;
 document.getElementById('detailMainImage').src=images[0]||productImage(selectedProduct);
-document.getElementById('detailThumbnails').innerHTML=images.map((image,index)=>`
-<button class="thumbnail ${index===0?'active':''}" onclick="changeDetailImage(${index})">
-<img src="${escapeHTML(image)}" alt="Product image ${index+1}">
-</button>`).join('');
+document.getElementById('detailThumbnails').innerHTML=images.map((image,index)=>`<button class="thumbnail ${index===0?'active':''}" onclick="changeDetailImage(${index})"><img src="${escapeHTML(image)}" alt="Product image ${index+1}"></button>`).join('');
 }
-
-function selectProductColor(color){
-selectedVariation=color?findVariation(color):null;
-renderDetailGallery();
-}
+function selectProductColor(color){selectedVariation=productVariations.find(v=>String(v.color_name)===String(color))||null;renderDetailGallery();}
 
 function changeDetailImage(index){
 if(!detailImages[index])return;
@@ -572,86 +557,35 @@ function changeDetailQuantity(change){
 const input=document.getElementById('detailQuantity');
 input.value=Math.max(1,Math.min(99,Number(input.value||1)+change));
 }
-
 function getSelectedProductOptions(){
 if(!selectedProduct)return null;
-const sizes=getOptions(selectedProduct.sizes);
-const colors=productVariations.map(v=>v.color_name).filter(Boolean);
+const sizes=getOptions(selectedProduct.sizes),colors=productVariations.map(v=>v.color_name).filter(Boolean);
 const size=sizes.length?document.getElementById('detailSize').value:'';
 const color=colors.length?document.getElementById('detailColor').value:'';
 if(sizes.length&&!size){alert('Please select a size first.');return null;}
 if(colors.length&&!color){alert('Please select a color first.');return null;}
-
-const variation=color?findVariation(color):null;
-if(color&&!variation){alert('Selected color variation is unavailable. Please select again.');return null;}
-
 const quantity=Math.max(1,Math.min(99,Number(document.getElementById('detailQuantity').value||1)));
 const stock=Number(selectedProduct.stock);
-
-/* Stock value 0 means unavailable; missing/null stock is not treated as zero */
-if(selectedProduct.stock!==null&&selectedProduct.stock!==undefined&&selectedProduct.stock!==''&&Number.isFinite(stock)){
-if(stock<=0){alert('দুঃখিত, এই পণ্যটি বর্তমানে স্টকে নেই।');return null;}
-const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&cartVariationMatches(item,{variation_id:getVariationId(variation),size,color}));
+if(Number.isFinite(stock)&&stock>0){
+const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===size&&item.color===color);
 const alreadyInCart=existing?Number(existing.quantity):0;
 if(alreadyInCart+quantity>stock){alert(`Only ${stock} item(s) currently available in stock.`);return null;}
 }
-
-return {
-size,color,quantity,
-variation_id:getVariationId(variation),
-supplier_sku:getVariationSku(variation),
-supplier_product_url:getVariationUrl(variation),
-variation_image:variation?.image_url||''
-};
+return {size,color,quantity};
 }
-
 function addSelectedProductToCart(){
-if(!selectedProduct)return;
-const options=getSelectedProductOptions();
-if(!options)return;
-addProductToCart(options);
+if(!selectedProduct)return;const options=getSelectedProductOptions();if(!options)return;addProductToCart(options);
 }
 function buySelectedProduct(){
-if(!selectedProduct)return;
-const options=getSelectedProductOptions();
-if(!options)return;
-addProductToCart(options,false);
-openCheckout();
+if(!selectedProduct)return;const options=getSelectedProductOptions();if(!options)return;addProductToCart(options,false);openCheckout();
 }
-
 function addProductToCart(options,openDrawer=true){
-const existing=cart.find(item=>
-String(item.id)===String(selectedProduct.id)&&
-cartVariationMatches(item,options)
-);
-if(existing){
-existing.quantity+=options.quantity;
-existing.variation_id=options.variation_id||existing.variation_id||null;
-existing.supplier_sku=options.supplier_sku||existing.supplier_sku||'';
-existing.supplier_product_url=options.supplier_product_url||existing.supplier_product_url||'';
-existing.image=options.variation_image||existing.image;
-}else{
-cart.push({
-id:selectedProduct.id,
-name:selectedProduct.name,
-price:Number(selectedProduct.selling_price||0),
-image:options.variation_image||productImage(selectedProduct),
-size:options.size,
-color:options.color,
-quantity:options.quantity,
-variation_id:options.variation_id||null,
-supplier_sku:options.supplier_sku||'',
-supplier_product_url:options.supplier_product_url||''
-});
+const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===options.size&&item.color===options.color);
+if(existing)existing.quantity+=options.quantity;
+else cart.push({id:selectedProduct.id,name:selectedProduct.name,price:Number(selectedProduct.selling_price||0),image:selectedVariation?.image_url||productImage(selectedProduct),size:options.size,color:options.color,quantity:options.quantity});
+saveCart();if(openDrawer)openCart();
 }
-saveCart();
-if(openDrawer)openCart();
-}
-
-function saveCart(){
-localStorage.setItem('tkr_cart',JSON.stringify(cart));
-updateCart();
-}
+function saveCart(){localStorage.setItem('tkr_cart',JSON.stringify(cart));updateCart();}
 function updateCart(){
 document.getElementById('cartCount').textContent=cart.reduce((sum,item)=>sum+Number(item.quantity||0),0);
 document.getElementById('cartItems').innerHTML=cart.length?cart.map((item,index)=>`
@@ -661,28 +595,20 @@ document.getElementById('cartItems').innerHTML=cart.length?cart.map((item,index)
 <div class="cart-item-actions"><button class="qty-btn" onclick="changeCartQuantity(${index},-1)">−</button><span>${Number(item.quantity||1)}</span><button class="qty-btn" onclick="changeCartQuantity(${index},1)">+</button><button class="remove-btn" onclick="removeCartItem(${index})">REMOVE</button></div></div>
 <strong>৳${money(Number(item.price)*Number(item.quantity))}</strong></div>`).join(''):'<p class="note">Your cart is empty.</p>';
 document.getElementById('cartTotal').textContent=money(cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.quantity),0));
-const wa=document.getElementById('cartWhatsAppOrder');
-if(wa){wa.href=getWhatsAppOrderUrl();wa.style.display=cart.length?'block':'none';}
+const wa=document.getElementById('cartWhatsAppOrder');if(wa){wa.href=getWhatsAppOrderUrl();wa.style.display=cart.length?'block':'none';}
 }
-
 function changeCartQuantity(index,change){
 if(!cart[index])return;
 const nextQuantity=Number(cart[index].quantity)+change;
 if(nextQuantity<=0){removeCartItem(index);return;}
 const product=products.find(p=>String(p.id)===String(cart[index].id));
-if(product&&product.stock!==null&&product.stock!==undefined&&product.stock!==''&&Number.isFinite(Number(product.stock))){
-const stock=Number(product.stock);
-if(stock<=0||nextQuantity>stock){alert(stock<=0?'এই পণ্যটি বর্তমানে স্টকে নেই।':`Only ${stock} item(s) currently available.`);return;}
-}
-cart[index].quantity=nextQuantity;
-saveCart();
+if(product&&Number(product.stock)>0&&nextQuantity>Number(product.stock)){alert(`Only ${product.stock} item(s) currently available.`);return;}
+cart[index].quantity=nextQuantity;saveCart();
 if(document.getElementById('checkoutPage').style.display==='block')updateCheckoutSummary();
 }
 function removeCartItem(index){
 cart.splice(index,1);saveCart();
-if(document.getElementById('checkoutPage').style.display==='block'){
-if(!cart.length)showHome();else updateCheckoutSummary();
-}
+if(document.getElementById('checkoutPage').style.display==='block'){if(!cart.length)showHome();else updateCheckoutSummary();}
 }
 function openCart(){document.getElementById('cartDrawer').classList.add('open');updateCart();}
 function closeCart(){document.getElementById('cartDrawer').classList.remove('open');}
@@ -702,6 +628,7 @@ window.scrollTo({top:0,behavior:'smooth'});
 }
 function backToCart(){document.getElementById('checkoutPage').style.display='none';openCart();}
 function getCartSubtotal(){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.quantity)||0),0);}
+
 function updateCheckoutSummary(){
 document.getElementById('checkoutItems').innerHTML=cart.map(item=>`
 <div class="summary-product"><span>${escapeHTML(item.name)} × ${Number(item.quantity)}
@@ -712,6 +639,7 @@ document.getElementById('checkoutSubtotal').textContent=money(subtotal);
 document.getElementById('checkoutDelivery').textContent=selectedDeliveryCharge===null?'জেলা নির্বাচন করুন':money(selectedDeliveryCharge);
 document.getElementById('checkoutTotal').textContent=money(subtotal+(selectedDeliveryCharge||0));
 }
+
 function showCheckoutError(message){
 const box=document.getElementById('checkoutMessage');
 box.textContent=message;box.style.display='block';
@@ -733,15 +661,20 @@ return 'অর্ডার জমা দেওয়া যায়নি: '+text;
 async function handleCheckoutSubmit(event){
 event.preventDefault();
 if(!cart.length){showCheckoutError('আপনার কার্টে কোনো পণ্য নেই।');return;}
+
 const districtSelect=document.getElementById('customerDistrict');
 const thanaSelect=document.getElementById('customerArea');
+
 if(!districtSelect.value||!thanaSelect.value){
 showCheckoutError('অনুগ্রহ করে জেলা এবং থানা/উপজেলা নির্বাচন করুন।');return;
 }
+
 calculateDeliveryFromDistrict();
+
 if(selectedDeliveryCharge===null||!selectedDeliveryZone){
 showCheckoutError('সঠিক জেলা নির্বাচন করুন।');return;
 }
+
 const districtName=districtSelect.options[districtSelect.selectedIndex]?.textContent.trim();
 const thanaName=thanaSelect.options[thanaSelect.selectedIndex]?.textContent.trim();
 if(!districtName||!thanaName){showCheckoutError('জেলা অথবা থানার সঠিক নাম পাওয়া যায়নি। আবার নির্বাচন করুন।');return;}
@@ -760,20 +693,11 @@ districtId:Number(districtSelect.value),
 thanaId:Number(thanaSelect.value),
 postalCode:document.getElementById('customerPostal').value.trim()||null,
 deliveryZone:selectedDeliveryZone,
-items:cart.map(item=>({
-productId:String(item.id),
-quantity:Number(item.quantity),
-size:item.size||'',
-color:item.color||'',
-variationId:item.variation_id||null,
-supplierSku:item.supplier_sku||'',
-supplierProductUrl:item.supplier_product_url||''
-})),
+items:cart.map(item=>({productId:String(item.id),quantity:Number(item.quantity),size:item.size||'',color:item.color||''})),
 customerNote:document.getElementById('customerNote').value.trim()||null
 };
 
-submitButton.disabled=true;
-submitButton.textContent='অর্ডার জমা হচ্ছে...';
+submitButton.disabled=true;submitButton.textContent='অর্ডার জমা হচ্ছে...';
 try{
 const client=window.supabaseClient;
 if(!client||!client.functions)throw new Error('Supabase client is not available');
@@ -802,10 +726,7 @@ size:item.size,
 color:item.color,
 quantity:Number(item.quantity),
 unit_price:Number(item.price),
-line_total:Number(item.price)*Number(item.quantity),
-variation_id:item.variation_id||null,
-supplier_sku:item.supplier_sku||'',
-supplier_product_url:item.supplier_product_url||''
+line_total:Number(item.price)*Number(item.quantity)
 }))
 };
 localStorage.setItem('tkr_last_receipt',JSON.stringify(currentReceipt));
@@ -872,9 +793,8 @@ else if(document.getElementById('productDetailsPage').classList.contains('active
 }
 });
 function getWhatsAppOrderUrl(){
-const raw=String(customerContacts.whatsapp_order_number||'01623851172').replace(/\D/g,'');
-const phone=raw.startsWith('0')?'88'+raw:raw;
-const lines=cart.map(item=>`${item.name} × ${item.quantity}${item.color?' ('+item.color+')':''}${item.size?' Size: '+item.size:''} — ৳${money(Number(item.price)*Number(item.quantity))}`);
+const raw=String(customerContacts.whatsapp_order_number||'01623851172').replace(/\D/g,'');const phone=raw.startsWith('0')?'88'+raw:raw;
+const lines=cart.map(item=>`${item.name} × ${item.quantity}${item.color?' ('+item.color+')':''} — ৳${money(Number(item.price)*Number(item.quantity))}`);
 const total=cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.quantity),0);
 return 'https://wa.me/'+phone+'?text='+encodeURIComponent('আসসালামু আলাইকুম, আমি এই পণ্যগুলো অর্ডার করতে চাই:\n'+lines.join('\n')+'\nমোট: ৳'+money(total));
 }
@@ -882,16 +802,10 @@ async function loadCustomerContacts(){
 try{
 const client=window.supabaseClient;if(!client)return;
 const {data,error}=await client.from('store_settings').select('whatsapp_order_number,customer_support_number,customer_support_number_2').order('id',{ascending:true}).limit(1).maybeSingle();
-if(error)throw error;
-if(data)customerContacts={...customerContacts,...data};
-document.querySelectorAll('[data-contact-link]').forEach(a=>{
-const key=a.dataset.contactLink==='1'?'customer_support_number':'customer_support_number_2';
-const phone=customerContacts[key]||'';
-a.href='tel:'+String(phone).replace(/\D/g,'');
-a.textContent='☎ '+phone;
-});
+if(error)throw error;if(data)customerContacts={...customerContacts,...data};
+ document.querySelectorAll('[data-contact-link]').forEach(a=>{const key=a.dataset.contactLink==='1'?'customer_support_number':'customer_support_number_2';const phone=customerContacts[key]||'';a.href='tel:'+String(phone).replace(/\D/g,'');a.textContent='☎ '+phone;});
 updateCart();
-}catch(error){console.warn('Customer contact settings could not be loaded:',error.message);}
+}catch(error){console.warn('Customer contact settings could not be loaded:',error.message)}
 }
 document.getElementById('year').textContent=new Date().getFullYear();
 updateCart();
