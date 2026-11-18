@@ -1,817 +1,687 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAMKHUSH BY RATUL | Premium Fashion Label</title>
-<meta name="description" content="Discover premium men's and women's fashion at TAMKHUSH BY RATUL.">
+<title>TKR Admin Dashboard | TAMKHUSH BY RATUL</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script src="store.js"></script>
 <style>
-:root{--bg:#101113;--panel:#191b1f;--silver:#bfc5cc;--white:#f5f5f5;--muted:#969ba2;--line:#303238}
+:root{
+--green:#123b31;--green2:#0d3028;--orange:#f47b20;
+--blue:#174f8a;--bg:#f3f6f7;--white:#fff;
+--text:#17232b;--muted:#687783;--line:#dce4e9;
+--red:#d64545;--shadow:0 5px 22px #173c3010;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-a{color:inherit;text-decoration:none}
-header{position:sticky;top:0;z-index:20;background:rgba(16,17,19,.97);border-bottom:1px solid var(--line);padding:17px 6%;display:flex;align-items:center;justify-content:space-between;gap:15px}
-.logo{font-size:19px;font-weight:800;letter-spacing:2px;display:flex;align-items:center;gap:12px}
-.logo-mark{width:43px;height:43px;border:1px solid var(--silver);display:grid;place-items:center;color:var(--silver);font-size:13px;letter-spacing:0;border-radius:3px}
-.logo-text span{display:block;font-size:9px;color:var(--silver);letter-spacing:4px;margin-top:5px}
-nav{display:flex;gap:25px;font-size:13px;color:#ddd}
-nav a:hover{color:var(--silver)}
-.header-actions{display:flex;gap:10px;align-items:center}
-.btn{background:var(--silver);color:#111;border:0;padding:13px 20px;font-weight:700;border-radius:3px}
-.btn:hover{background:white}
-.btn-outline{background:transparent;color:white;border:1px solid var(--silver);padding:11px 15px;border-radius:3px}
-.hero{min-height:540px;padding:85px 8%;display:flex;align-items:center;background:linear-gradient(90deg,rgba(10,11,13,.96),rgba(10,11,13,.55)),url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1800') center/cover}
-.hero-content{max-width:650px}
-.eyebrow{color:var(--silver);letter-spacing:5px;font-size:11px;margin-bottom:22px}
-.hero h1{font-size:clamp(40px,7vw,76px);line-height:1.08;letter-spacing:2px}
-.hero h1 span{color:var(--silver)}
-.hero p{color:#c2c4c8;line-height:1.8;margin:23px 0 30px;max-width:470px}
-.section{padding:75px 6%}
-.section-head{text-align:center;margin-bottom:38px}
-.section-head small{color:var(--silver);letter-spacing:4px}
-.section-head h2{font-size:32px;margin-top:12px;letter-spacing:1px}
-.categories{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
-.category{min-height:260px;display:flex;align-items:end;padding:28px;background-size:cover;background-position:center;border:1px solid var(--line)}
-.category:first-child{background-image:linear-gradient(0deg,#000b,#0002),url('https://images.unsplash.com/photo-1617137968427-85924c800a22?w=900')}
-.category:last-child{background-image:linear-gradient(0deg,#000b,#0002),url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=900')}
-.category h3{font-size:27px;letter-spacing:2px}
-.category p{color:#ddd;margin:8px 0 15px;font-size:13px}
-.category button{background:var(--silver);border:0;padding:11px 18px;font-weight:bold}
-.toolbar{display:flex;justify-content:space-between;gap:12px;margin-bottom:25px;flex-wrap:wrap}
-.search{background:var(--panel);border:1px solid var(--line);color:white;padding:13px 15px;min-width:230px;border-radius:3px}
-.filters{display:flex;gap:8px;flex-wrap:wrap}
-.filter{background:transparent;border:1px solid var(--line);color:#ddd;padding:11px 15px}
-.filter.active{background:var(--silver);color:#111}
-.products{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px}
-.product{background:var(--panel);border:1px solid var(--line);overflow:hidden;transition:.25s}
-.product:hover{transform:translateY(-4px);border-color:#858b94}
-.product-image-button{display:block;width:100%;height:290px;padding:12px;border:0;background:#202226}
-.product img{width:100%;height:100%;object-fit:contain;display:block}
-.product-info{padding:17px}
-.product-info small{color:var(--muted);text-transform:uppercase;letter-spacing:2px}
-.product-info h3{font-size:16px;margin:10px 0}
-.price{color:var(--silver);font-weight:bold;font-size:17px}
-.product-info button{width:100%;margin-top:12px}
-.view-btn{background:transparent;color:var(--silver);border:1px solid var(--silver);padding:11px}
-.empty{text-align:center;color:var(--muted);padding:35px;grid-column:1/-1}
-.about{background:#181a1e;text-align:center;padding:75px 8%;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.about h2{font-size:30px;margin-bottom:15px}
-.about p{color:#b8bbc0;line-height:1.8;max-width:650px;margin:auto}
-footer{padding:35px 6%;text-align:center;color:var(--muted);font-size:12px;line-height:2}
-.footer-mark{font-size:16px;letter-spacing:4px;color:var(--silver);margin-bottom:8px}
-#productDetailsPage{display:none;min-height:80vh;padding:25px 6% 75px}
-#productDetailsPage.active{display:block}
-.detail-topbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:8px 0 25px;border-bottom:1px solid var(--line);margin-bottom:30px}
-.back-button{background:transparent;border:1px solid #555;color:white;padding:11px 17px;border-radius:3px}
-.detail-breadcrumb{color:var(--muted);font-size:12px}
-.detail-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);gap:55px;max-width:1250px;margin:0 auto}
-.gallery{min-width:0}
-.main-image-box{height:620px;background:#1a1c20;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:20px}
-#detailMainImage{width:100%;height:100%;object-fit:contain;display:block}
-.thumbnail-list{display:flex;gap:12px;overflow-x:auto;padding:15px 0}
-.thumbnail{flex:0 0 82px;height:95px;background:#1c1e22;border:1px solid var(--line);padding:5px}
-.thumbnail.active{border:1px solid var(--silver)}
-.thumbnail img{width:100%;height:100%;object-fit:contain}
-.detail-info{padding:12px 0}
-.detail-category{font-size:11px;letter-spacing:4px;color:var(--silver);text-transform:uppercase}
-.detail-info h1{font-size:clamp(27px,3vw,40px);line-height:1.2;margin:16px 0}
-.detail-price{font-size:28px;font-weight:bold;color:var(--silver);margin:18px 0}
-.detail-description{color:#b8bbc0;line-height:1.9;font-size:14px;white-space:pre-line;margin:20px 0 28px}
-.detail-divider{border:0;border-top:1px solid var(--line);margin:22px 0}
-.option-label{display:block;color:#ddd;font-size:12px;letter-spacing:2px;margin:20px 0 9px}
-.option-select,.quantity-input{width:100%;padding:14px;background:#101113;color:white;border:1px solid #454950;border-radius:2px}
-.quantity-row{display:flex;align-items:center;gap:12px}
-.quantity-row button{background:#292c31;color:white;border:1px solid #555;padding:12px 18px}
-.quantity-input{text-align:center;max-width:100px}
-.stock-note{font-size:12px;color:var(--muted);margin-top:15px}
-.detail-actions{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:25px}
-.detail-actions button{min-height:49px}
-.buy-button{background:var(--silver);color:#111;border:0;font-weight:bold}
-.add-button{background:transparent;color:white;border:1px solid var(--silver);font-weight:bold}
-.detail-benefits{margin-top:30px;padding:20px;background:#191b1f;border:1px solid var(--line);color:#c6c8cc;font-size:12px;line-height:2}
-.detail-benefits div{border-bottom:1px solid #303238;padding:7px 0}
-.detail-benefits div:last-child{border:0}
-.drawer{position:fixed;inset:0;background:#000b;z-index:50;display:none;justify-content:flex-end}
-.drawer.open{display:flex}
-.drawer-content{width:min(440px,100%);height:100%;overflow:auto;background:#17191d;padding:25px}
-.drawer-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}
-.cart-item{padding:15px 0;border-bottom:1px solid var(--line);display:flex;gap:12px}
-.cart-item img{width:70px;height:85px;object-fit:contain;background:#25272b}
-.cart-item-info{flex:1;min-width:0}
-.cart-item-info strong{font-size:14px}
-.cart-item-info small{display:block;color:var(--muted);margin-top:5px;line-height:1.6}
-.cart-item-actions{display:flex;align-items:center;gap:9px;margin-top:10px}
-.qty-btn{background:#292c31;color:white;border:1px solid #444;padding:4px 10px}
-.remove-btn{background:none;color:#e88;border:0;margin-left:8px;font-size:12px}
-.cart-total{margin:25px 0;font-size:20px}
-.note{font-size:12px;color:var(--muted);line-height:1.6}
-.page-wrap{display:none;max-width:1100px;margin:0 auto;padding:35px 5% 70px}
-.page-heading{margin:22px 0 28px}
-.page-heading small{color:var(--silver);letter-spacing:3px}
-.page-heading h1{font-size:30px;margin-top:10px}
-.checkout-grid{display:grid;grid-template-columns:1.3fr .8fr;gap:25px;align-items:start}
-.panel{background:var(--panel);border:1px solid var(--line);padding:24px;border-radius:4px}
-.panel h2{font-size:19px;margin-bottom:20px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.field{margin-bottom:16px}
-.field.full{grid-column:1/-1}
-.field label{display:block;font-size:13px;color:#ddd;margin-bottom:8px}
-.field input,.field textarea,.field select{width:100%;padding:13px;background:#101113;color:white;border:1px solid #454950;border-radius:3px;outline:none}
-.field textarea{min-height:95px;resize:vertical}
-.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--silver)}
-.delivery-auto-note{padding:14px;background:#22252a;border:1px solid var(--line);color:#c7cbd0;font-size:13px;line-height:1.8;border-radius:3px}
-.delivery-auto-note strong{color:var(--silver)}
-.summary-line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);font-size:14px}
-.summary-line.total{font-size:19px;font-weight:bold;border:0;padding-top:18px}
-.summary-items{margin-bottom:15px}
-.summary-product{display:flex;justify-content:space-between;gap:12px;padding:9px 0;color:#ddd;font-size:13px;line-height:1.5}
-.summary-product small{display:block;color:var(--muted)}
-.checkout-message{display:none;margin:15px 0;padding:13px;border:1px solid #9a5555;color:#ffbaba;background:#351d1d;font-size:13px;line-height:1.6;overflow-wrap:anywhere}
-.checkout-submit{width:100%;margin-top:20px;padding:16px;font-size:15px}
-.checkout-submit:disabled{opacity:.55;cursor:not-allowed}
-.payment-note{margin-top:15px;color:var(--muted);font-size:12px;line-height:1.7}
-.receipt-wrap{max-width:780px;margin:0 auto;padding:35px 5% 70px}
-.receipt-card{background:#f7f7f7;color:#171717;padding:35px;border-radius:4px;box-shadow:0 10px 35px #0005}
-.receipt-brand{text-align:center;border-bottom:2px solid #222;padding-bottom:22px;margin-bottom:22px}
-.receipt-monogram{font-size:13px;letter-spacing:5px;border:1px solid #222;display:inline-block;padding:8px 14px;margin-bottom:12px;font-weight:bold}
-.receipt-brand h1{font-size:24px;letter-spacing:2px}
-.receipt-brand p{font-size:11px;letter-spacing:3px;margin-top:7px;color:#555}
-.receipt-title{text-align:center;font-size:20px;margin-bottom:20px}
-.receipt-meta{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap;font-size:13px;margin-bottom:20px}
-.receipt-customer{background:#eee;padding:15px;margin-bottom:20px;font-size:13px;line-height:1.8;overflow-wrap:anywhere}
-.receipt-table{width:100%;border-collapse:collapse;font-size:13px}
-.receipt-table th,.receipt-table td{padding:11px 7px;border-bottom:1px solid #ddd;text-align:left}
-.receipt-table th:last-child,.receipt-table td:last-child{text-align:right}
-.receipt-totals{max-width:330px;margin:20px 0 0 auto}
-.receipt-totals .summary-line{color:#222;border-color:#ddd}
-.receipt-totals .total{font-size:19px}
-.receipt-footer{text-align:center;border-top:1px solid #ddd;padding-top:20px;margin-top:25px;font-size:12px;color:#555;line-height:1.8}
-.receipt-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:25px}
-.receipt-actions button{min-width:150px}
-.status-pill{display:inline-block;background:#e9e9e9;padding:5px 10px;border-radius:20px;font-size:12px}
-.receipt-image{width:42px;height:48px;object-fit:contain;vertical-align:middle;margin-right:8px;background:#eee}
-@media(max-width:900px){.products{grid-template-columns:repeat(2,minmax(0,1fr))}.detail-layout{grid-template-columns:1fr;gap:25px}.main-image-box{height:520px}.detail-info{padding:10px 0}.checkout-grid{grid-template-columns:1fr}}
-@media(max-width:580px){
-header{padding:14px 4%;flex-wrap:wrap}nav{order:3;width:100%;justify-content:center;padding-top:8px;font-size:11px}.logo{font-size:16px}.logo-mark{width:37px;height:37px;font-size:11px}
-.hero{min-height:470px;padding:65px 6%}.section{padding:55px 5%}.categories{grid-template-columns:1fr}.category{min-height:220px}
-.products{gap:10px}.product-image-button{height:205px;padding:8px}.product-info{padding:12px}.product-info h3{font-size:14px}
-.section-head h2{font-size:26px}#productDetailsPage{padding:15px 4% 50px}.detail-topbar{margin-bottom:18px}.detail-breadcrumb{display:none}
-.main-image-box{height:390px;padding:12px}.thumbnail{flex-basis:68px;height:78px}.detail-info h1{font-size:27px}.detail-price{font-size:25px}
-.detail-actions{grid-template-columns:1fr}.page-wrap{padding:20px 4% 50px}.panel{padding:17px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}
-.receipt-wrap{padding:20px 3% 50px}.receipt-card{padding:18px 13px}.receipt-brand h1{font-size:19px}.receipt-table{font-size:11px}
-.receipt-table th,.receipt-table td{padding:8px 4px}
+.hidden{display:none!important}
+#loginScreen{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,var(--green),#174f8a)}
+.login-card{width:min(420px,100%);background:white;padding:35px;border-radius:12px;box-shadow:0 20px 60px #0003}
+.brand{text-align:center;margin-bottom:28px}
+.brand-mark{display:inline-grid;place-items:center;width:58px;height:58px;background:var(--green);color:#ffad65;border:2px solid var(--orange);font-weight:900;letter-spacing:2px;border-radius:8px}
+.brand h1{font-size:20px;letter-spacing:1px;margin-top:13px}
+.brand p{font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:6px}
+.login-card h2{font-size:19px;margin-bottom:20px}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.field input,.field select,.field textarea{
+width:100%;padding:12px;border:1px solid #cbd5de;border-radius:6px;background:white;color:var(--text);outline:none
 }
-@media print{
-@page{size:A4;margin:12mm}body{background:#fff!important;color:#111!important}body *{visibility:hidden!important}
-#receiptPage,#receiptPage *{visibility:visible!important}
-#receiptPage{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:0!important;margin:0!important}
-#receiptContent{box-shadow:none!important;border-radius:0!important;padding:10px!important}#receiptActions{display:none!important}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange)}
+.field textarea{min-height:90px;resize:vertical}
+.btn{border:0;background:var(--orange);color:white;padding:11px 17px;border-radius:6px;font-weight:700}
+.btn:hover{background:#d96812}
+.btn-green{background:var(--green)}
+.btn-blue{background:var(--blue)}
+.btn-red{background:var(--red)}
+.btn-light{background:white;color:var(--green);border:1px solid var(--line)}
+.btn-small{padding:7px 10px;font-size:12px}
+.login-card .btn{width:100%;padding:14px}
+.error{color:var(--red);font-size:13px;margin-top:12px;line-height:1.5}
+#app{min-height:100vh}
+.topbar{height:68px;background:var(--green);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20;box-shadow:var(--shadow)}
+.top-brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:1px}
+.top-mark{width:39px;height:39px;border:1px solid var(--orange);color:#ffad65;display:grid;place-items:center;border-radius:5px;font-size:12px}
+.top-brand small{display:block;font-size:9px;letter-spacing:3px;color:#ffad65;margin-top:4px}
+.top-right{display:flex;align-items:center;gap:12px}
+.role-pill{background:#ffffff20;border:1px solid #ffffff35;border-radius:30px;padding:7px 12px;font-size:11px}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:calc(100vh - 68px)}
+.sidebar{background:white;border-right:1px solid var(--line);padding:20px 13px;position:sticky;top:68px;height:calc(100vh - 68px);overflow:auto}
+.side-label{font-size:10px;color:#91a0a9;letter-spacing:2px;font-weight:bold;padding:13px 12px 8px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;background:transparent;padding:12px;border-radius:7px;color:#53636d;font-size:13px;margin:2px 0}
+.nav-btn:hover,.nav-btn.active{background:#eaf2ef;color:var(--green);font-weight:700}
+.nav-btn.active{border-left:3px solid var(--orange)}
+.nav-icon{width:20px;text-align:center;font-size:16px}
+.main{padding:27px;min-width:0}
+.page{display:none}.page.active{display:block}
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:23px}
+.page-head h1{font-size:25px}
+.page-head p{font-size:12px;color:var(--muted);margin-top:6px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
+.stat-card{background:white;border:1px solid var(--line);padding:19px;border-radius:9px;box-shadow:var(--shadow)}
+.stat-card small{color:var(--muted);font-size:12px}
+.stat-card strong{display:block;font-size:27px;margin-top:12px;color:var(--green)}
+.stat-card .stat-icon{float:right;background:#fff0e5;color:var(--orange);width:35px;height:35px;border-radius:8px;display:grid;place-items:center}
+.panel{background:white;border:1px solid var(--line);padding:20px;border-radius:9px;box-shadow:var(--shadow);margin-bottom:20px;min-width:0}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:17px}
+.panel-head h2{font-size:16px}
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:17px}
+.search{flex:1;min-width:180px;padding:11px 13px;border:1px solid var(--line);border-radius:6px}
+.table-wrap{width:100%;overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf0f2;font-size:12px;vertical-align:middle}
+th{background:#f6f8f8;color:#64747e;font-size:11px;white-space:nowrap}
+td strong{font-size:12px}
+.product-cell{display:flex;align-items:center;gap:10px;min-width:160px}
+.product-cell img{width:43px;height:48px;object-fit:contain;background:#f1f4f6;border-radius:5px}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.badge{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:700;background:#eaf2ef;color:var(--green)}
+.badge.orange{background:#fff0e5;color:#bd5c12}
+.badge.red{background:#ffeded;color:#c03939}
+.badge.blue{background:#eaf2fb;color:var(--blue)}
+.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
+.modal{position:fixed;inset:0;background:#0008;z-index:50;display:none;align-items:center;justify-content:center;padding:15px}
+.modal.open{display:flex}
+.modal-box{background:white;border-radius:10px;width:min(850px,100%);max-height:92vh;overflow:auto;padding:23px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-head h2{font-size:19px}
+.close-btn{border:0;background:#edf1f3;border-radius:5px;padding:8px 12px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}
+.full{grid-column:1/-1}
+.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:15px;flex-wrap:wrap}
+.image-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:12px}
+.image-item{position:relative;background:#f1f4f6;border:1px solid var(--line);border-radius:6px;padding:5px}
+.image-item img{width:100%;height:95px;object-fit:contain}
+.image-item button{position:absolute;top:3px;right:3px;background:var(--red);color:white;border:0;border-radius:4px;padding:3px 7px}
+.variation-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr auto;gap:7px;margin:10px 0;align-items:center}
+.variation-row input{min-width:0;width:100%;padding:9px;border:1px solid var(--line);border-radius:5px;font-size:12px}
+.notice{padding:12px;border-radius:6px;background:#eaf2ef;color:var(--green);font-size:12px;line-height:1.7;margin-bottom:15px}
+.notice.warn{background:#fff3e8;color:#9b5118}
+.order-detail{line-height:1.9;font-size:13px}
+.order-detail strong{color:var(--green)}
+.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.mobile-menu{display:none}
+@media(max-width:950px){
+.layout{grid-template-columns:205px 1fr}
+.cards{grid-template-columns:repeat(2,1fr)}
+.main{padding:20px}
 }
-
-/* TKR PREMIUM ORANGE / WHITE / DARK GREEN / BLUE THEME */
-:root{--bg:#f5f7f8;--panel:#fff;--silver:#f47b20;--white:#17232b;--muted:#667684;--line:#dce4e9}
-body{background:var(--bg);color:var(--white)}
-header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-color:#ff9b4b;color:#ffb36e}.logo-text span,.eyebrow,.section-head small,.detail-category,.footer-mark{color:#ff9b4b}
-.btn,.category button,.filter.active,.buy-button{background:#f47b20;color:#fff}.btn:hover,.category button:hover,.buy-button:hover{background:#d96812}.btn-outline{border-color:#ff9b4b;color:#fff}
-.hero{background-image:linear-gradient(90deg,rgba(13,48,40,.96),rgba(13,48,40,.55)),url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1800')}
-.product,.panel,.drawer-content{background:#fff;color:#17232b;border-color:#dce4e9}.product-image-button,.main-image-box,.thumbnail,.cart-item img{background:#f1f4f6}
-.product-info small,.detail-description,.note,.stock-note{color:#667684}.about{background:#eaf2ef;border-color:#d4e3dc}.about p{color:#53665f}
-.search,.option-select,.quantity-input,.field input,.field textarea,.field select{background:#fff;color:#17232b;border-color:#cbd5de}.back-button{background:#fff;color:#174f8a;border-color:#174f8a}
-.detail-benefits{background:#edf5f1;border-color:#d6e5dd;color:#31584a}.detail-benefits div{border-color:#d6e5dd}.add-button{color:#174f8a;border-color:#174f8a}
-.gallery{display:grid;grid-template-columns:92px minmax(0,1fr);grid-template-areas:"thumb main";gap:12px;align-items:start}
-.main-image-box{grid-area:main}.thumbnail-list{grid-area:thumb;display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;max-height:620px;padding:0;gap:10px}
-.thumbnail{flex:0 0 82px;width:82px;height:92px}.brand-label{margin-top:12px;text-align:center;color:#174f8a;font-size:11px;letter-spacing:3px;font-weight:800}
-.detail-actions .buy-button,.detail-actions .add-button{border-radius:5px}.cart-total{color:#123b31}
-.whatsapp-order-button{display:block;text-align:center;margin-top:10px;padding:14px 16px;border-radius:5px;background:#168653;color:#fff;font-weight:800}
-.whatsapp-order-button:hover{background:#116b42}
-@media(max-width:900px){.gallery{grid-template-columns:1fr;grid-template-areas:"main" "thumb"}.main-image-box{height:520px}.thumbnail-list{flex-direction:row;max-height:none;overflow-x:auto;overflow-y:hidden}.thumbnail{flex:0 0 78px;width:78px;height:85px}}
-@media(max-width:580px){header{gap:8px}.header-actions{margin-left:auto}.main-image-box{height:390px}.thumbnail-list{padding:10px 0}.thumbnail{flex-basis:68px;width:68px;height:78px}.detail-layout{gap:20px}.brand-label{font-size:10px}.detail-actions{grid-template-columns:1fr}}
+@media(max-width:650px){
+.topbar{padding:0 13px;height:60px}
+.top-brand{font-size:12px}.top-mark{width:34px;height:34px}
+.top-brand small{font-size:8px}
+.role-pill{display:none}
+.layout{display:block}
+.sidebar{position:fixed;z-index:30;top:60px;left:-260px;width:245px;height:calc(100vh - 60px);transition:.25s;box-shadow:0 10px 30px #0002}
+.sidebar.open{left:0}
+.mobile-menu{display:inline-block;background:transparent;color:white;border:0;font-size:23px;margin-right:8px}
+.main{padding:15px}
+.page-head h1{font-size:21px}
+.cards{gap:9px}
+.stat-card{padding:13px}
+.stat-card strong{font-size:22px}
+.stat-card small{font-size:10px}
+.panel{padding:13px}
+.form-grid,.setting-grid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.variation-row{grid-template-columns:1fr 1fr}
+.variation-row button{grid-column:1/-1}
+}
 </style>
 </head>
 <body>
-<header>
-<a href="#" class="logo" onclick="showHome();return false;">
-<div class="logo-mark">TKR</div>
-<div class="logo-text">TAMKHUSH BY RATUL<span>PREMIUM FASHION LABEL</span></div>
-</a>
-<nav>
-<a href="#home" onclick="showHome()">HOME</a><a href="#collections" onclick="showHome()">COLLECTIONS</a><a href="#products" onclick="showHome()">SHOP</a><a href="#about" onclick="showHome()">ABOUT</a>
-</nav>
-<div class="header-actions"><button class="btn-outline" onclick="openCart()">CART (<span id="cartCount">0</span>)</button></div>
+
+<section id="loginScreen">
+<div class="login-card">
+<div class="brand">
+<div class="brand-mark">TKR</div>
+<h1>TAMKHUSH BY RATUL</h1>
+<p>ADMIN CONTROL PANEL</p>
+</div>
+<h2>Admin Login</h2>
+<form id="loginForm">
+<div class="field"><label>Email Address</label><input id="loginEmail" type="email" required placeholder="Admin email"></div>
+<div class="field"><label>Password</label><input id="loginPassword" type="password" required placeholder="Password"></div>
+<button class="btn" type="submit" id="loginButton">LOGIN TO DASHBOARD</button>
+<div id="loginError" class="error"></div>
+</form>
+</div>
+</section>
+
+<div id="app" class="hidden">
+<header class="topbar">
+<div class="top-brand">
+<button class="mobile-menu" onclick="toggleSidebar()">☰</button>
+<div class="top-mark">TKR</div>
+<div>TAMKHUSH BY RATUL<small>ADMIN DASHBOARD</small></div>
+</div>
+<div class="top-right">
+<span id="roleBadge" class="role-pill">ADMIN</span>
+<button class="btn btn-small btn-light" onclick="logout()">LOGOUT</button>
+</div>
 </header>
 
-<main id="homePage">
-<section class="hero" id="home"><div class="hero-content">
-<div class="eyebrow">PREMIUM FASHION LABEL</div><h1>STYLE IS<br><span>YOUR IDENTITY.</span></h1>
-<p>Discover a refined collection of modern fashion. Explore timeless style, quality and elegance with TAMKHUSH BY RATUL.</p>
-<a href="#products" class="btn">EXPLORE COLLECTION</a>
-</div></section>
-<section class="section" id="collections">
-<div class="section-head"><small>OUR COLLECTIONS</small><h2>SHOP BY CATEGORY</h2></div>
-<div class="categories">
-<div class="category"><div><h3>MEN'S FASHION</h3><p>Modern essentials for every style.</p><button onclick="selectCategory('men')">EXPLORE MEN</button></div></div>
-<div class="category"><div><h3>WOMEN'S FASHION</h3><p>Elegance in every detail.</p><button onclick="selectCategory('women')">EXPLORE WOMEN</button></div></div>
-</div></section>
-<section class="section" id="products">
-<div class="section-head"><small>THE LATEST EDIT</small><h2>FEATURED PRODUCTS</h2></div>
-<div class="toolbar"><input class="search" id="searchInput" placeholder="Search products..." oninput="renderProducts()">
-<div class="filters">
-<button class="filter active" onclick="selectCategory('all',this)">ALL</button><button class="filter" onclick="selectCategory('men',this)">MEN</button><button class="filter" onclick="selectCategory('women',this)">WOMEN</button><button class="filter" onclick="selectCategory('accessories',this)">ACCESSORIES</button>
-</div></div>
-<div class="products" id="productGrid"><div class="empty">Loading collection...</div></div>
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+<div class="side-label">MAIN MENU</div>
+<button class="nav-btn active" data-page="dashboard" onclick="navigate('dashboard',this)"><span class="nav-icon">▦</span> Dashboard</button>
+<button class="nav-btn" data-page="products" onclick="navigate('products',this)"><span class="nav-icon">◈</span> Products</button>
+<button class="nav-btn" data-page="variations" onclick="navigate('variations',this)"><span class="nav-icon">◉</span> Variations & SKU</button>
+<button class="nav-btn" data-page="orders" onclick="navigate('orders',this)"><span class="nav-icon">▤</span> Orders</button>
+<button class="nav-btn" data-page="customers" onclick="navigate('customers',this)"><span class="nav-icon">♙</span> Customers</button>
+<button class="nav-btn" data-page="inventory" onclick="navigate('inventory',this)"><span class="nav-icon">▣</span> Inventory</button>
+<div class="side-label">MANAGEMENT</div>
+<button class="nav-btn" data-page="reports" onclick="navigate('reports',this)"><span class="nav-icon">▥</span> Reports</button>
+<button class="nav-btn" data-page="staff" onclick="navigate('staff',this)"><span class="nav-icon">♧</span> Staff & Roles</button>
+<button class="nav-btn" data-page="activity" onclick="navigate('activity',this)"><span class="nav-icon">◷</span> Activity Logs</button>
+<button class="nav-btn" data-page="settings" onclick="navigate('settings',this)"><span class="nav-icon">⚙</span> Settings</button>
+</aside>
+
+<main class="main">
+
+<section class="page active" id="page-dashboard">
+<div class="page-head"><div><h1>Dashboard Overview</h1><p>Welcome to TAMKHUSH BY RATUL management panel.</p></div><button class="btn" onclick="refreshAll()">↻ Refresh Data</button></div>
+<div class="cards">
+<div class="stat-card"><span class="stat-icon">৳</span><small>Total Revenue</small><strong id="statRevenue">৳0</strong></div>
+<div class="stat-card"><span class="stat-icon">▤</span><small>Total Orders</small><strong id="statOrders">0</strong></div>
+<div class="stat-card"><span class="stat-icon">◈</span><small>Total Products</small><strong id="statProducts">0</strong></div>
+<div class="stat-card"><span class="stat-icon">♙</span><small>Customers</small><strong id="statCustomers">0</strong></div>
+</div>
+<div class="cards">
+<div class="stat-card"><small>Pending Orders</small><strong id="statPending">0</strong></div>
+<div class="stat-card"><small>Low Stock Products</small><strong id="statLowStock">0</strong></div>
+<div class="stat-card"><small>Delivered Orders</small><strong id="statDelivered">0</strong></div>
+<div class="stat-card"><small>Cancelled Orders</small><strong id="statCancelled">0</strong></div>
+</div>
+<div class="panel"><div class="panel-head"><h2>Recent Orders</h2><button class="btn btn-small btn-light" onclick="navigate('orders')">View All</button></div>
+<div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
+<div class="panel"><div class="panel-head"><h2>Low Stock Alerts</h2><button class="btn btn-small btn-light" onclick="navigate('inventory')">Inventory</button></div><div id="lowStockList"></div></div>
 </section>
-<section class="about" id="about"><h2>THE ART OF EVERYDAY ELEGANCE</h2><p>TAMKHUSH BY RATUL is a premium fashion label built around modern style, confidence and simplicity. Discover fashion that reflects your identity.</p></section>
+
+<section class="page" id="page-products">
+<div class="page-head"><div><h1>Products</h1><p>Add, edit and manage your fashion collection.</p></div><button class="btn" onclick="openProductModal()">+ Add Product</button></div>
+<div class="panel">
+<div class="toolbar"><input id="productSearch" class="search" placeholder="Search product name or SKU..." oninput="renderProducts()"><select id="productCategoryFilter" class="search" onchange="renderProducts()"><option value="">All Categories</option><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+</div>
+</section>
+
+<section class="page" id="page-variations">
+<div class="page-head"><div><h1>Variations & Supplier SKU</h1><p>Manage product color images and supplier details.</p></div></div>
+<div class="panel">
+<div class="toolbar"><input id="variationSearch" class="search" placeholder="Search product..." oninput="renderVariations()"></div>
+<div class="table-wrap"><table><thead><tr><th>Product</th><th>Color</th><th>Supplier SKU</th><th>Supplier URL</th><th>Image</th></tr></thead><tbody id="variationsTable"></tbody></table></div>
+</div>
+</section>
+
+<section class="page" id="page-orders">
+<div class="page-head"><div><h1>Orders Management</h1><p>View orders and update order status.</p></div><button class="btn btn-light" onclick="loadOrders()">↻ Refresh</button></div>
+<div class="panel">
+<div class="toolbar"><input id="orderSearch" class="search" placeholder="Search order, name or phone..." oninput="renderOrders()"><select id="orderStatusFilter" class="search" onchange="renderOrders()"><option value="">All Status</option><option value="new">New</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
+<div class="table-wrap"><table><thead><tr><th>Order No.</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table></div>
+</div>
+</section>
+
+<section class="page" id="page-customers">
+<div class="page-head"><div><h1>Customers</h1><p>Customer information collected from orders.</p></div></div>
+<div class="panel"><div class="toolbar"><input id="customerSearch" class="search" placeholder="Search customer..." oninput="renderCustomers()"></div>
+<div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-inventory">
+<div class="page-head"><div><h1>Inventory Management</h1><p>Monitor stock levels and low-stock products.</p></div></div>
+<div class="panel"><div class="toolbar"><input id="inventorySearch" class="search" placeholder="Search inventory..." oninput="renderInventory()"></div>
+<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Stock</th><th>Alert Level</th><th>Stock Status</th><th>Action</th></tr></thead><tbody id="inventoryTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-reports">
+<div class="page-head"><div><h1>Reports</h1><p>Sales and order performance overview.</p></div><button class="btn" onclick="exportOrdersCSV()">Export Orders CSV</button></div>
+<div class="cards">
+<div class="stat-card"><small>Total Sales</small><strong id="reportSales">৳0</strong></div>
+<div class="stat-card"><small>Average Order</small><strong id="reportAverage">৳0</strong></div>
+<div class="stat-card"><small>Delivered Revenue</small><strong id="reportDelivered">৳0</strong></div>
+<div class="stat-card"><small>Products in Stock</small><strong id="reportStock">0</strong></div>
+</div>
+<div class="panel"><h2>Order Status Summary</h2><div id="reportStatuses" style="margin-top:15px;line-height:2.2;font-size:13px"></div></div>
+</section>
+
+<section class="page" id="page-staff">
+<div class="page-head"><div><h1>Staff & Roles</h1><p>Manage dashboard access by assigned profile roles.</p></div></div>
+<div class="notice">Owner has full access. Manager and Admin access depend on their assigned role. Role changes should be performed only by the Owner.</div>
+<div class="panel"><div class="panel-head"><h2>Staff Accounts</h2><button class="btn btn-light btn-small" onclick="loadStaff()">Refresh</button></div>
+<div class="table-wrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Account</th></tr></thead><tbody id="staffTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-activity">
+<div class="page-head"><div><h1>Activity Logs</h1><p>Recent admin activity records.</p></div><button class="btn btn-light" onclick="loadActivity()">Refresh</button></div>
+<div class="panel"><div class="table-wrap"><table><thead><tr><th>Activity</th><th>Details</th><th>User</th><th>Date</th></tr></thead><tbody id="activityTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-settings">
+<div class="page-head"><div><h1>Store Settings</h1><p>Manage customer contact information.</p></div></div>
+<div class="panel">
+<h2 style="margin-bottom:18px">Customer Contact Settings</h2>
+<div class="setting-grid">
+<div class="field"><label>WhatsApp Order Number</label><input id="settingWhatsapp" placeholder="016XXXXXXXX"></div>
+<div class="field"><label>Customer Support Number</label><input id="settingSupport1" placeholder="016XXXXXXXX"></div>
+<div class="field"><label>Secondary Support Number</label><input id="settingSupport2" placeholder="017XXXXXXXX"></div>
+</div>
+<button class="btn" onclick="saveSettings()">Save Settings</button>
+</div>
+<div class="panel">
+<h2 style="margin-bottom:15px">Change Password</h2>
+<div class="field"><label>New Password</label><input id="newPassword" type="password" minlength="6" placeholder="At least 6 characters"></div>
+<button class="btn btn-blue" onclick="changePassword()">Update Password</button>
+</div>
+</section>
+
 </main>
+</div>
+</div>
 
-<section id="productDetailsPage">
-<div class="detail-topbar"><button class="back-button" onclick="showHome()">← BACK TO SHOP</button><div class="detail-breadcrumb">HOME / COLLECTION / PRODUCT</div></div>
-<div class="detail-layout">
-<div class="gallery"><div class="thumbnail-list" id="detailThumbnails"></div><div><div class="main-image-box"><img id="detailMainImage" src="" alt="Product"></div><div class="brand-label">TKR BRAND LABEL</div></div></div>
-<div class="detail-info">
-<div class="detail-category" id="detailCategory"></div><h1 id="detailName"></h1><div class="detail-price">৳<span id="detailPrice"></span></div>
-<p class="detail-description" id="detailDescription"></p><hr class="detail-divider">
-<div id="detailSizeWrap"><label class="option-label" for="detailSize">SELECT SIZE</label><select class="option-select" id="detailSize"></select></div>
-<div id="detailColorWrap"><label class="option-label" for="detailColor">SELECT COLOR</label><select class="option-select" id="detailColor"></select></div>
-<label class="option-label" for="detailQuantity">QUANTITY</label>
-<div class="quantity-row"><button onclick="changeDetailQuantity(-1)">−</button><input class="quantity-input" id="detailQuantity" type="number" min="1" max="99" value="1"><button onclick="changeDetailQuantity(1)">+</button></div>
-<div class="stock-note" id="detailStock"></div>
-<div class="detail-actions"><button class="buy-button" onclick="buySelectedProduct()">BUY NOW</button><button class="add-button" onclick="addSelectedProductToCart()">ADD TO CART</button></div>
-<div class="detail-benefits"><div>✓ Premium fashion collection</div><div>✓ Size and color selection</div><div>✓ Secure order processing</div><div>✓ Delivery information at checkout</div></div>
-</div></div>
-</section>
-
-<section id="checkoutPage" class="page-wrap">
-<button class="back-button" onclick="backToCart()">← কার্টে ফিরে যান</button>
-<div class="page-heading"><small>TAMKHUSH BY RATUL</small><h1>অর্ডার সম্পন্ন করুন</h1></div>
-<form id="checkoutForm">
-<div class="checkout-grid"><div class="panel">
-<h2>আপনার তথ্য ও ডেলিভারি ঠিকানা</h2>
+<!-- PRODUCT MODAL -->
+<div class="modal" id="productModal">
+<div class="modal-box">
+<div class="modal-head"><h2 id="productModalTitle">Add New Product</h2><button class="close-btn" onclick="closeModal('productModal')">✕</button></div>
+<form id="productForm">
+<input type="hidden" id="editProductId">
 <div class="form-grid">
-<div class="field"><label for="customerName">আপনার নাম *</label><input id="customerName" type="text" required minlength="2" placeholder="সম্পূর্ণ নাম লিখুন"></div>
-<div class="field"><label for="customerPhone">মোবাইল নম্বর *</label><input id="customerPhone" type="tel" required placeholder="01XXXXXXXXX"></div>
-<div class="field full"><label for="customerEmail">ইমেইল (ঐচ্ছিক)</label><input id="customerEmail" type="email" placeholder="আপনার ইমেইল"></div>
-<div class="field"><label for="customerDistrict">জেলা *</label><select id="customerDistrict" required disabled><option value="">জেলা লোড হচ্ছে...</option></select></div>
-<div class="field"><label for="customerArea">থানা / উপজেলা *</label><select id="customerArea" required disabled><option value="">আগে জেলা নির্বাচন করুন</option></select></div>
-<div class="field full"><label for="customerAddress">সম্পূর্ণ ঠিকানা *</label><textarea id="customerAddress" required minlength="8" placeholder="বাসা/বাড়ি নম্বর, রোড, এলাকার নামসহ সম্পূর্ণ ঠিকানা লিখুন"></textarea></div>
-<div class="field full"><label for="customerPostal">পোস্ট কোড (ঐচ্ছিক)</label><input id="customerPostal" type="text" placeholder="পোস্ট কোড"></div>
-<div class="field full">
-<div class="delivery-auto-note"><strong>অটোমেটিক ডেলিভারি চার্জ</strong><br>ঢাকা জেলা: ৳৭০<br>অন্যান্য জেলা: ৳১২০<br><span id="deliveryHint">জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।</span></div>
+<div class="field"><label>Product Name *</label><input id="pName" required></div>
+<div class="field"><label>Product SKU</label><input id="pSku"></div>
+<div class="field"><label>Category *</label><select id="pCategory" required><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
+<div class="field"><label>Selling Price (৳) *</label><input id="pPrice" type="number" min="0" required></div>
+<div class="field"><label>Supplier Cost (৳)</label><input id="pCost" type="number" min="0" value="0"></div>
+<div class="field"><label>Stock Quantity</label><input id="pStock" type="number" min="0" value="0"></div>
+<div class="field"><label>Low Stock Alert Level</label><input id="pAlert" type="number" min="0" value="5"></div>
+<div class="field"><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL"></div>
+<div class="field full"><label>Product Description</label><textarea id="pDescription"></textarea></div>
+<div class="field full"><label>Product Images (Select multiple from Gallery)</label><input id="pImages" type="file" accept="image/png,image/jpeg,image/webp" multiple><small style="color:var(--muted)">Maximum 5MB per image. Images upload to Supabase Storage.</small><div id="imagePreview" class="image-preview"></div></div>
+<div class="field full"><label><input id="pActive" type="checkbox" checked style="width:auto"> Show this product on customer website</label></div>
+<div class="field full"><hr style="border:0;border-top:1px solid var(--line);margin:8px 0 16px"><div class="panel-head"><h2>Color Variations & Supplier Information</h2><button type="button" class="btn btn-small" onclick="addVariationRow()">+ Add Color</button></div><div id="variationEditor"></div></div>
 </div>
-<div class="field full"><label for="customerNote">অতিরিক্ত নির্দেশনা (ঐচ্ছিক)</label><textarea id="customerNote" placeholder="অর্ডার সম্পর্কে কোনো কথা থাকলে লিখুন"></textarea></div>
-</div></div>
-<div class="panel"><h2>আপনার অর্ডার</h2><div id="checkoutItems" class="summary-items"></div>
-<div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳<span id="checkoutSubtotal">0</span></strong></div>
-<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">জেলা নির্বাচন করুন</span></strong></div>
-<div class="summary-line total"><span>সর্বমোট</span><strong>৳<span id="checkoutTotal">0</span></strong></div>
-<div id="checkoutMessage" class="checkout-message"></div>
-<button type="submit" id="checkoutSubmit" class="btn checkout-submit">অর্ডার কনফার্ম করুন</button>
-<p class="payment-note">পেমেন্ট পদ্ধতি: ক্যাশ অন ডেলিভারি (পণ্য হাতে পেয়ে মূল্য পরিশোধ করবেন)। ডেলিভারি চার্জ জেলা অনুযায়ী স্বয়ংক্রিয়ভাবে যোগ হবে।</p>
-</div></div></form>
-</section>
-
-<section id="receiptPage" style="display:none"><div class="receipt-wrap">
-<div class="receipt-card" id="receiptContent">
-<div class="receipt-brand"><div class="receipt-monogram">TKR</div><h1>TAMKHUSH BY RATUL</h1><p>PREMIUM FASHION LABEL</p></div>
-<h2 class="receipt-title">অর্ডার রসিদ</h2><div id="receiptDetails"></div>
-<div class="receipt-footer"><strong>ধন্যবাদ আমাদের সাথে কেনাকাটা করার জন্য!</strong><br>TKR — TAMKHUSH BY RATUL — Discover Your Style.</div>
+<div class="form-actions"><button type="button" class="btn btn-light" onclick="closeModal('productModal')">Cancel</button><button type="submit" class="btn" id="saveProductButton">Save Product</button></div>
+<div id="productFormError" class="error"></div>
+</form>
 </div>
-<div class="receipt-actions" id="receiptActions"><button class="btn" onclick="downloadReceipt()">PDF ডাউনলোড / প্রিন্ট</button><button class="btn-outline" onclick="showHome()">হোম পেজে ফিরে যান</button></div>
-</div></section>
+</div>
 
-<footer><div class="footer-mark">TKR</div><strong>TAMKHUSH BY RATUL</strong><br>PREMIUM FASHION LABEL<br><a data-contact-link="1" href="tel:01623851172">☎ 01623851172</a> &nbsp; <a data-contact-link="2" href="tel:01745108935">☎ 01745108935</a><br>© <span id="year"></span> TAMKHUSH BY RATUL. ALL RIGHTS RESERVED.</footer>
-
-<div class="drawer" id="cartDrawer" onclick="if(event.target===this)closeCart()"><div class="drawer-content">
-<div class="drawer-head"><h2>YOUR CART</h2><button class="btn-outline" onclick="closeCart()">CLOSE</button></div>
-<div id="cartItems"></div><div class="cart-total">Total: ৳<span id="cartTotal">0</span></div>
-<p class="note">Your selected items are saved in your cart.</p>
-<button class="btn" style="width:100%;margin-top:18px" onclick="openCheckout()">PROCEED TO CHECKOUT</button>
-<a id="cartWhatsAppOrder" class="whatsapp-order-button" href="https://wa.me/8801623851172" target="_blank" rel="noopener">ORDER VIA WHATSAPP</a>
-</div></div>
+<!-- ORDER MODAL -->
+<div class="modal" id="orderModal">
+<div class="modal-box">
+<div class="modal-head"><h2>Order Details</h2><button class="close-btn" onclick="closeModal('orderModal')">✕</button></div>
+<div id="orderModalContent" class="order-detail"></div>
+<div class="form-actions"><button class="btn btn-light" onclick="closeModal('orderModal')">Close</button></div>
+</div>
+</div>
 
 <script>
-let products=[];
-let activeCategory='all';
-let selectedProduct=null;
-let detailImages=[];
-let baseDetailImages=[];
-let productVariations=[];
-let selectedVariation=null;
-let customerContacts={whatsapp_order_number:'01623851172',customer_support_number:'01623851172',customer_support_number_2:'01745108935'};
-let currentReceipt=null;
-let districtsLoaded=false;
-let districtsLoading=false;
-let selectedDeliveryCharge=null;
-let selectedDeliveryZone=null;
+const client=window.supabaseClient;
+let currentUser=null,currentProfile=null,currentRole='';
+let products=[],orders=[],customers=[],variations=[];
+let existingImages=[];
+let variationDraft=[];
+let settingsRow=null;
 
-/* PRODUCT LINK SUPPORT */
-const requestedProductId=new URLSearchParams(window.location.search).get('product');
-let productLinkHandled=false;
+const $=id=>document.getElementById(id);
+const money=v=>Number(v||0).toLocaleString('en-BD');
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const dateText=v=>v?new Date(v).toLocaleString('en-BD'):'—';
+const roleName=r=>({owner:'Owner',manager:'Manager',admin:'Admin'}[String(r||'').toLowerCase()]||r||'Unknown');
 
-let cart=[];
+function notify(message){alert(message)}
+function canManage(){return ['owner','manager'].includes(currentRole)}
+function isOwner(){return currentRole==='owner'}
+
+async function init(){
+if(!client){$('loginError').textContent='Supabase client পাওয়া যায়নি। config.js পরীক্ষা করুন।';return}
+const {data:{session}}=await client.auth.getSession();
+if(session?.user)await verifyUser(session.user);
+}
+async function verifyUser(user){
 try{
-const savedCart=JSON.parse(localStorage.getItem('tkr_cart')||'[]');
-cart=Array.isArray(savedCart)?savedCart:[];
-}catch(error){cart=[];}
-
-function money(value){return Number(value||0).toLocaleString('en-BD');}
-function escapeHTML(value){
-return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
+if(error)throw error;
+if(!data)throw new Error('আপনার profiles record পাওয়া যায়নি।');
+const role=String(data.role||'').toLowerCase();
+if(!['owner','manager','admin'].includes(role))throw new Error('আপনার Admin Dashboard access নেই।');
+currentUser=user;currentProfile=data;currentRole=role;
+$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');
+$('roleBadge').textContent=roleName(role).toUpperCase();
+applyRolePermissions();
+await refreshAll();
+}catch(error){await client.auth.signOut();$('loginError').textContent=error.message||'Login verification failed.';$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden')}
 }
-function getProductImages(product){
-let images=product.images||[];
-if(typeof images==='string'){try{images=JSON.parse(images);}catch(e){images=[images];}}
-if(!Array.isArray(images))images=[];
-images=images.filter(x=>typeof x==='string'&&x.trim());
-return images.length?images:['https://images.unsplash.com/photo-1445205170230-053b83016050?w=900'];
+$('loginForm').addEventListener('submit',async e=>{
+e.preventDefault();
+$('loginButton').disabled=true;$('loginButton').textContent='PLEASE WAIT...';$('loginError').textContent='';
+try{
+const {data,error}=await client.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});
+if(error)throw error;
+await verifyUser(data.user);
+}catch(error){$('loginError').textContent=error.message||'Login failed.'}
+finally{$('loginButton').disabled=false;$('loginButton').textContent='LOGIN TO DASHBOARD'}
+});
+async function logout(){await client.auth.signOut();location.reload()}
+function applyRolePermissions(){
+if(currentRole!=='owner'){
+document.querySelector('[data-page="staff"]').classList.add('hidden');
+document.querySelector('[data-page="settings"]').classList.add('hidden');
 }
-function productImage(product){return getProductImages(product)[0];}
-function getOptions(value){
-if(Array.isArray(value))return value.filter(Boolean).map(String);
-if(typeof value==='string'&&value.trim())return value.split(',').map(v=>v.trim()).filter(Boolean);
-return [];
+if(currentRole==='admin'){
+document.querySelector('[data-page="reports"]').classList.add('hidden');
+document.querySelector('[data-page="activity"]').classList.add('hidden');
 }
-
-/* AUTO OPEN PRODUCT FROM FACEBOOK LINK */
-function openRequestedProduct(){
-if(productLinkHandled||!requestedProductId)return;
-productLinkHandled=true;
-
-const matchedProduct=products.find(item=>String(item.id)===String(requestedProductId));
-
-if(matchedProduct){
-openProductDetails(matchedProduct.id);
-return;
 }
-
-document.getElementById('homePage').style.display='block';
-document.getElementById('productDetailsPage').classList.remove('active');
-
-const grid=document.getElementById('productGrid');
-grid.innerHTML='<div class="empty">এই প্রোডাক্টটি পাওয়া যায়নি অথবা বর্তমানে উপলভ্য নেই। <br><br><button class="btn" onclick="showHome()">BACK TO SHOP</button></div>';
-
-document.getElementById('products').scrollIntoView({behavior:'smooth'});
+function navigate(name,button){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+$('page-'+name)?.classList.add('active');
+document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+const nav=button||document.querySelector(`[data-page="${name}"]`);
+nav?.classList.add('active');
+$('sidebar').classList.remove('open');
 }
+function toggleSidebar(){$('sidebar').classList.toggle('open')}
+function openModal(id){$(id).classList.add('open')}
+function closeModal(id){$(id).classList.remove('open')}
 
-/* LOAD PRODUCTS */
+async function refreshAll(){
+await Promise.allSettled([loadProducts(),loadOrders(),loadSettings()]);
+renderDashboard();renderCustomers();renderInventory();renderReports();renderVariations();
+}
 async function loadProducts(){
-const grid=document.getElementById('productGrid');
-try{
-if(!window.store)throw new Error('Store is not loaded');
-products=await window.store.getProducts();
-renderProducts();
-
-/* Wait until products are loaded, then open the exact linked product */
-openRequestedProduct();
-
-}catch(error){
-console.error(error);
-grid.innerHTML='<div class="empty">Products could not be loaded. Please try again later.</div>';
+const {data,error}=await client.from('products').select('*').order('created_at',{ascending:false});
+if(error)throw error;
+products=data||[];
+renderProducts();renderInventory();renderDashboard();
 }
+async function loadOrders(){
+const {data,error}=await client.from('orders').select('*,order_items(*)').order('created_at',{ascending:false});
+if(error)throw error;
+orders=data||[];
+renderOrders();renderDashboard();renderCustomers();renderReports();
 }
-
-/* DROPBAZAR DISTRICT & THANA */
-async function invokeLocations(body){
-const client=window.supabaseClient;
-if(!client||!client.functions)throw new Error('Supabase client is not available');
-const {data,error}=await client.functions.invoke('dropbazar-locations',{body});
-if(error)throw await getUsefulFunctionError(error);
-if(!data||data.success!==true||!Array.isArray(data.data)){
-throw new Error(data?.error||'Location service returned an invalid response');
+function renderDashboard(){
+const revenue=orders.filter(o=>o.status!=='cancelled'&&o.order_status!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
+$('statRevenue').textContent='৳'+money(revenue);
+$('statOrders').textContent=orders.length;
+$('statProducts').textContent=products.length;
+$('statCustomers').textContent=buildCustomers().length;
+$('statPending').textContent=orders.filter(o=>['new','pending'].includes(o.status||o.order_status)).length;
+$('statDelivered').textContent=orders.filter(o=>(o.status||o.order_status)==='delivered').length;
+$('statCancelled').textContent=orders.filter(o=>(o.status||o.order_status)==='cancelled').length;
+const low=products.filter(p=>Number(p.stock||0)<=Number(p.low_stock_threshold??p.alert_level??5));
+$('statLowStock').textContent=low.length;
+$('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(o.status||o.order_status)}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders yet</td></tr>';
+$('lowStockList').innerHTML=low.slice(0,6).map(p=>`<div style="padding:10px;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between"><span>${esc(p.name)}</span><strong style="color:var(--red)">${Number(p.stock||0)} left</strong></div>`).join('')||'<div class="empty">No low stock alerts</div>';
 }
-return data.data;
+function statusBadge(status){
+const s=String(status||'new').toLowerCase();
+const label={new:'New',pending:'Pending',confirmed:'Confirmed',processing:'Processing',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'}[s]||s;
+const cls=['cancelled'].includes(s)?'red':['new','pending'].includes(s)?'orange':['shipped','processing'].includes(s)?'blue':'';
+return `<span class="badge ${cls}">${esc(label)}</span>`;
 }
-
-async function getUsefulFunctionError(error){
-let message=error?.message||'Function request failed';
-try{
-const context=error?.context;
-if(context){
-if(typeof context.json==='function'){
-const body=await context.clone().json();
-message=body?.error||body?.message||body?.details||message;
-}else if(typeof context==='string'){message=context;}
-}
-}catch(e){}
-return new Error(String(message));
-}
-
-async function loadDistricts(){
-if(districtsLoaded||districtsLoading)return;
-districtsLoading=true;
-const districtSelect=document.getElementById('customerDistrict');
-const thanaSelect=document.getElementById('customerArea');
-districtSelect.disabled=true;
-districtSelect.innerHTML='<option value="">জেলা লোড হচ্ছে...</option>';
-thanaSelect.disabled=true;
-thanaSelect.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';
-try{
-const list=await invokeLocations({});
-districtSelect.innerHTML='<option value="">জেলা নির্বাচন করুন</option>'+
-list.map(item=>`<option value="${Number(item.id)}" data-name="${escapeHTML(item.name||item.bn_name||'')}">${escapeHTML(item.bn_name||item.name)}</option>`).join('');
-districtsLoaded=true;
-districtSelect.disabled=false;
-}catch(error){
-console.error('District loading error:',error);
-districtSelect.innerHTML='<option value="">জেলা লোড হয়নি — আবার চেষ্টা করুন</option>';
-districtSelect.disabled=false;
-showCheckoutError('জেলার তালিকা লোড করা যায়নি। ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করুন।');
-}finally{districtsLoading=false;}
-}
-
-async function loadThanas(districtId){
-const thanaSelect=document.getElementById('customerArea');
-thanaSelect.disabled=true;
-thanaSelect.innerHTML='<option value="">থানা লোড হচ্ছে...</option>';
-if(!districtId){
-thanaSelect.innerHTML='<option value="">আগে জেলা নির্বাচন করুন</option>';
-return;
-}
-try{
-const list=await invokeLocations({district_id:Number(districtId)});
-thanaSelect.innerHTML='<option value="">থানা / উপজেলা নির্বাচন করুন</option>'+
-list.map(item=>`<option value="${Number(item.id)}">${escapeHTML(item.bn_name||item.name)}</option>`).join('');
-thanaSelect.disabled=false;
-if(!list.length)thanaSelect.innerHTML='<option value="">এই জেলার থানা পাওয়া যায়নি</option>';
-}catch(error){
-console.error('Thana loading error:',error);
-thanaSelect.innerHTML='<option value="">থানা লোড হয়নি — জেলা আবার নির্বাচন করুন</option>';
-thanaSelect.disabled=false;
-showCheckoutError('থানা/উপজেলার তালিকা লোড করা যায়নি। আবার জেলা নির্বাচন করে চেষ্টা করুন।');
-}
-}
-
-/* AUTOMATIC DELIVERY CHARGE */
-function calculateDeliveryFromDistrict(){
-const select=document.getElementById('customerDistrict');
-const option=select.options[select.selectedIndex];
-const districtName=String(option?.dataset?.name||option?.textContent||'').trim().toLowerCase();
-
-if(!select.value||!districtName){
-selectedDeliveryCharge=null;
-selectedDeliveryZone=null;
-document.getElementById('deliveryHint').textContent='জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।';
-updateCheckoutSummary();
-return;
-}
-
-const isDhaka=districtName==='dhaka'||districtName==='ঢাকা'||districtName.includes('dhaka')||districtName.includes('ঢাকা');
-selectedDeliveryCharge=isDhaka?70:120;
-selectedDeliveryZone=isDhaka?'inside_dhaka':'outside_dhaka';
-
-document.getElementById('deliveryHint').textContent=isDhaka
-?'ঢাকা জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳৭০।'
-:'ঢাকার বাইরের জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳১২০।';
-
-updateCheckoutSummary();
-}
-
-document.getElementById('customerDistrict').addEventListener('change',event=>{
-document.getElementById('customerArea').value='';
-calculateDeliveryFromDistrict();
-loadThanas(event.target.value);
-});
-
 function renderProducts(){
-const grid=document.getElementById('productGrid');
-const term=document.getElementById('searchInput').value.toLowerCase().trim();
-const filtered=products.filter(p=>{
-const category=String(p.category||'').toLowerCase();
-const matchesCategory=activeCategory==='all'||category===activeCategory||((activeCategory==='men'||activeCategory==='women')&&category==='unisex');
-const matchesSearch=String(p.name||'').toLowerCase().includes(term)||String(p.description||'').toLowerCase().includes(term);
-return matchesCategory&&matchesSearch;
+const term=($('productSearch')?.value||'').toLowerCase();
+const cat=$('productCategoryFilter')?.value||'';
+const list=products.filter(p=>(!cat||p.category===cat)&&(`${p.name} ${p.sku||''}`).toLowerCase().includes(term));
+$('productsTable').innerHTML=list.map(p=>{
+let imgs=Array.isArray(p.images)?p.images:typeof p.images==='string'?(()=>{try{return JSON.parse(p.images)}catch(e){return [p.images]}})():[];
+return `<tr><td><div class="product-cell"><img src="${esc(imgs[0]||'')}" onerror="this.style.visibility='hidden'"><strong>${esc(p.name)}</strong></div></td><td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td><td>৳${money(p.selling_price)}</td><td>${Number(p.stock||0)}</td><td>${p.is_active===false?'<span class="badge red">Hidden</span>':'<span class="badge">Active</span>'}</td><td><div class="actions"><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Edit</button><button class="btn btn-small btn-red" onclick="deleteProduct('${esc(p.id)}')">Delete</button></div></td></tr>`;
+}).join('')||'<tr><td colspan="7" class="empty">No products found</td></tr>';
+}
+function openProductModal(){
+$('productForm').reset();$('editProductId').value='';$('productModalTitle').textContent='Add New Product';
+$('pActive').checked=true;existingImages=[];variationDraft=[];
+$('imagePreview').innerHTML='';$('variationEditor').innerHTML='';$('productFormError').textContent='';
+openModal('productModal');
+}
+async function editProduct(id){
+const p=products.find(x=>String(x.id)===String(id));if(!p)return;
+$('productForm').reset();$('editProductId').value=p.id;$('productModalTitle').textContent='Edit Product';
+$('pName').value=p.name||'';$('pSku').value=p.sku||'';$('pCategory').value=p.category||'men';
+$('pPrice').value=p.selling_price||0;$('pCost').value=p.supplier_cost||0;$('pStock').value=p.stock||0;
+$('pAlert').value=p.low_stock_threshold??p.alert_level??5;$('pSizes').value=Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||'';
+$('pDescription').value=p.description||'';$('pActive').checked=p.is_active!==false;
+existingImages=Array.isArray(p.images)?p.images.slice():[];
+if(typeof p.images==='string'){try{existingImages=JSON.parse(p.images)}catch(e){existingImages=[p.images]}}
+renderImagePreview();
+variationDraft=[];
+try{
+const {data,error}=await client.from('product_variations').select('*').eq('product_id',p.id);
+if(error)throw error;variationDraft=data||[];
+}catch(e){console.warn(e)}
+renderVariationEditor();$('productFormError').textContent='';openModal('productModal');
+}
+function renderImagePreview(){
+$('imagePreview').innerHTML=existingImages.map((url,i)=>`<div class="image-item"><img src="${esc(url)}"><button type="button" onclick="removeExistingImage(${i})">×</button></div>`).join('');
+}
+function removeExistingImage(i){existingImages.splice(i,1);renderImagePreview()}
+$('pImages').addEventListener('change',()=>{
+const files=[...$('pImages').files];
+for(const file of files){
+if(file.size>5*1024*1024){notify(file.name+' is larger than 5MB');continue}
+const reader=new FileReader();reader.onload=e=>{
+const box=document.createElement('div');box.className='image-item';
+const img=document.createElement('img');img.src=e.target.result;box.appendChild(img);
+const tag=document.createElement('small');tag.textContent=file.name;box.appendChild(tag);
+$('imagePreview').appendChild(box);
+};reader.readAsDataURL(file);
+}
 });
-if(!filtered.length){grid.innerHTML='<div class="empty">No products found in this collection.</div>';return;}
-grid.innerHTML=filtered.map(p=>`
-<article class="product">
-<button class="product-image-button" onclick="openProductDetails('${escapeHTML(p.id)}')" aria-label="View ${escapeHTML(p.name)}"><img src="${escapeHTML(productImage(p))}" alt="${escapeHTML(p.name)}" loading="lazy"></button>
-<div class="product-info"><small>${escapeHTML(p.category||'Fashion')}</small><h3>${escapeHTML(p.name)}</h3>
-<div class="price">৳${money(p.selling_price)}</div><button class="view-btn" onclick="openProductDetails('${escapeHTML(p.id)}')">VIEW DETAILS</button></div>
-</article>`).join('');
+function addVariationRow(item={}){
+variationDraft.push({color_name:item.color_name||'',supplier_sku:item.supplier_sku||'',supplier_product_url:item.supplier_product_url||'',image_url:item.image_url||'',id:item.id||null});
+renderVariationEditor();
 }
-
-function selectCategory(category,button){
-activeCategory=category;
-document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));
-if(button)button.classList.add('active');
-else{
-const match=[...document.querySelectorAll('.filter')].find(b=>b.textContent.trim().toLowerCase()===category);
-if(match)match.classList.add('active');
+function renderVariationEditor(){
+$('variationEditor').innerHTML=variationDraft.map((v,i)=>`<div class="variation-row">
+<input placeholder="Color name" value="${esc(v.color_name)}" oninput="variationDraft[${i}].color_name=this.value">
+<input placeholder="Supplier SKU" value="${esc(v.supplier_sku)}" oninput="variationDraft[${i}].supplier_sku=this.value">
+<input placeholder="Supplier product URL" value="${esc(v.supplier_product_url)}" oninput="variationDraft[${i}].supplier_product_url=this.value">
+<input placeholder="Color image URL" value="${esc(v.image_url)}" oninput="variationDraft[${i}].image_url=this.value">
+<button type="button" class="btn btn-small btn-red" onclick="variationDraft.splice(${i},1);renderVariationEditor()">Remove</button>
+</div>`).join('');
 }
-showHome();renderProducts();document.getElementById('products').scrollIntoView({behavior:'smooth'});
+async function uploadProductImages(productId){
+const files=[...$('pImages').files];
+if(!files.length)return existingImages;
+for(const file of files){
+if(file.size>5*1024*1024)throw new Error(file.name+' is larger than 5MB');
+const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+const path=`products/${productId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+const {error}=await client.storage.from('product-images').upload(path,file,{upsert:false,contentType:file.type});
+if(error)throw error;
+const {data}=client.storage.from('product-images').getPublicUrl(path);
+existingImages.push(data.publicUrl);
 }
-function hideOtherPages(){
-document.getElementById('checkoutPage').style.display='none';
-document.getElementById('receiptPage').style.display='none';
-document.getElementById('productDetailsPage').classList.remove('active');
+return existingImages;
 }
-function showHome(){
-hideOtherPages();
-document.getElementById('homePage').style.display='block';
-selectedProduct=null;
-closeCart();
-window.scrollTo({top:0,behavior:'smooth'});
-}
-async function openProductDetails(id){
-selectedProduct=products.find(item=>String(item.id)===String(id));
-if(!selectedProduct)return;
-productVariations=[];selectedVariation=null;
-try{if(window.store?.getProductVariations)productVariations=await window.store.getProductVariations(selectedProduct.id)||[]}catch(error){console.warn('Product variations unavailable:',error.message)}
-if(!productVariations.length){const legacy=getOptions(selectedProduct.colors);productVariations=legacy.map(color=>({color_name:color,image_url:''}));}
-baseDetailImages=getProductImages(selectedProduct);detailImages=baseDetailImages.slice();
-document.getElementById('detailMainImage').src=detailImages[0];
-document.getElementById('detailMainImage').alt=selectedProduct.name||'Product';
-document.getElementById('detailCategory').textContent=selectedProduct.category||'Fashion';
-document.getElementById('detailName').textContent=selectedProduct.name||'Product';
-document.getElementById('detailPrice').textContent=money(selectedProduct.selling_price);
-document.getElementById('detailDescription').textContent=selectedProduct.description||'Discover this item from the TAMKHUSH BY RATUL collection.';
-renderDetailGallery();
-const sizes=getOptions(selectedProduct.sizes),colors=productVariations.map(v=>v.color_name).filter(Boolean);
-document.getElementById('detailSizeWrap').style.display=sizes.length?'block':'none';
-document.getElementById('detailColorWrap').style.display=colors.length?'block':'none';
-document.getElementById('detailSize').innerHTML=sizes.length?'<option value="">Choose size</option>'+sizes.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join(''):'';
-document.getElementById('detailColor').innerHTML=colors.length?'<option value="">Choose color</option>'+colors.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join(''):'';
-document.getElementById('detailColor').onchange=()=>selectProductColor(document.getElementById('detailColor').value);
-document.getElementById('detailQuantity').value=1;
-const stock=Number(selectedProduct.stock);document.getElementById('detailStock').textContent=Number.isFinite(stock)?(stock>0?`Available stock: ${stock}`:'Stock availability: Please contact us'):'';
-document.getElementById('homePage').style.display='none';document.getElementById('checkoutPage').style.display='none';document.getElementById('receiptPage').style.display='none';document.getElementById('productDetailsPage').classList.add('active');window.scrollTo({top:0,behavior:'smooth'});
-}
-function renderDetailGallery(){
-const images=[...new Set([...(selectedVariation?.image_url?[selectedVariation.image_url]:[]),...baseDetailImages])];detailImages=images;
-document.getElementById('detailMainImage').src=images[0]||productImage(selectedProduct);
-document.getElementById('detailThumbnails').innerHTML=images.map((image,index)=>`<button class="thumbnail ${index===0?'active':''}" onclick="changeDetailImage(${index})"><img src="${escapeHTML(image)}" alt="Product image ${index+1}"></button>`).join('');
-}
-function selectProductColor(color){selectedVariation=productVariations.find(v=>String(v.color_name)===String(color))||null;renderDetailGallery();}
-
-function changeDetailImage(index){
-if(!detailImages[index])return;
-document.getElementById('detailMainImage').src=detailImages[index];
-document.querySelectorAll('.thumbnail').forEach((button,i)=>button.classList.toggle('active',i===index));
-}
-function changeDetailQuantity(change){
-const input=document.getElementById('detailQuantity');
-input.value=Math.max(1,Math.min(99,Number(input.value||1)+change));
-}
-function getSelectedProductOptions(){
-if(!selectedProduct)return null;
-const sizes=getOptions(selectedProduct.sizes),colors=productVariations.map(v=>v.color_name).filter(Boolean);
-const size=sizes.length?document.getElementById('detailSize').value:'';
-const color=colors.length?document.getElementById('detailColor').value:'';
-if(sizes.length&&!size){alert('Please select a size first.');return null;}
-if(colors.length&&!color){alert('Please select a color first.');return null;}
-const quantity=Math.max(1,Math.min(99,Number(document.getElementById('detailQuantity').value||1)));
-const stock=Number(selectedProduct.stock);
-if(Number.isFinite(stock)&&stock>0){
-const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===size&&item.color===color);
-const alreadyInCart=existing?Number(existing.quantity):0;
-if(alreadyInCart+quantity>stock){alert(`Only ${stock} item(s) currently available in stock.`);return null;}
-}
-return {size,color,quantity};
-}
-function addSelectedProductToCart(){
-if(!selectedProduct)return;const options=getSelectedProductOptions();if(!options)return;addProductToCart(options);
-}
-function buySelectedProduct(){
-if(!selectedProduct)return;const options=getSelectedProductOptions();if(!options)return;addProductToCart(options,false);openCheckout();
-}
-function addProductToCart(options,openDrawer=true){
-const existing=cart.find(item=>String(item.id)===String(selectedProduct.id)&&item.size===options.size&&item.color===options.color);
-if(existing)existing.quantity+=options.quantity;
-else cart.push({id:selectedProduct.id,name:selectedProduct.name,price:Number(selectedProduct.selling_price||0),image:selectedVariation?.image_url||productImage(selectedProduct),size:options.size,color:options.color,quantity:options.quantity});
-saveCart();if(openDrawer)openCart();
-}
-function saveCart(){localStorage.setItem('tkr_cart',JSON.stringify(cart));updateCart();}
-function updateCart(){
-document.getElementById('cartCount').textContent=cart.reduce((sum,item)=>sum+Number(item.quantity||0),0);
-document.getElementById('cartItems').innerHTML=cart.length?cart.map((item,index)=>`
-<div class="cart-item"><img src="${escapeHTML(item.image)}" alt="${escapeHTML(item.name)}">
-<div class="cart-item-info"><strong>${escapeHTML(item.name)}</strong>
-<small>${item.size?'Size: '+escapeHTML(item.size)+'<br>':''}${item.color?'Color: '+escapeHTML(item.color)+'<br>':''}৳${money(item.price)} each</small>
-<div class="cart-item-actions"><button class="qty-btn" onclick="changeCartQuantity(${index},-1)">−</button><span>${Number(item.quantity||1)}</span><button class="qty-btn" onclick="changeCartQuantity(${index},1)">+</button><button class="remove-btn" onclick="removeCartItem(${index})">REMOVE</button></div></div>
-<strong>৳${money(Number(item.price)*Number(item.quantity))}</strong></div>`).join(''):'<p class="note">Your cart is empty.</p>';
-document.getElementById('cartTotal').textContent=money(cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.quantity),0));
-const wa=document.getElementById('cartWhatsAppOrder');if(wa){wa.href=getWhatsAppOrderUrl();wa.style.display=cart.length?'block':'none';}
-}
-function changeCartQuantity(index,change){
-if(!cart[index])return;
-const nextQuantity=Number(cart[index].quantity)+change;
-if(nextQuantity<=0){removeCartItem(index);return;}
-const product=products.find(p=>String(p.id)===String(cart[index].id));
-if(product&&Number(product.stock)>0&&nextQuantity>Number(product.stock)){alert(`Only ${product.stock} item(s) currently available.`);return;}
-cart[index].quantity=nextQuantity;saveCart();
-if(document.getElementById('checkoutPage').style.display==='block')updateCheckoutSummary();
-}
-function removeCartItem(index){
-cart.splice(index,1);saveCart();
-if(document.getElementById('checkoutPage').style.display==='block'){if(!cart.length)showHome();else updateCheckoutSummary();}
-}
-function openCart(){document.getElementById('cartDrawer').classList.add('open');updateCart();}
-function closeCart(){document.getElementById('cartDrawer').classList.remove('open');}
-
-/* CHECKOUT */
-function openCheckout(){
-if(!cart.length){alert('আপনার কার্টে কোনো পণ্য নেই।');return;}
-closeCart();
-document.getElementById('homePage').style.display='none';
-document.getElementById('productDetailsPage').classList.remove('active');
-document.getElementById('receiptPage').style.display='none';
-document.getElementById('checkoutPage').style.display='block';
-document.getElementById('checkoutMessage').style.display='none';
-updateCheckoutSummary();
-if(!districtsLoaded)loadDistricts();
-window.scrollTo({top:0,behavior:'smooth'});
-}
-function backToCart(){document.getElementById('checkoutPage').style.display='none';openCart();}
-function getCartSubtotal(){return cart.reduce((sum,item)=>sum+(Number(item.price)||0)*(Number(item.quantity)||0),0);}
-
-function updateCheckoutSummary(){
-document.getElementById('checkoutItems').innerHTML=cart.map(item=>`
-<div class="summary-product"><span>${escapeHTML(item.name)} × ${Number(item.quantity)}
-<small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small></span>
-<strong>৳${money(Number(item.price)*Number(item.quantity))}</strong></div>`).join('');
-const subtotal=getCartSubtotal();
-document.getElementById('checkoutSubtotal').textContent=money(subtotal);
-document.getElementById('checkoutDelivery').textContent=selectedDeliveryCharge===null?'জেলা নির্বাচন করুন':money(selectedDeliveryCharge);
-document.getElementById('checkoutTotal').textContent=money(subtotal+(selectedDeliveryCharge||0));
-}
-
-function showCheckoutError(message){
-const box=document.getElementById('checkoutMessage');
-box.textContent=message;box.style.display='block';
-box.scrollIntoView({behavior:'smooth',block:'center'});
-}
-function translateOrderError(message){
-const text=String(message||'');
-if(text.includes('Insufficient stock'))return 'দুঃখিত, এই পণ্যের পর্যাপ্ত স্টক নেই।';
-if(text.includes('unavailable'))return 'আপনার নির্বাচিত একটি পণ্য বর্তমানে পাওয়া যাচ্ছে না।';
-if(text.includes('Invalid size'))return 'একটি পণ্যের সাইজ সঠিক নয়। আবার সাইজ নির্বাচন করুন।';
-if(text.includes('Invalid color'))return 'একটি পণ্যের রং সঠিক নয়। আবার রং নির্বাচন করুন।';
-if(text.includes('Invalid phone'))return 'সঠিক মোবাইল নম্বর লিখুন।';
-if(text.includes('Could not save order'))return 'অর্ডার সংরক্ষণ করা যায়নি। সার্ভার লগ পরীক্ষা করা প্রয়োজন।';
-if(text.includes('Server configuration'))return 'সার্ভারের সেটআপে সমস্যা আছে।';
-if(text.includes('Supabase client'))return 'ওয়েবসাইটের Supabase সংযোগ পাওয়া যাচ্ছে না। config.js পরীক্ষা করতে হবে।';
-return 'অর্ডার জমা দেওয়া যায়নি: '+text;
-}
-
-async function handleCheckoutSubmit(event){
-event.preventDefault();
-if(!cart.length){showCheckoutError('আপনার কার্টে কোনো পণ্য নেই।');return;}
-
-const districtSelect=document.getElementById('customerDistrict');
-const thanaSelect=document.getElementById('customerArea');
-
-if(!districtSelect.value||!thanaSelect.value){
-showCheckoutError('অনুগ্রহ করে জেলা এবং থানা/উপজেলা নির্বাচন করুন।');return;
-}
-
-calculateDeliveryFromDistrict();
-
-if(selectedDeliveryCharge===null||!selectedDeliveryZone){
-showCheckoutError('সঠিক জেলা নির্বাচন করুন।');return;
-}
-
-const districtName=districtSelect.options[districtSelect.selectedIndex]?.textContent.trim();
-const thanaName=thanaSelect.options[thanaSelect.selectedIndex]?.textContent.trim();
-if(!districtName||!thanaName){showCheckoutError('জেলা অথবা থানার সঠিক নাম পাওয়া যায়নি। আবার নির্বাচন করুন।');return;}
-
-const submitButton=document.getElementById('checkoutSubmit');
-document.getElementById('checkoutMessage').style.display='none';
-
+$('productForm').addEventListener('submit',async e=>{
+e.preventDefault();
+$('saveProductButton').disabled=true;$('saveProductButton').textContent='Saving...';
+$('productFormError').textContent='';
+try{
+const id=$('editProductId').value;
 const payload={
-customerName:document.getElementById('customerName').value.trim(),
-customerPhone:document.getElementById('customerPhone').value.trim(),
-customerEmail:document.getElementById('customerEmail').value.trim()||null,
-shippingAddress:document.getElementById('customerAddress').value.trim(),
-city:districtName,
-area:thanaName,
-districtId:Number(districtSelect.value),
-thanaId:Number(thanaSelect.value),
-postalCode:document.getElementById('customerPostal').value.trim()||null,
-deliveryZone:selectedDeliveryZone,
-items:cart.map(item=>({productId:String(item.id),quantity:Number(item.quantity),size:item.size||'',color:item.color||''})),
-customerNote:document.getElementById('customerNote').value.trim()||null
+name:$('pName').value.trim(),sku:$('pSku').value.trim()||null,
+category:$('pCategory').value,selling_price:Number($('pPrice').value),
+supplier_cost:Number($('pCost').value||0),stock:Number($('pStock').value||0),
+low_stock_threshold:Number($('pAlert').value||5),
+sizes:$('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),
+description:$('pDescription').value.trim(),is_active:$('pActive').checked,
+images:existingImages
 };
-
-submitButton.disabled=true;submitButton.textContent='অর্ডার জমা হচ্ছে...';
-try{
-const client=window.supabaseClient;
-if(!client||!client.functions)throw new Error('Supabase client is not available');
-const {data,error}=await client.functions.invoke('customer-order',{body:payload});
-if(error)throw await getUsefulFunctionError(error);
-if(!data||data.success!==true||!data.order)throw new Error(data?.error||data?.message||'Order response was not valid');
-
-const serverOrder=data.order;
-currentReceipt={
-...serverOrder,
-customer_name:payload.customerName,
-customer_phone:payload.customerPhone,
-customer_email:payload.customerEmail,
-shipping_address:payload.shippingAddress,
-city:payload.city,
-area:payload.area,
-postal_code:payload.postalCode,
-customer_note:payload.customerNote,
-created_at:serverOrder.created_at||new Date().toISOString(),
-order_status:serverOrder.status||serverOrder.order_status||'new',
-discount:Number(serverOrder.discount||0),
-order_items:cart.map(item=>({
-product_name:item.name,
-image:item.image,
-size:item.size,
-color:item.color,
-quantity:Number(item.quantity),
-unit_price:Number(item.price),
-line_total:Number(item.price)*Number(item.quantity)
-}))
-};
-localStorage.setItem('tkr_last_receipt',JSON.stringify(currentReceipt));
-cart=[];saveCart();
-document.getElementById('checkoutPage').style.display='none';
-document.getElementById('homePage').style.display='none';
-document.getElementById('productDetailsPage').classList.remove('active');
-closeCart();
-renderReceipt(currentReceipt);
-document.getElementById('receiptPage').style.display='block';
-window.scrollTo({top:0,behavior:'smooth'});
-}catch(error){
-console.error('Checkout error:',error);
-showCheckoutError(translateOrderError(error.message));
-}finally{
-submitButton.disabled=false;
-submitButton.textContent='অর্ডার কনফার্ম করুন';
+let productId=id;
+if(id){
+const {error}=await client.from('products').update(payload).eq('id',id);
+if(error)throw error;
+}else{
+const {data,error}=await client.from('products').insert(payload).select().single();
+if(error)throw error;productId=data.id;
 }
-}
-document.getElementById('checkoutForm').addEventListener('submit',handleCheckoutSubmit);
-
-/* RECEIPT */
-function formatReceiptDate(value){
-const date=value?new Date(value):new Date();
-if(Number.isNaN(date.getTime()))return new Date().toLocaleString('bn-BD');
-return date.toLocaleString('bn-BD',{dateStyle:'medium',timeStyle:'short'});
-}
-function renderReceipt(order){
-const items=Array.isArray(order.order_items)?order.order_items:[];
-const statusMap={new:'নতুন অর্ডার',pending:'অপেক্ষমাণ',confirmed:'কনফার্ম',processing:'প্রসেসিং',shipped:'পাঠানো হয়েছে',delivered:'ডেলিভারি সম্পন্ন',cancelled:'বাতিল'};
-const status=statusMap[order.order_status]||'নতুন অর্ডার';
-const itemRows=items.map(item=>`
-<tr><td>${item.image?`<img class="receipt-image" src="${escapeHTML(item.image)}" alt="">`:''}
-<strong>${escapeHTML(item.product_name||'পণ্য')}</strong><br>
-<small>${item.size?'সাইজ: '+escapeHTML(item.size)+' ':''}${item.color?'রং: '+escapeHTML(item.color):''}</small></td>
-<td>${Number(item.quantity||0)}</td><td>৳${money(item.unit_price)}</td><td>৳${money(item.line_total)}</td></tr>`).join('');
-document.getElementById('receiptDetails').innerHTML=`
-<div class="receipt-meta"><span><strong>অর্ডার নম্বর:</strong> ${escapeHTML(order.order_number||'')}</span><span><strong>তারিখ:</strong> ${escapeHTML(formatReceiptDate(order.created_at))}</span></div>
-<div class="receipt-customer"><strong>গ্রাহকের তথ্য</strong><br>
-নাম: ${escapeHTML(order.customer_name||'')}<br>
-মোবাইল: ${escapeHTML(order.customer_phone||'')}<br>
-জেলা: ${escapeHTML(order.city||'')}<br>
-থানা: ${escapeHTML(order.area||'')}<br>
-ঠিকানা: ${escapeHTML(order.shipping_address||'')}<br>
-<strong>অর্ডারের অবস্থা:</strong> <span class="status-pill">${escapeHTML(status)}</span><br>
-<strong>পেমেন্ট:</strong> ক্যাশ অন ডেলিভারি</div>
-<table class="receipt-table"><thead><tr><th>পণ্য</th><th>পরিমাণ</th><th>দাম</th><th>মোট</th></tr></thead><tbody>${itemRows}</tbody></table>
-<div class="receipt-totals">
-<div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳${money(order.subtotal)}</strong></div>
-<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳${money(order.delivery_charge)}</strong></div>
-<div class="summary-line"><span>ডিসকাউন্ট</span><strong>৳${money(order.discount)}</strong></div>
-<div class="summary-line total"><span>সর্বমোট</span><strong>৳${money(order.total_amount)}</strong></div>
-</div>`;
-}
-function downloadReceipt(){
-if(!currentReceipt){alert('রসিদ পাওয়া যায়নি।');return;}
-window.print();
-}
-document.addEventListener('keydown',event=>{
-if(event.key==='Escape'){
-closeCart();
-if(document.getElementById('checkoutPage').style.display==='block')backToCart();
-else if(document.getElementById('productDetailsPage').classList.contains('active'))showHome();
-}
+payload.images=await uploadProductImages(productId);
+const {error:imageError}=await client.from('products').update({images:payload.images}).eq('id',productId);
+if(imageError)throw imageError;
+const {error:deleteError}=await client.from('product_variations').delete().eq('product_id',productId);
+if(deleteError)throw deleteError;
+const rows=variationDraft.filter(v=>v.color_name.trim()).map(v=>({
+product_id:productId,color_name:v.color_name.trim(),
+supplier_sku:v.supplier_sku.trim()||null,
+supplier_product_url:v.supplier_product_url.trim()||null,
+image_url:v.image_url.trim()||null
+}));
+if(rows.length){const {error}=await client.from('product_variations').insert(rows);if(error)throw error}
+await logActivity(id?'Updated product':'Created product',payload.name);
+closeModal('productModal');$('pImages').value='';await loadProducts();await loadVariations();
+notify('Product saved successfully.');
+}catch(error){console.error(error);$('productFormError').textContent=error.message||'Could not save product.'}
+finally{$('saveProductButton').disabled=false;$('saveProductButton').textContent='Save Product'}
 });
-function getWhatsAppOrderUrl(){
-const raw=String(customerContacts.whatsapp_order_number||'01623851172').replace(/\D/g,'');const phone=raw.startsWith('0')?'88'+raw:raw;
-const lines=cart.map(item=>`${item.name} × ${item.quantity}${item.color?' ('+item.color+')':''} — ৳${money(Number(item.price)*Number(item.quantity))}`);
-const total=cart.reduce((sum,item)=>sum+Number(item.price)*Number(item.quantity),0);
-return 'https://wa.me/'+phone+'?text='+encodeURIComponent('আসসালামু আলাইকুম, আমি এই পণ্যগুলো অর্ডার করতে চাই:\n'+lines.join('\n')+'\nমোট: ৳'+money(total));
+async function deleteProduct(id){
+if(!isOwner()&&!canManage()){notify('You do not have permission.');return}
+if(!confirm('এই Product Delete করতে চাও?'))return;
+const {error}=await client.from('products').delete().eq('id',id);
+if(error){notify(error.message);return}
+await logActivity('Deleted product',id);await loadProducts();notify('Product deleted.');
 }
-async function loadCustomerContacts(){
-try{
-const client=window.supabaseClient;if(!client)return;
-const {data,error}=await client.from('store_settings').select('whatsapp_order_number,customer_support_number,customer_support_number_2').order('id',{ascending:true}).limit(1).maybeSingle();
-if(error)throw error;if(data)customerContacts={...customerContacts,...data};
- document.querySelectorAll('[data-contact-link]').forEach(a=>{const key=a.dataset.contactLink==='1'?'customer_support_number':'customer_support_number_2';const phone=customerContacts[key]||'';a.href='tel:'+String(phone).replace(/\D/g,'');a.textContent='☎ '+phone;});
-updateCart();
-}catch(error){console.warn('Customer contact settings could not be loaded:',error.message)}
+async function loadVariations(){
+const {data,error}=await client.from('product_variations').select('*');
+if(error){console.warn(error);variations=[]}else variations=data||[];
+renderVariations();
 }
-document.getElementById('year').textContent=new Date().getFullYear();
-updateCart();
-loadProducts();
-loadDistricts();
-loadCustomerContacts();
+function renderVariations(){
+if(!variations.length){$('variationsTable').innerHTML='<tr><td colspan="5" class="empty">No variations loaded</td></tr>';return}
+const term=($('variationSearch')?.value||'').toLowerCase();
+$('variationsTable').innerHTML=variations.filter(v=>{
+const p=products.find(x=>String(x.id)===String(v.product_id));
+return (`${p?.name||''} ${v.color_name||''} ${v.supplier_sku||''}`).toLowerCase().includes(term)
+}).map(v=>{
+const p=products.find(x=>String(x.id)===String(v.product_id));
+return `<tr><td>${esc(p?.name||v.product_id)}</td><td>${esc(v.color_name)}</td><td>${esc(v.supplier_sku||'—')}</td><td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open Link</a>`:'—'}</td><td>${v.image_url?`<a href="${esc(v.image_url)}" target="_blank">View Image</a>`:'—'}</td></tr>`
+}).join('')||'<tr><td colspan="5" class="empty">No variations found</td></tr>';
+}
+async function loadOrders(){
+const {data,error}=await client.from('orders').select('*,order_items(*)').order('created_at',{ascending:false});
+if(error)throw error;orders=data||[];renderOrders();renderDashboard();renderCustomers();renderReports();
+}
+function renderOrders(){
+const term=($('orderSearch')?.value||'').toLowerCase(),status=$('orderStatusFilter')?.value||'';
+const list=orders.filter(o=>(!status||(o.status||o.order_status)===status)&&(`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`).toLowerCase().includes(term));
+$('ordersTable').innerHTML=list.map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name||'')}</td><td>${esc(o.customer_phone||'')}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(o.status||o.order_status)}</td><td>${dateText(o.created_at)}</td><td><div class="actions"><button class="btn btn-small btn-blue" onclick="viewOrder('${esc(o.id)}')">View</button><select onchange="updateOrderStatus('${esc(o.id)}',this.value)" style="padding:6px;border:1px solid var(--line);border-radius:5px"><option value="">Update</option>${['new','confirmed','processing','shipped','delivered','cancelled'].map(s=>`<option value="${s}">${s}</option>`).join('')}</select></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No orders found</td></tr>';
+}
+async function updateOrderStatus(id,status){
+if(!status)return;
+if(!confirm('Order status '+status+' করতে চাও?')){renderOrders();return}
+const {error}=await client.from('orders').update({status}).eq('id',id);
+if(error){notify(error.message);return}
+await logActivity('Updated order status',id+' → '+status);await loadOrders();notify('Order status updated.');
+}
+function viewOrder(id){
+const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
+const items=Array.isArray(o.order_items)?o.order_items:[];
+$('orderModalContent').innerHTML=`
+<p><strong>Order:</strong> ${esc(o.order_number||o.id)}</p>
+<p><strong>Customer:</strong> ${esc(o.customer_name||'')}</p>
+<p><strong>Phone:</strong> ${esc(o.customer_phone||'')}</p>
+<p><strong>Email:</strong> ${esc(o.customer_email||'—')}</p>
+<p><strong>Address:</strong> ${esc(o.shipping_address||'')} — ${esc(o.area||'')}, ${esc(o.city||'')}</p>
+<p><strong>Status:</strong> ${statusBadge(o.status||o.order_status)}</p>
+<p><strong>Payment:</strong> ${esc(o.payment_method||'Cash on Delivery')}</p>
+<p><strong>Date:</strong> ${dateText(o.created_at)}</p>
+<hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
+<strong>Order Items</strong>
+${items.map(i=>`<p>${esc(i.product_name||i.name||'Product')} × ${Number(i.quantity||1)} — ৳${money(i.line_total||i.total_price)}</p>`).join('')}
+<hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
+<p><strong>Subtotal:</strong> ৳${money(o.subtotal)}</p>
+<p><strong>Delivery:</strong> ৳${money(o.delivery_charge)}</p>
+<p><strong>Total:</strong> ৳${money(o.total_amount)}</p>`;
+openModal('orderModal');
+}
+function buildCustomers(){
+const map=new Map();
+orders.forEach(o=>{
+const key=o.customer_phone||o.customer_email||o.customer_name||String(o.id);
+if(!map.has(key))map.set(key,{name:o.customer_name||'',phone:o.customer_phone||'',email:o.customer_email||'',count:0,total:0,last:null});
+const c=map.get(key);c.count++;c.total+=Number(o.total_amount||0);
+if(!c.last||new Date(o.created_at)>new Date(c.last))c.last=o.created_at;
+});
+return [...map.values()];
+}
+function renderCustomers(){
+customers=buildCustomers();const term=($('customerSearch')?.value||'').toLowerCase();
+$('customersTable').innerHTML=customers.filter(c=>(`${c.name} ${c.phone} ${c.email}`).toLowerCase().includes(term)).map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.email||'—')}</td><td>${c.count}</td><td>৳${money(c.total)}</td><td>${dateText(c.last)}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No customers found</td></tr>';
+}
+function renderInventory(){
+const term=($('inventorySearch')?.value||'').toLowerCase();
+$('inventoryTable').innerHTML=products.filter(p=>(`${p.name} ${p.sku||''}`).toLowerCase().includes(term)).map(p=>{
+const stock=Number(p.stock||0),alertLevel=Number(p.low_stock_threshold??p.alert_level??5);
+return `<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'—')}</td><td><strong>${stock}</strong></td><td>${alertLevel}</td><td>${stock<=alertLevel?'<span class="badge red">Low Stock</span>':'<span class="badge">In Stock</span>'}</td><td><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Update</button></td></tr>`;
+}).join('')||'<tr><td colspan="6" class="empty">No inventory records</td></tr>';
+}
+function renderReports(){
+const sales=orders.filter(o=>(o.status||o.order_status)!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
+const delivered=orders.filter(o=>(o.status||o.order_status)==='delivered').reduce((s,o)=>s+Number(o.total_amount||0),0);
+$('reportSales').textContent='৳'+money(sales);
+$('reportAverage').textContent='৳'+money(orders.length?sales/orders.length:0);
+$('reportDelivered').textContent='৳'+money(delivered);
+$('reportStock').textContent=products.reduce((s,p)=>s+Number(p.stock||0),0);
+const statuses=['new','confirmed','processing','shipped','delivered','cancelled'];
+$('reportStatuses').innerHTML=statuses.map(s=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line)"><span>${s.toUpperCase()}</span><strong>${orders.filter(o=>(o.status||o.order_status)===s).length}</strong></div>`).join('');
+}
+async function loadStaff(){
+if(!isOwner())return;
+const {data,error}=await client.from('profiles').select('*');
+if(error){$('staffTable').innerHTML=`<tr><td colspan="3">${esc(error.message)}</td></tr>`;return}
+$('staffTable').innerHTML=(data||[]).map(p=>`<tr><td>${esc(p.id)}</td><td><span class="badge">${esc(roleName(p.role))}</span></td><td>${p.id===currentUser.id?'Current User':'Profile'}</td></tr>`).join('')||'<tr><td colspan="3" class="empty">No staff profiles</td></tr>';
+}
+async function logActivity(action,details){
+try{await client.from('activity_logs').insert({user_id:currentUser?.id,action,details:String(details||'')})}catch(e){console.warn('Activity log not saved:',e.message)}
+}
+async function loadActivity(){
+if(!isOwner())return;
+const {data,error}=await client.from('activity_logs').select('*').order('created_at',{ascending:false}).limit(100);
+if(error){$('activityTable').innerHTML=`<tr><td colspan="4">${esc(error.message)}</td></tr>`;return}
+$('activityTable').innerHTML=(data||[]).map(a=>`<tr><td>${esc(a.action||'')}</td><td>${esc(a.details||'')}</td><td>${esc(a.user_id||'')}</td><td>${dateText(a.created_at)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No activity records</td></tr>';
+}
+async function loadSettings(){
+if(!isOwner())return;
+const {data,error}=await client.from('store_settings').select('*').order('id',{ascending:true}).limit(1).maybeSingle();
+if(error){console.warn(error);return}
+settingsRow=data;
+if(data){
+$('settingWhatsapp').value=data.whatsapp_order_number||'';
+$('settingSupport1').value=data.customer_support_number||'';
+$('settingSupport2').value=data.customer_support_number_2||'';
+}
+}
+async function saveSettings(){
+if(!isOwner())return;
+const payload={whatsapp_order_number:$('settingWhatsapp').value.trim(),customer_support_number:$('settingSupport1').value.trim(),customer_support_number_2:$('settingSupport2').value.trim()};
+let result;
+if(settingsRow?.id)result=await client.from('store_settings').update(payload).eq('id',settingsRow.id);
+else result=await client.from('store_settings').insert(payload);
+if(result.error){notify(result.error.message);return}
+await logActivity('Updated store settings','Contact numbers');await loadSettings();notify('Settings saved.');
+}
+async function changePassword(){
+const password=$('newPassword').value;
+if(password.length<6){notify('Password must be at least 6 characters.');return}
+const {error}=await client.auth.updateUser({password});
+if(error){notify(error.message);return}
+$('newPassword').value='';notify('Password updated successfully.');
+}
+function exportOrdersCSV(){
+const rows=[['Order Number','Customer','Phone','Total','Status','Date'],...orders.map(o=>[o.order_number||o.id,o.customer_name,o.customer_phone,o.total_amount,o.status||o.order_status,o.created_at])];
+const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
+const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TKR-orders.csv';a.click();URL.revokeObjectURL(a.href);
+}
+async function loadVariationsSafe(){await loadVariations()}
+init().catch(e=>console.error(e));
 </script>
 </body>
 </html>
