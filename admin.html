@@ -28,7 +28,7 @@ a:hover{text-decoration:underline}
 .brand-mark{display:inline-flex;align-items:center;justify-content:center;width:62px;height:62px;border:1px solid var(--silver);border-radius:14px;color:var(--silver);font-size:22px;font-weight:bold;margin-bottom:12px}
 .brand h1{font-size:21px;letter-spacing:2px;margin:0}
 .brand p{font-size:11px;color:var(--silver);letter-spacing:3px}
-.field{margin-bottom:15px}
+.field{margin-bottom:15px;min-width:0}
 .field label{display:block;font-size:12px;color:var(--silver);margin-bottom:7px;font-weight:bold}
 input,select,textarea{width:100%;background:#111317;border:1px solid var(--border);border-radius:9px;padding:12px;color:var(--white);outline:none;min-width:0}
 input:focus,select:focus,textarea:focus{border-color:var(--silver)}
@@ -95,7 +95,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
 .order-filter button{width:auto}
 .status-select{min-width:130px;padding:8px}
 .muted{color:var(--muted)}
-.order-detail{background:#111317;border:1px solid var(--border);border-radius:9px;padding:13px;margin:8px 0;line-height:1.7;white-space:normal;overflow-wrap:anywhere}
+.order-detail{background:#111317;border:1px solid var(--border);border-radius:9px;padding:13px;margin:8px 0;line-height:1.7;overflow-wrap:anywhere}
 .order-detail strong{color:var(--silver)}
 .item-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:12px 0}
 .item-card{background:#191b1f;border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;gap:12px;min-width:0}
@@ -112,6 +112,18 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
 .log-item:last-child{border-bottom:0}
 .copy-link-btn{margin-top:5px;background:#292d34;color:#f5f6f7;border:1px solid #59616b}
 .copy-link-btn:hover{background:#3a4048}
+
+/* VARIATION DESIGN */
+.variation-panel{background:#111317;border:1px solid var(--border);border-radius:11px;padding:15px;margin:12px 0 18px}
+.variation-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.variation-heading strong{color:var(--silver);font-size:14px}
+.variation-row{background:#191b1f;border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px}
+.variation-row-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.variation-row-header strong{font-size:12px;color:var(--silver)}
+.variation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.variation-image-preview{width:85px;height:85px;border:1px solid var(--border);background:#101113;border-radius:8px;margin-top:9px;overflow:hidden}
+.variation-image-preview img{width:100%;height:100%;object-fit:contain}
+.variation-help{color:var(--muted);font-size:11px;margin-top:6px;line-height:1.5}
 @media(max-width:900px){
  .app{display:block}
  .sidebar{width:100%;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
@@ -124,7 +136,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
 }
 @media(max-width:560px){
  .stats{grid-template-columns:1fr 1fr}
- .form-grid{grid-template-columns:1fr}
+ .form-grid,.variation-grid{grid-template-columns:1fr}
  .full{grid-column:auto}
  .main{padding:12px}
  .panel{padding:14px}
@@ -174,9 +186,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
    <a href="tel:01623851172">☎ 01623851172 — Call</a>
    <a href="tel:01745108935">☎ 01745-108935 — Call</a>
   </div>
-  <div class="sidebar-bottom">
-   <button id="logoutButton" class="nav-btn">Sign Out</button>
-  </div>
+  <div class="sidebar-bottom"><button id="logoutButton" class="nav-btn">Sign Out</button></div>
  </aside>
 
  <main class="main">
@@ -221,14 +231,31 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
       <div class="field"><label>Stock Quantity *</label><input id="productStock" type="number" min="0" step="1" required value="0"></div>
       <div class="field"><label>Low Stock Minimum Quantity</label><input id="lowStockThreshold" type="number" min="0" step="1" value="5"></div>
       <div class="field full"><label>Sizes</label><input id="productSizes" placeholder="S, M, L, XL, XXL"></div>
-      <div class="field full"><label>Colors</label><input id="productColors" placeholder="Black, White, Blue"></div>
-      <div class="field full"><label>Supplier Product URL</label><input id="supplierProductUrl" type="url" placeholder="https://..."></div>
+
+      <div class="field full">
+       <label>Colors</label>
+       <input id="productColors" placeholder="Black, White, Blue" readonly>
+       <div class="image-help">Color names automatically update from variations.</div>
+      </div>
+
+      <div class="field full">
+       <div class="variation-panel">
+        <div class="variation-heading">
+         <strong>PRODUCT COLOR VARIATIONS</strong>
+         <button type="button" id="addVariationButton" class="btn btn-small">+ ADD VARIATION</button>
+        </div>
+        <p class="section-note">প্রতিটি Color-এর জন্য আলাদা Supplier SKU, Supplier URL এবং Image দিন। Selling Price, Discount Price, Supplier Cost ও Stock Parent Product থেকে নিয়ন্ত্রণ হবে।</p>
+        <div id="variationContainer"></div>
+       </div>
+      </div>
+
+      <div class="field full"><label>Supplier Product URL (Default / Legacy)</label><input id="supplierProductUrl" type="url" placeholder="https://..."></div>
       <div class="field"><label>DropBazar Product ID</label><input id="dropbazarProductId"></div>
       <div class="field"><label>Product Image URL (Optional)</label><input id="imageUrl" type="url" placeholder="https://..."></div>
       <div class="field full">
        <label>Upload Product Images</label>
        <input id="productImages" type="file" accept="image/jpeg,image/png,image/webp" multiple>
-       <div class="image-help">JPG, PNG অথবা WEBP। প্রতিটি ছবি সর্বোচ্চ 5MB। একাধিক ছবি Select করতে পারবেন।</div>
+       <div class="image-help">JPG, PNG অথবা WEBP। প্রতিটি ছবি সর্বোচ্চ 5MB।</div>
        <div id="imagePreview" class="preview-grid"></div>
       </div>
       <div class="field full"><label>Product Description</label><textarea id="productDescription"></textarea></div>
@@ -297,7 +324,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
   <section id="reportsSection" class="content-section">
    <div class="panel">
     <h3>Revenue, Cost & Estimated Profit</h3>
-    <p class="section-note">রিপোর্টে অর্ডারের Total Amount এবং পাওয়া Supplier Cost ব্যবহার করা হবে। Supplier Cost না থাকলে Profit কম বা অসম্পূর্ণ দেখাতে পারে।</p>
+    <p class="section-note">রিপোর্টে অর্ডারের Total Amount এবং পাওয়া Supplier Cost ব্যবহার করা হবে।</p>
     <div class="report-grid">
      <div class="report-box"><span>Total Revenue</span><strong id="reportRevenue">৳0</strong></div>
      <div class="report-box"><span>Estimated Cost</span><strong id="reportCost">৳0</strong></div>
@@ -315,7 +342,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
   <section id="staffSection" class="content-section">
    <div class="panel">
     <h3>Staff Directory</h3>
-    <p class="section-note">Staff account ও role দেখতে পারবেন। এখানে role পরিবর্তন করা যাবে না; database permission নিরাপদ রাখার জন্য।</p>
+    <p class="section-note">Staff account ও role দেখতে পারবেন। এখানে role পরিবর্তন করা যাবে না।</p>
     <div class="table-wrap"><table><thead><tr><th>NAME</th><th>EMAIL</th><th>ROLE</th><th>STAFF ID</th></tr></thead><tbody id="staffTableBody"></tbody></table></div>
    </div>
   </section>
@@ -323,7 +350,7 @@ th{color:var(--silver);font-size:11px;letter-spacing:.5px}
   <section id="activitySection" class="content-section">
    <div class="panel">
     <h3>Activity Logs</h3>
-    <p class="section-note">Admin-এর করা কাজের Activity Log দেখাবে। activity_logs টেবিল না থাকলে এখানে ডেটা লোড নাও হতে পারে।</p>
+    <p class="section-note">Admin-এর করা কাজের Activity Log দেখাবে।</p>
     <button class="btn btn-dark" id="refreshActivityButton">REFRESH LOGS</button>
     <div id="activityMessage" class="message"></div>
     <div id="activityList" style="margin-top:12px"></div>
@@ -362,26 +389,18 @@ const DROPBAZAR_FUNCTION_NAME="dropbazar-order";
 let currentUser=null,currentProfile=null;
 let adminProducts=[],adminOrders=[],orderItemsByOrder={};
 let orderFilter="all",existingImages=[],selectedImageFiles=[],previewUrls=[];
+let productVariations=[],variationPreviewUrls=[];
 const $=id=>document.getElementById(id);
 
 function escapeHTML(v){
  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 }
-function money(v){
- return "৳"+Number(v||0).toLocaleString("en-BD",{maximumFractionDigits:2});
-}
-function showMessage(el,msg,type="error"){
- el.textContent=msg;el.className="message "+type;
-}
-function clearMessage(el){
- el.textContent="";el.className="message";
-}
-function digits(v){return String(v||"").replace(/\D/g,"");}
-function phoneLink(v){return "tel:"+digits(v);}
-function waLink(v){
- const n=digits(v);
- return "https://wa.me/"+(n.startsWith("0")?"88"+n:n);
-}
+function money(v){return "৳"+Number(v||0).toLocaleString("en-BD",{maximumFractionDigits:2})}
+function showMessage(el,msg,type="error"){el.textContent=msg;el.className="message "+type}
+function clearMessage(el){el.textContent="";el.className="message"}
+function digits(v){return String(v||"").replace(/\D/g,"")}
+function phoneLink(v){return "tel:"+digits(v)}
+function waLink(v){const n=digits(v);return "https://wa.me/"+(n.startsWith("0")?"88"+n:n)}
 function getImages(p){
  if(Array.isArray(p.images))return p.images;
  if(typeof p.images==="string"){try{return JSON.parse(p.images)}catch(e){return []}}
@@ -404,10 +423,6 @@ function itemImage(i){
  const p=adminProducts.find(x=>x.id===i.product_id);
  return getImages(p||{})[0]||"";
 }
-function effectivePrice(p){
- return Number(p.discount_price)>0?Number(p.discount_price):Number(p.selling_price||0);
-}
-
 const sections=["overview","products","orders","customers","inventory","reports","staff","activity","settings"];
 
 function showSection(s){
@@ -435,7 +450,6 @@ async function checkStaff(user){
  $("staffName").textContent=data.full_name||user.email||"Staff";
  $("staffRole").textContent=String(data.role).toUpperCase();
 }
-
 async function startApp(user){
  try{
   await checkStaff(user);
@@ -451,39 +465,26 @@ async function startApp(user){
   showMessage($("loginMessage"),e.message);
  }
 }
-
 $("loginForm").addEventListener("submit",async e=>{
  e.preventDefault();clearMessage($("loginMessage"));
  if(!supabaseClient){showMessage($("loginMessage"),"Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");return}
  const b=$("loginButton");b.disabled=true;b.textContent="LOGGING IN...";
  try{
-  const {data,error}=await supabaseClient.auth.signInWithPassword({
-   email:$("loginEmail").value.trim(),
-   password:$("loginPassword").value
-  });
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email:$("loginEmail").value.trim(),password:$("loginPassword").value});
   if(error)throw error;
   await startApp(data.user);
  }catch(err){showMessage($("loginMessage"),err.message||"Login failed.")}
  finally{b.disabled=false;b.textContent="LOGIN TO DASHBOARD"}
 });
-
 $("logoutButton").addEventListener("click",async()=>{
  try{await supabaseClient.auth.signOut()}catch(e){alert(e.message)}
  currentUser=null;currentProfile=null;
- $("adminApp").classList.add("hidden");
- $("loginScreen").classList.remove("hidden");
+ $("adminApp").classList.add("hidden");$("loginScreen").classList.remove("hidden");
 });
-
 async function logActivity(action,details){
  if(!supabaseClient||!currentUser)return;
- try{
-  await supabaseClient.from("activity_logs").insert([{
-   user_id:currentUser.id,
-   action:String(action),
-   details:String(details||""),
-   created_at:new Date().toISOString()
-  }]);
- }catch(e){console.warn("Activity log unavailable:",e.message)}
+ try{await supabaseClient.from("activity_logs").insert([{user_id:currentUser.id,action:String(action),details:String(details||""),created_at:new Date().toISOString()}])}
+ catch(e){console.warn("Activity log unavailable:",e.message)}
 }
 
 async function loadAdminProducts(){
@@ -495,23 +496,15 @@ async function loadAdminProducts(){
   renderInventory();
  }catch(e){$("loadingText").textContent="Product loading failed: "+e.message}
 }
-
 async function loadOrderItems(){
- orderItemsByOrder={};
- if(!adminOrders.length)return;
+ orderItemsByOrder={};if(!adminOrders.length)return;
  const ids=adminOrders.map(o=>o.id);
  try{
   const {data,error}=await supabaseClient.from("order_items").select("*").in("order_id",ids);
   if(error)throw error;
-  (data||[]).forEach(item=>{
-   if(!orderItemsByOrder[item.order_id])orderItemsByOrder[item.order_id]=[];
-   orderItemsByOrder[item.order_id].push(item);
-  });
- }catch(e){
-  console.warn("Relational order_items could not be loaded. Using JSON order_items.",e.message);
- }
+  (data||[]).forEach(item=>{if(!orderItemsByOrder[item.order_id])orderItemsByOrder[item.order_id]=[];orderItemsByOrder[item.order_id].push(item)});
+ }catch(e){console.warn("order_items load issue:",e.message)}
 }
-
 function updateDashboardStats(){
  const active=adminProducts.filter(p=>p.is_active);
  const low=adminProducts.filter(p=>p.is_active&&p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5));
@@ -523,121 +516,38 @@ function updateDashboardStats(){
  $("confirmedOrders").textContent=adminOrders.filter(o=>["confirmed","processing","shipped","delivered"].includes(orderStatus(o))||isSubmitted(o)).length;
  renderRecentOrders();
 }
-
 function renderRecentOrders(){
- const body=$("recentOrdersBody");
  const list=adminOrders.slice(0,6);
- body.innerHTML=list.length?list.map(o=>`<tr>
- <td>${escapeHTML(o.order_number||o.id)}</td>
- <td>${escapeHTML(o.customer_name||"—")}</td>
- <td>${money(o.total_amount)}</td>
- <td><span class="badge">${escapeHTML(orderStatus(o).toUpperCase())}</span></td>
- </tr>`).join(""):'<tr><td colspan="4" class="empty">No orders found.</td></tr>';
+ $("recentOrdersBody").innerHTML=list.length?list.map(o=>`<tr><td>${escapeHTML(o.order_number||o.id)}</td><td>${escapeHTML(o.customer_name||"—")}</td><td>${money(o.total_amount)}</td><td><span class="badge">${escapeHTML(orderStatus(o).toUpperCase())}</span></td></tr>`).join(""):'<tr><td colspan="4" class="empty">No orders found.</td></tr>';
 }
 
-/* PRODUCT ORDER LINK SYSTEM */
-
+/* PRODUCT ORDER LINK */
 function getProductOrderLink(productId){
- if(!productId)throw new Error("Product ID পাওয়া যায়নি।");
-
- // Customer Website-এর নির্দিষ্ট URL
- const customerURL=new URL("https://fcchampionscommunity-dotcom.github.io/tamkhush-by-ratul/");
-
- // Product UUID দিয়ে Customer Details Page খুলবে
- customerURL.searchParams.set("product",String(productId));
- customerURL.hash="";
-
- return customerURL.toString();
+ const url=new URL("https://fcchampionscommunity-dotcom.github.io/tamkhush-by-ratul/");
+ url.searchParams.set("product",String(productId));url.hash="";
+ return url.toString();
 }
-
 async function copyTextToClipboard(text){
- if(navigator.clipboard&&window.isSecureContext){
-  await navigator.clipboard.writeText(text);
-  return;
- }
-
- const textarea=document.createElement("textarea");
- textarea.value=text;
- textarea.style.position="fixed";
- textarea.style.left="-9999px";
- textarea.style.top="0";
- document.body.appendChild(textarea);
- textarea.focus();
- textarea.select();
-
- const successful=document.execCommand("copy");
- textarea.remove();
-
- if(!successful)throw new Error("এই Browser-এ Copy করা যায়নি।");
+ if(navigator.clipboard&&window.isSecureContext){await navigator.clipboard.writeText(text);return}
+ const t=document.createElement("textarea");t.value=text;t.style.position="fixed";t.style.left="-9999px";
+ document.body.appendChild(t);t.focus();t.select();
+ const ok=document.execCommand("copy");t.remove();
+ if(!ok)throw new Error("এই Browser-এ Copy করা যায়নি।");
 }
-
-async function copyProductOrderLink(productId,button){
- const product=adminProducts.find(p=>String(p.id)===String(productId));
- if(!product){
-  alert("Product পাওয়া যায়নি। Products Refresh করে আবার চেষ্টা করুন।");
-  return;
- }
-
- const originalText=button.textContent;
- button.disabled=true;
- button.textContent="COPYING...";
-
+async function copyProductOrderLink(id,button){
+ const p=adminProducts.find(x=>String(x.id)===String(id));
+ if(!p){alert("Product পাওয়া যায়নি।");return}
+ const old=button.textContent;button.disabled=true;button.textContent="COPYING...";
  try{
-  const link=getProductOrderLink(product.id);
-  await copyTextToClipboard(link);
-
-  button.textContent="COPIED!";
-  await logActivity("PRODUCT_ORDER_LINK_COPIED",product.name+" | "+link);
-  alert("Order Link Copy হয়েছে!\n\n"+link+"\n\nএখন Facebook পোস্টে Paste করতে পারবেন।");
- }catch(error){
-  alert("লিংক Copy করা যায়নি: "+error.message);
- }finally{
-  button.disabled=false;
-  setTimeout(()=>{button.textContent=originalText},1800);
- }
+  const link=getProductOrderLink(p.id);await copyTextToClipboard(link);
+  button.textContent="COPIED!";await logActivity("PRODUCT_ORDER_LINK_COPIED",p.name+" | "+link);
+  alert("Order Link Copy হয়েছে!\n\n"+link);
+ }catch(e){alert("লিংক Copy করা যায়নি: "+e.message)}
+ finally{button.disabled=false;setTimeout(()=>button.textContent=old,1800)}
 }
 
-/* PRODUCTS */
-
-function renderProducts(){
- const tbody=$("productsTableBody");
- const q=$("productSearch").value.trim().toLowerCase();
- const list=adminProducts.filter(p=>[p.name,p.category,p.sku,p.dropbazar_product_id].join(" ").toLowerCase().includes(q));
- if(!list.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No products found.</td></tr>';return}
- tbody.innerHTML=list.map(p=>{
-  const img=getImages(p)[0]||"",labels=[];
-  if(p.is_new_arrival)labels.push('<span class="badge silver">NEW</span>');
-  if(p.is_best_seller)labels.push('<span class="badge silver">BEST SELLER</span>');
-  if(p.is_featured)labels.push('<span class="badge">FEATURED</span>');
-  const low=p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5);
-  if(low)labels.push('<span class="badge red">LOW STOCK</span>');
-  const price=Number(p.discount_price)>0?`<strong>${money(p.discount_price)}</strong><br><del>${money(p.selling_price)}</del>`:`<strong>${money(p.selling_price)}</strong>`;
-  return `<tr>
-   <td>${img?`<img class="product-thumb" src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}</td>
-   <td><strong>${escapeHTML(p.name)}</strong><br><span class="muted">${escapeHTML(p.category||"")}</span></td>
-   <td>${escapeHTML(p.sku||"—")}</td><td>${price}</td>
-   <td>${Number(p.stock||0)}</td><td>${labels.join(" ")||"—"}</td>
-   <td>${p.is_active?'<span class="badge green">ACTIVE</span>':'<span class="badge red">INACTIVE</span>'}</td>
-   <td>
-    <button class="btn btn-small" data-edit="${escapeHTML(p.id)}">Edit</button>
-    <button class="btn btn-small btn-danger" data-delete="${escapeHTML(p.id)}">Delete</button>
-    <br>
-    <button class="btn btn-small copy-link-btn" data-copy-order-link="${escapeHTML(p.id)}">COPY ORDER LINK</button>
-   </td>
-  </tr>`;
- }).join("");
-
- tbody.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editProduct(b.dataset.edit)));
- tbody.querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>deleteProduct(b.dataset.delete)));
- tbody.querySelectorAll("[data-copy-order-link]").forEach(b=>{
-  b.addEventListener("click",()=>copyProductOrderLink(b.dataset.copyOrderLink,b));
- });
-}
-$("productSearch").addEventListener("input",renderProducts);
-
-function clearPreviewUrls(){
- previewUrls.forEach(u=>URL.revokeObjectURL(u));previewUrls=[];
-}
+/* IMAGE UPLOAD */
+function clearPreviewUrls(){previewUrls.forEach(u=>URL.revokeObjectURL(u));previewUrls=[]}
 function renderImagePreview(){
  const c=$("imagePreview");clearPreviewUrls();const all=[];
  existingImages.forEach((url,index)=>all.push({url,existing:true,index}));
@@ -645,17 +555,9 @@ function renderImagePreview(){
   const url=URL.createObjectURL(file);previewUrls.push(url);
   all.push({url,existing:false,index});
  });
- c.innerHTML=all.map(x=>`<div class="preview-item"><img src="${x.url}" alt="Product image"><button type="button" data-old="${x.existing?x.index:""}" data-new="${x.existing?"":x.index}">×</button></div>`).join("");
- c.querySelectorAll("[data-old]").forEach(b=>{
-  if(b.dataset.old!=="")b.addEventListener("click",()=>{
-   existingImages.splice(Number(b.dataset.old),1);renderImagePreview();
-  });
- });
- c.querySelectorAll("[data-new]").forEach(b=>{
-  if(b.dataset.new!=="")b.addEventListener("click",()=>{
-   selectedImageFiles.splice(Number(b.dataset.new),1);renderImagePreview();
-  });
- });
+ c.innerHTML=all.map(x=>`<div class="preview-item"><img src="${escapeHTML(x.url)}" alt="Product image"><button type="button" data-old="${x.existing?x.index:""}" data-new="${x.existing?"":x.index}">×</button></div>`).join("");
+ c.querySelectorAll("[data-old]").forEach(b=>{if(b.dataset.old!=="")b.addEventListener("click",()=>{existingImages.splice(Number(b.dataset.old),1);renderImagePreview()})});
+ c.querySelectorAll("[data-new]").forEach(b=>{if(b.dataset.new!=="")b.addEventListener("click",()=>{selectedImageFiles.splice(Number(b.dataset.new),1);renderImagePreview()})});
 }
 $("productImages").addEventListener("change",e=>{
  for(const f of Array.from(e.target.files||[])){
@@ -665,80 +567,236 @@ $("productImages").addEventListener("change",e=>{
  }
  $("productImages").value="";renderImagePreview();
 });
-
+async function uploadImage(file,folder="products"){
+ const ext=file.name.split(".").pop().toLowerCase();
+ const path=`${folder}/${Date.now()}-${crypto.randomUUID()}.${ext}`;
+ const {error}=await supabaseClient.storage.from("product-images").upload(path,file,{cacheControl:"3600",upsert:false,contentType:file.type});
+ if(error)throw new Error("Image upload failed: "+error.message);
+ const {data}=supabaseClient.storage.from("product-images").getPublicUrl(path);
+ return data.publicUrl;
+}
 async function uploadSelectedImages(){
  const urls=[];
- for(const f of selectedImageFiles){
-  const ext=f.name.split(".").pop().toLowerCase();
-  const path=`products/${Date.now()}-${crypto.randomUUID()}.${ext}`;
-  const {error}=await supabaseClient.storage.from("product-images").upload(path,f,{
-   cacheControl:"3600",upsert:false,contentType:f.type
-  });
-  if(error)throw new Error("Image upload failed: "+error.message);
-  const {data}=supabaseClient.storage.from("product-images").getPublicUrl(path);
-  urls.push(data.publicUrl);
- }
+ for(const f of selectedImageFiles)urls.push(await uploadImage(f,"products"));
  return urls;
 }
+
+/* =====================================
+   PRODUCT VARIATIONS
+===================================== */
+function clearVariationPreviews(){
+ variationPreviewUrls.forEach(url=>URL.revokeObjectURL(url));
+ variationPreviewUrls=[];
+}
+function newVariation(){
+ return {id:null,color_name:"",supplier_sku:"",supplier_product_url:"",image_url:"",image_file:null};
+}
+function syncColors(){
+ $("productColors").value=productVariations.map(v=>v.color_name.trim()).filter(Boolean).join(", ");
+}
+function renderVariations(){
+ const box=$("variationContainer");clearVariationPreviews();
+ box.innerHTML=productVariations.map((v,i)=>{
+  let image=v.image_url||"";
+  if(v.image_file){image=URL.createObjectURL(v.image_file);variationPreviewUrls.push(image)}
+  return `<div class="variation-row">
+   <div class="variation-row-header">
+    <strong>VARIATION ${i+1}</strong>
+    <button type="button" class="btn btn-small btn-danger" data-remove-variation="${i}">− REMOVE</button>
+   </div>
+   <div class="variation-grid">
+    <div class="field">
+     <label>Color Name *</label>
+     <input data-vfield="color_name" data-index="${i}" value="${escapeHTML(v.color_name)}" placeholder="Black">
+    </div>
+    <div class="field">
+     <label>Supplier SKU</label>
+     <input data-vfield="supplier_sku" data-index="${i}" value="${escapeHTML(v.supplier_sku)}" placeholder="TKR-BLK-001">
+    </div>
+    <div class="field full">
+     <label>Supplier Product URL</label>
+     <input type="url" data-vfield="supplier_product_url" data-index="${i}" value="${escapeHTML(v.supplier_product_url)}" placeholder="https://...">
+    </div>
+    <div class="field full">
+     <label>Variation Image</label>
+     <input type="file" accept="image/jpeg,image/png,image/webp" data-vimage="${i}">
+     <div class="variation-help">JPG, PNG অথবা WEBP। সর্বোচ্চ 5MB।</div>
+     <div class="variation-image-preview">${image?`<img src="${escapeHTML(image)}" alt="Variation image">`:'<span class="muted" style="font-size:10px;padding:8px;display:block">No image selected</span>'}</div>
+    </div>
+   </div>
+  </div>`;
+ }).join("");
+ syncColors();
+}
+$("addVariationButton").addEventListener("click",()=>{
+ productVariations.push(newVariation());renderVariations();
+});
+$("variationContainer").addEventListener("input",e=>{
+ const field=e.target.dataset.vfield;if(!field)return;
+ const i=Number(e.target.dataset.index);
+ if(!productVariations[i])return;
+ productVariations[i][field]=e.target.value;
+ if(field==="color_name")syncColors();
+});
+$("variationContainer").addEventListener("change",e=>{
+ if(e.target.dataset.vimage===undefined)return;
+ const i=Number(e.target.dataset.vimage),file=e.target.files?.[0];
+ if(!file)return;
+ if(!["image/jpeg","image/png","image/webp"].includes(file.type)){alert("শুধু JPG, PNG অথবা WEBP ছবি Upload করা যাবে।");e.target.value="";return}
+ if(file.size>5*1024*1024){alert("ছবির Size 5MB-এর কম হতে হবে।");e.target.value="";return}
+ productVariations[i].image_file=file;renderVariations();
+});
+$("variationContainer").addEventListener("click",e=>{
+ const b=e.target.closest("[data-remove-variation]");if(!b)return;
+ const i=Number(b.dataset.removeVariation);
+ if(!confirm("এই Color Variation Remove করবেন?"))return;
+ productVariations.splice(i,1);renderVariations();
+});
+async function prepareVariationData(){
+ const result=[];
+ for(const v of productVariations){
+  const color=String(v.color_name||"").trim();
+  if(!color)throw new Error("প্রতিটি Variation-এর Color Name দিতে হবে।");
+  let imageUrl=v.image_url||null;
+  if(v.image_file)imageUrl=await uploadImage(v.image_file,"products/variations");
+  result.push({
+   ...(v.id?{id:v.id}:{}),
+   color_name:color,
+   supplier_sku:String(v.supplier_sku||"").trim()||null,
+   supplier_product_url:String(v.supplier_product_url||"").trim()||null,
+   image_url:imageUrl
+  });
+ }
+ return result;
+}
+async function loadVariationsForEdit(product){
+ let rows=[];
+ try{
+  rows=await window.store.getProductVariations(product.id);
+ }catch(e){
+  throw new Error("Product variations load failed: "+e.message);
+ }
+ if(rows.length){
+  productVariations=rows.map(v=>({
+   id:v.id,color_name:v.color_name||"",
+   supplier_sku:v.supplier_sku||"",
+   supplier_product_url:v.supplier_product_url||"",
+   image_url:v.image_url||"",image_file:null
+  }));
+ }else{
+  const colors=Array.isArray(product.colors)?product.colors:[];
+  productVariations=colors.map((color,index)=>({
+   id:null,color_name:color||"",
+   supplier_sku:index===0?(product.sku||""):"",
+   supplier_product_url:index===0?(product.supplier_product_url||""):"",
+   image_url:index===0?(getImages(product)[0]||""):"",
+   image_file:null
+  }));
+ }
+ renderVariations();
+}
+
+/* PRODUCTS */
+function renderProducts(){
+ const tbody=$("productsTableBody"),q=$("productSearch").value.trim().toLowerCase();
+ const list=adminProducts.filter(p=>[p.name,p.category,p.sku,p.dropbazar_product_id].join(" ").toLowerCase().includes(q));
+ if(!list.length){tbody.innerHTML='<tr><td colspan="8" class="empty">No products found.</td></tr>';return}
+ tbody.innerHTML=list.map(p=>{
+  const img=getImages(p)[0]||"",labels=[];
+  if(p.is_new_arrival)labels.push('<span class="badge silver">NEW</span>');
+  if(p.is_best_seller)labels.push('<span class="badge silver">BEST SELLER</span>');
+  if(p.is_featured)labels.push('<span class="badge">FEATURED</span>');
+  if(p.variations?.length)labels.push(`<span class="badge silver">${p.variations.length} COLORS</span>`);
+  const low=p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5);
+  if(low)labels.push('<span class="badge red">LOW STOCK</span>');
+  const price=Number(p.discount_price)>0?`<strong>${money(p.discount_price)}</strong><br><del>${money(p.selling_price)}</del>`:`<strong>${money(p.selling_price)}</strong>`;
+  return `<tr>
+   <td>${img?`<img class="product-thumb" src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}</td>
+   <td><strong>${escapeHTML(p.name)}</strong><br><span class="muted">${escapeHTML(p.category||"")}</span></td>
+   <td>${escapeHTML(p.sku||"—")}</td><td>${price}</td><td>${Number(p.stock||0)}</td>
+   <td>${labels.join(" ")||"—"}</td>
+   <td>${p.is_active?'<span class="badge green">ACTIVE</span>':'<span class="badge red">INACTIVE</span>'}</td>
+   <td><button class="btn btn-small" data-edit="${escapeHTML(p.id)}">Edit</button>
+   <button class="btn btn-small btn-danger" data-delete="${escapeHTML(p.id)}">Delete</button><br>
+   <button class="btn btn-small copy-link-btn" data-copy-order-link="${escapeHTML(p.id)}">COPY ORDER LINK</button></td>
+  </tr>`;
+ }).join("");
+ tbody.querySelectorAll("[data-edit]").forEach(b=>b.addEventListener("click",()=>editProduct(b.dataset.edit)));
+ tbody.querySelectorAll("[data-delete]").forEach(b=>b.addEventListener("click",()=>deleteProduct(b.dataset.delete)));
+ tbody.querySelectorAll("[data-copy-order-link]").forEach(b=>b.addEventListener("click",()=>copyProductOrderLink(b.dataset.copyOrderLink,b)));
+}
+$("productSearch").addEventListener("input",renderProducts);
+
 function resetProductForm(){
  $("productForm").reset();$("productId").value="";
  $("formHeading").textContent="Add New Product";
  $("saveProductButton").textContent="SAVE PRODUCT";
- $("isActive").checked=true;$("lowStockAlert").checked=true;
- $("lowStockThreshold").value=5;
- existingImages=[];selectedImageFiles=[];clearPreviewUrls();
- $("imagePreview").innerHTML="";clearMessage($("formMessage"));
+ $("isActive").checked=true;$("lowStockAlert").checked=true;$("lowStockThreshold").value=5;
+ existingImages=[];selectedImageFiles=[];productVariations=[];
+ clearPreviewUrls();clearVariationPreviews();
+ $("imagePreview").innerHTML="";
+ $("variationContainer").innerHTML="";
+ $("productColors").value="";
+ productVariations.push(newVariation());renderVariations();
+ clearMessage($("formMessage"));
 }
 $("resetFormButton").addEventListener("click",resetProductForm);
-
 const commaList=v=>v.split(",").map(x=>x.trim()).filter(Boolean);
 
 $("productForm").addEventListener("submit",async e=>{
  e.preventDefault();clearMessage($("formMessage"));
  if(!currentUser){showMessage($("formMessage"),"Please login again.");return}
- const name=$("productName").value.trim();
- const category=$("productCategory").value;
+ const name=$("productName").value.trim(),category=$("productCategory").value;
  const selling=Number($("sellingPrice").value);
- const d=$("discountPrice").value.trim();
- const discount=d===""?null:Number(d);
- const stock=Number($("productStock").value);
- const threshold=Number($("lowStockThreshold").value||5);
+ const d=$("discountPrice").value.trim(),discount=d===""?null:Number(d);
+ const stock=Number($("productStock").value),threshold=Number($("lowStockThreshold").value||5);
  const supplierCost=Number($("supplierCost").value||0);
  if(!name||!category||!Number.isFinite(selling)||selling<0){showMessage($("formMessage"),"Product Name, Category এবং Selling Price সঠিকভাবে দিন।");return}
  if(discount!==null&&(!Number.isFinite(discount)||discount<=0||discount>=selling)){showMessage($("formMessage"),"Discount Price অবশ্যই Selling Price-এর চেয়ে কম হতে হবে।");return}
  if(!Number.isInteger(stock)||stock<0||!Number.isInteger(threshold)||threshold<0||supplierCost<0){showMessage($("formMessage"),"Stock, Supplier Cost এবং Minimum Stock সঠিক সংখ্যা হতে হবে।");return}
  const b=$("saveProductButton");b.disabled=true;b.textContent="SAVING...";
  try{
+  const variationData=await prepareVariationData();
   const uploaded=await uploadSelectedImages();
   const manual=$("imageUrl").value.trim();
   const images=[...existingImages,...uploaded];
   if(manual&&!images.includes(manual))images.push(manual);
-  const id=$("productId").value;
-  const old=id?adminProducts.find(p=>p.id===id):null;
+  const id=$("productId").value,old=id?adminProducts.find(p=>p.id===id):null;
+  const colors=variationData.length?variationData.map(v=>v.color_name):commaList($("productColors").value);
   const data={
    name,slug:old?.slug||name.toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+Date.now(),
    category,sku:$("productSku").value.trim()||null,
    selling_price:selling,discount_price:discount,supplier_cost:supplierCost,
    stock,low_stock_threshold:threshold,low_stock_alert:$("lowStockAlert").checked,
-   sizes:commaList($("productSizes").value),colors:commaList($("productColors").value),
-   images,description:$("productDescription").value.trim(),
+   sizes:commaList($("productSizes").value),colors,images,
+   description:$("productDescription").value.trim(),
    is_featured:$("isFeatured").checked,is_new_arrival:$("isNewArrival").checked,
    is_best_seller:$("isBestSeller").checked,is_active:$("isActive").checked,
    supplier_product_url:$("supplierProductUrl").value.trim()||null,
    dropbazar_product_id:$("dropbazarProductId").value.trim()||null,
    updated_at:new Date().toISOString()
   };
-  if(id){await window.store.updateProduct(id,data);await logActivity("PRODUCT_UPDATED",name)}
-  else{await window.store.addProduct(data);await logActivity("PRODUCT_CREATED",name)}
+  let saved;
+  if(id){
+   saved=await window.store.updateProduct(id,data);
+   await logActivity("PRODUCT_UPDATED",name);
+  }else{
+   saved=await window.store.addProduct(data);
+   await logActivity("PRODUCT_CREATED",name);
+  }
+  if(!saved?.id)throw new Error("Product save হয়েছে কিনা যাচাই করা যায়নি: Product ID পাওয়া যায়নি।");
+  await window.store.saveProductVariations(saved.id,variationData);
   await loadAdminProducts();
-  showMessage($("formMessage"),"Product saved successfully!","success");
+  showMessage($("formMessage"),"Product এবং Color Variations সফলভাবে Save হয়েছে!","success");
   setTimeout(resetProductForm,1200);
- }catch(err){showMessage($("formMessage"),err.message||"Product save failed.")}
+ }catch(err){
+  showMessage($("formMessage"),err.message||"Product save failed.");
+ }
  finally{b.disabled=false;b.textContent=$("productId").value?"UPDATE PRODUCT":"SAVE PRODUCT"}
 });
 
-function editProduct(id){
- const p=adminProducts.find(x=>x.id===id);if(!p)return;
+async function editProduct(id){
+ const p=adminProducts.find(x=>String(x.id)===String(id));if(!p)return;
  resetProductForm();
  $("productId").value=p.id;$("productName").value=p.name||"";
  $("productSku").value=p.sku||"";$("productCategory").value=p.category||"";
@@ -746,20 +804,26 @@ function editProduct(id){
  $("supplierCost").value=p.supplier_cost??0;$("productStock").value=p.stock??0;
  $("lowStockThreshold").value=p.low_stock_threshold??5;
  $("productSizes").value=Array.isArray(p.sizes)?p.sizes.join(", "):"";
- $("productColors").value=Array.isArray(p.colors)?p.colors.join(", "):"";
  $("productDescription").value=p.description||"";
  $("isFeatured").checked=!!p.is_featured;$("isNewArrival").checked=!!p.is_new_arrival;
  $("isBestSeller").checked=!!p.is_best_seller;$("isActive").checked=!!p.is_active;
  $("lowStockAlert").checked=p.low_stock_alert!==false;
  $("supplierProductUrl").value=p.supplier_product_url||"";
  $("dropbazarProductId").value=p.dropbazar_product_id||"";
+ $("imageUrl").value="";
  existingImages=getImages(p).slice();renderImagePreview();
- $("formHeading").textContent="Edit Product";
- $("saveProductButton").textContent="UPDATE PRODUCT";
- showSection("products");$("productForm").scrollIntoView({behavior:"smooth",block:"start"});
+ $("formHeading").textContent="Edit Product";$("saveProductButton").textContent="UPDATE PRODUCT";
+ showSection("products");
+ $("productForm").scrollIntoView({behavior:"smooth",block:"start"});
+ try{
+  $("variationContainer").innerHTML='<div class="muted">Loading variations...</div>';
+  await loadVariationsForEdit(p);
+ }catch(e){
+  showMessage($("formMessage"),e.message);
+ }
 }
 async function deleteProduct(id){
- const p=adminProducts.find(x=>x.id===id);
+ const p=adminProducts.find(x=>String(x.id)===String(id));
  if(!p||!confirm(`Delete "${p.name}"? এই কাজটি Undo করা যাবে না।`))return;
  try{
   await window.store.deleteProduct(id);
@@ -769,45 +833,33 @@ async function deleteProduct(id){
 }
 
 /* ORDERS */
-
 async function loadOrders(){
  if(!supabaseClient)return;
  $("ordersLoading").textContent="Loading orders...";
  try{
   const {data,error}=await supabaseClient.from("orders").select("*").order("created_at",{ascending:false});
   if(error)throw error;
-  adminOrders=data||[];
-  await loadOrderItems();
-  renderOrders();updateDashboardStats();
+  adminOrders=data||[];await loadOrderItems();renderOrders();updateDashboardStats();
   $("ordersLoading").textContent=adminOrders.length?"":"No orders found.";
  }catch(e){$("ordersLoading").textContent="Order loading failed: "+e.message}
 }
-
 function renderOrderProductCards(o){
  const items=getOrderItems(o);
  if(!items.length)return '<p class="muted">Order items details unavailable.</p>';
  return '<div class="item-cards">'+items.map(i=>{
   const img=itemImage(i);
-  return `<div class="item-card">
-   ${img?`<img src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}
-   <div class="item-card-info">
-    <strong>${escapeHTML(itemName(i))}</strong><br>
-    Size: ${escapeHTML(i.selected_size||i.size||"N/A")}<br>
-    Color: ${escapeHTML(i.selected_color||i.color||"N/A")}<br>
-    Quantity: ${itemQty(i)}<br>
-    Unit Price: ${money(itemPrice(i))}<br>
-    Supplier Cost: ${money(i.supplier_cost)}
-   </div>
-  </div>`;
+  return `<div class="item-card">${img?`<img src="${escapeHTML(img)}" alt="">`:'<div class="product-thumb"></div>'}
+   <div class="item-card-info"><strong>${escapeHTML(itemName(i))}</strong><br>
+   Size: ${escapeHTML(i.selected_size||i.size||"N/A")}<br>
+   Color: ${escapeHTML(i.selected_color||i.color||"N/A")}<br>
+   Quantity: ${itemQty(i)}<br>Unit Price: ${money(itemPrice(i))}<br>
+   Supplier Cost: ${money(i.supplier_cost)}</div></div>`;
  }).join("")+'</div>';
 }
-
 function renderOrders(){
- const tbody=$("ordersTableBody");
- const q=$("orderSearch").value.trim().toLowerCase();
+ const tbody=$("ordersTableBody"),q=$("orderSearch").value.trim().toLowerCase();
  const rows=adminOrders.filter(o=>{
-  const s=orderStatus(o);
-  const matches=orderFilter==="all"||s===orderFilter||(orderFilter==="confirmed"&&isSubmitted(o));
+  const s=orderStatus(o),matches=orderFilter==="all"||s===orderFilter||(orderFilter==="confirmed"&&isSubmitted(o));
   const search=[o.order_number,o.customer_name,o.customer_phone,o.customer_email].join(" ").toLowerCase().includes(q);
   return matches&&search;
  });
@@ -816,61 +868,46 @@ function renderOrders(){
   const s=orderStatus(o),submitted=isSubmitted(o);
   const statusClass=["delivered","shipped","confirmed","processing"].includes(s)?"green":s==="cancelled"?"red":"";
   const supplier=submitted?`<span class="badge green">SUBMITTED</span><br><small>${escapeHTML(o.supplier_order_id||"Supplier ID saved")}</small>`:'<span class="badge">NOT SUBMITTED</span>';
-  const items=getOrderItems(o);
-  const itemSummary=items.map(i=>`${itemName(i)} × ${itemQty(i)}`).join(", ")||"Items unavailable";
-  const detail=`
-   <div class="order-detail">
-    <h3>Order Details — ${escapeHTML(o.order_number||o.id)}</h3>
-    <strong>Customer:</strong> ${escapeHTML(o.customer_name||"—")}<br>
-    <strong>Phone:</strong> ${escapeHTML(o.customer_phone||"—")}
-    <div class="action-links">
-     <a class="action-link" href="${phoneLink(o.customer_phone)}">☎ Call Customer</a>
-     <a class="action-link" href="${waLink(o.customer_phone)}" target="_blank" rel="noopener">WhatsApp Customer</a>
-    </div>
-    <strong>Email:</strong> ${escapeHTML(o.customer_email||"—")}<br>
-    <strong>Address:</strong> ${escapeHTML(o.shipping_address||"—")}<br>
-    <strong>City / Area:</strong> ${escapeHTML([o.city,o.area].filter(Boolean).join(" / ")||"—")}<br>
-    <strong>Postal Code:</strong> ${escapeHTML(o.postal_code||"—")}<br>
-    <strong>Customer Note:</strong> ${escapeHTML(o.customer_note||"—")}<br>
-    ${renderOrderProductCards(o)}
-    <strong>Subtotal:</strong> ${money(o.subtotal)}<br>
-    <strong>Delivery:</strong> ${money(o.delivery_charge)}<br>
-    <strong>Discount:</strong> ${money(o.discount)}<br>
-    <strong>Total:</strong> ${money(o.total_amount)}<br>
-    <strong>Payment:</strong> ${escapeHTML(o.payment_method||"—")} / ${escapeHTML(o.payment_status||"—")}<br>
-    <strong>Courier:</strong> ${escapeHTML(o.courier_name||"—")}<br>
-    <strong>Tracking:</strong> ${escapeHTML(o.tracking_number||"—")}<br>
-    <strong>Supplier Order ID:</strong> ${escapeHTML(o.supplier_order_id||"Not available")}<br>
-    <strong>Submission Status:</strong> ${escapeHTML(supplierStatus(o))}
-   </div>`;
+  const items=getOrderItems(o),summary=items.map(i=>`${itemName(i)} × ${itemQty(i)}`).join(", ")||"Items unavailable";
+  const detail=`<div class="order-detail">
+   <h3>Order Details — ${escapeHTML(o.order_number||o.id)}</h3>
+   <strong>Customer:</strong> ${escapeHTML(o.customer_name||"—")}<br>
+   <strong>Phone:</strong> ${escapeHTML(o.customer_phone||"—")}
+   <div class="action-links"><a class="action-link" href="${phoneLink(o.customer_phone)}">☎ Call Customer</a>
+   <a class="action-link" href="${waLink(o.customer_phone)}" target="_blank" rel="noopener">WhatsApp Customer</a></div>
+   <strong>Email:</strong> ${escapeHTML(o.customer_email||"—")}<br>
+   <strong>Address:</strong> ${escapeHTML(o.shipping_address||"—")}<br>
+   <strong>City / Area:</strong> ${escapeHTML([o.city,o.area].filter(Boolean).join(" / ")||"—")}<br>
+   <strong>Postal Code:</strong> ${escapeHTML(o.postal_code||"—")}<br>
+   <strong>Customer Note:</strong> ${escapeHTML(o.customer_note||"—")}<br>
+   ${renderOrderProductCards(o)}
+   <strong>Subtotal:</strong> ${money(o.subtotal)}<br><strong>Delivery:</strong> ${money(o.delivery_charge)}<br>
+   <strong>Discount:</strong> ${money(o.discount)}<br><strong>Total:</strong> ${money(o.total_amount)}<br>
+   <strong>Payment:</strong> ${escapeHTML(o.payment_method||"—")} / ${escapeHTML(o.payment_status||"—")}<br>
+   <strong>Courier:</strong> ${escapeHTML(o.courier_name||"—")}<br>
+   <strong>Tracking:</strong> ${escapeHTML(o.tracking_number||"—")}<br>
+   <strong>Supplier Order ID:</strong> ${escapeHTML(o.supplier_order_id||"Not available")}<br>
+   <strong>Submission Status:</strong> ${escapeHTML(supplierStatus(o))}
+  </div>`;
   return `<tr>
    <td><strong>${escapeHTML(o.order_number||o.id)}</strong><br><small class="muted">${o.created_at?new Date(o.created_at).toLocaleString("en-BD"):""}</small></td>
    <td>${escapeHTML(o.customer_name||"—")}<br><small>${escapeHTML(o.customer_phone||"")}</small></td>
-   <td>${escapeHTML(itemSummary)}</td>
-   <td><strong>${money(o.total_amount)}</strong></td>
+   <td>${escapeHTML(summary)}</td><td><strong>${money(o.total_amount)}</strong></td>
    <td>${escapeHTML(o.payment_method||"—")}<br><span class="badge">${escapeHTML(o.payment_status||"pending")}</span></td>
-   <td><span class="badge ${statusClass}">${escapeHTML(s.toUpperCase())}</span></td>
-   <td>${supplier}</td>
+   <td><span class="badge ${statusClass}">${escapeHTML(s.toUpperCase())}</span></td><td>${supplier}</td>
    <td><div class="order-actions">
     <button class="btn btn-small btn-dark" data-details="${escapeHTML(o.id)}">View Details</button>
     ${!submitted&&s!=="cancelled"?`<button class="btn btn-small" data-confirm="${escapeHTML(o.id)}">Confirm & Send</button>`:""}
-    <select class="status-select" data-status="${escapeHTML(o.id)}">
-     ${["new","confirmed","processing","shipped","delivered","cancelled"].map(x=>`<option value="${x}" ${s===x?"selected":""}>${x.charAt(0).toUpperCase()+x.slice(1)}</option>`).join("")}
-    </select>
+    <select class="status-select" data-status="${escapeHTML(o.id)}">${["new","confirmed","processing","shipped","delivered","cancelled"].map(x=>`<option value="${x}" ${s===x?"selected":""}>${x.charAt(0).toUpperCase()+x.slice(1)}</option>`).join("")}</select>
     <button class="btn btn-small btn-danger" data-delete-order="${escapeHTML(o.id)}">Delete</button>
    </div></td>
-  </tr>
-  <tr id="details-${escapeHTML(o.id)}" class="hidden"><td colspan="8">${detail}</td></tr>`;
+  </tr><tr id="details-${escapeHTML(o.id)}" class="hidden"><td colspan="8">${detail}</td></tr>`;
  }).join("");
-
- tbody.querySelectorAll("[data-details]").forEach(b=>b.addEventListener("click",()=>{
-  $("details-"+b.dataset.details).classList.toggle("hidden");
- }));
+ tbody.querySelectorAll("[data-details]").forEach(b=>b.addEventListener("click",()=>$("details-"+b.dataset.details).classList.toggle("hidden")));
  tbody.querySelectorAll("[data-confirm]").forEach(b=>b.addEventListener("click",()=>confirmAndSubmitOrder(b.dataset.confirm,b)));
  tbody.querySelectorAll("[data-status]").forEach(sel=>sel.addEventListener("change",()=>updateOrderStatus(sel.dataset.status,sel.value,sel)));
  tbody.querySelectorAll("[data-delete-order]").forEach(b=>b.addEventListener("click",()=>deleteOrder(b.dataset.deleteOrder)));
 }
-
 $("refreshOrdersButton").addEventListener("click",loadOrders);
 $("orderSearch").addEventListener("input",renderOrders);
 document.querySelectorAll(".order-filter-btn").forEach(b=>b.addEventListener("click",()=>{
@@ -878,242 +915,162 @@ document.querySelectorAll(".order-filter-btn").forEach(b=>b.addEventListener("cl
  document.querySelectorAll(".order-filter-btn").forEach(x=>x.classList.toggle("btn-dark",x!==b));
  renderOrders();
 }));
-
 async function updateOrderStatus(id,status,control){
  const order=adminOrders.find(o=>o.id===id);
  if(status==="confirmed"&&order&&!isSubmitted(order)){
   control.value=orderStatus(order);
-  showMessage($("ordersMessage"),"Supplier-এ পাঠানোর জন্য Confirm & Send বাটন ব্যবহার করুন.");
-  return;
+  showMessage($("ordersMessage"),"Supplier-এ পাঠানোর জন্য Confirm & Send বাটন ব্যবহার করুন.");return;
  }
  control.disabled=true;
  try{
-  const {error}=await supabaseClient.from("orders").update({
-   order_status:status,updated_at:new Date().toISOString()
-  }).eq("id",id);
+  const {error}=await supabaseClient.from("orders").update({order_status:status,updated_at:new Date().toISOString()}).eq("id",id);
   if(error)throw error;
-  await logActivity("ORDER_STATUS_UPDATED",id+" → "+status);
-  clearMessage($("ordersMessage"));await loadOrders();
- }catch(e){
-  showMessage($("ordersMessage"),"Status update failed: "+e.message);
-  await loadOrders();
- }finally{control.disabled=false}
+  await logActivity("ORDER_STATUS_UPDATED",id+" → "+status);clearMessage($("ordersMessage"));await loadOrders();
+ }catch(e){showMessage($("ordersMessage"),"Status update failed: "+e.message);await loadOrders()}
+ finally{control.disabled=false}
 }
-
 async function confirmAndSubmitOrder(id,button){
  const order=adminOrders.find(o=>o.id===id);if(!order)return;
- if(isSubmitted(order)){
-  showMessage($("ordersMessage"),"এই অর্ডারটি ইতিমধ্যে Supplier-এ পাঠানো হয়েছে।");return;
- }
- if(!getOrderItems(order).length){
-  showMessage($("ordersMessage"),"এই অর্ডারের Product Items পাওয়া যায়নি। Supplier-এ পাঠানোর আগে Order Items পরীক্ষা করুন।");return;
- }
- const text=`অর্ডার ${order.order_number||id} যাচাই করেছেন?\n\nCustomer: ${order.customer_name||""}\nPhone: ${order.customer_phone||""}\nTotal: ${money(order.total_amount)}\n\nConfirm করলে DropBazar submission function চালু হবে।`;
- if(!confirm(text))return;
- button.disabled=true;button.textContent="SENDING...";
- clearMessage($("ordersMessage"));
+ if(isSubmitted(order)){showMessage($("ordersMessage"),"এই অর্ডারটি ইতিমধ্যে Supplier-এ পাঠানো হয়েছে।");return}
+ if(!getOrderItems(order).length){showMessage($("ordersMessage"),"এই অর্ডারের Product Items পাওয়া যায়নি।");return}
+ if(!confirm(`অর্ডার ${order.order_number||id} যাচাই করেছেন?\nCustomer: ${order.customer_name||""}\nPhone: ${order.customer_phone||""}\nTotal: ${money(order.total_amount)}\n\nConfirm করলে DropBazar submission function চালু হবে।`))return;
+ button.disabled=true;button.textContent="SENDING...";clearMessage($("ordersMessage"));
  try{
   const {data,error}=await supabaseClient.functions.invoke(DROPBAZAR_FUNCTION_NAME,{body:{order_id:id}});
   if(error)throw error;
   if(data&&data.success===false)throw new Error(data.message||"Supplier submission was not successful.");
-  showMessage($("ordersMessage"),"Backend response received. Order list refresh করা হচ্ছে। Supplier Order ID ও submission status যাচাই করুন।","success");
-  await logActivity("DROPBAZAR_SUBMISSION",order.order_number||id);
-  await loadOrders();
- }catch(e){
-  showMessage($("ordersMessage"),"DropBazar-এ পাঠানো যায়নি: "+(e.message||"Unknown error")+". Backend Function deploy ও configuration পরীক্ষা করুন।");
- }finally{button.disabled=false;button.textContent="Confirm & Send"}
+  showMessage($("ordersMessage"),"Backend response received. Order list refresh করা হচ্ছে।","success");
+  await logActivity("DROPBAZAR_SUBMISSION",order.order_number||id);await loadOrders();
+ }catch(e){showMessage($("ordersMessage"),"DropBazar-এ পাঠানো যায়নি: "+e.message+". Backend Function deploy ও configuration পরীক্ষা করুন।")}
+ finally{button.disabled=false;button.textContent="Confirm & Send"}
 }
-
 async function deleteOrder(id){
  const o=adminOrders.find(x=>x.id===id);
  if(!o||!confirm("এই Order এবং এর Order Items Delete করবেন? এটি Undo করা যাবে না।"))return;
  try{
   const {error}=await supabaseClient.from("orders").delete().eq("id",id);
   if(error)throw error;
-  await logActivity("ORDER_DELETED",o.order_number||id);
-  await loadOrders();alert("Order deleted successfully.");
+  await logActivity("ORDER_DELETED",o.order_number||id);await loadOrders();alert("Order deleted successfully.");
  }catch(e){showMessage($("ordersMessage"),"Order delete failed: "+e.message)}
 }
 
-/* CUSTOMER DIRECTORY */
-
+/* CUSTOMERS */
 function getCustomers(){
  const map=new Map();
  adminOrders.forEach(o=>{
   const key=digits(o.customer_phone)||String(o.customer_email||o.customer_name||o.id);
-  if(!map.has(key)){
-   map.set(key,{
-    name:o.customer_name||"Customer",phone:o.customer_phone||"",
-    email:o.customer_email||"",orders:[],total:0
-   });
-  }
+  if(!map.has(key))map.set(key,{name:o.customer_name||"Customer",phone:o.customer_phone||"",email:o.customer_email||"",orders:[],total:0});
   const c=map.get(key);c.orders.push(o);c.total+=Number(o.total_amount||0);
  });
  return Array.from(map.values()).sort((a,b)=>b.orders.length-a.orders.length);
 }
-
 function renderCustomers(){
  const q=$("customerSearch").value.trim().toLowerCase();
  const list=getCustomers().filter(c=>[c.name,c.phone,c.email].join(" ").toLowerCase().includes(q));
  $("customersTableBody").innerHTML=list.length?list.map((c,i)=>{
-  const phone=digits(c.phone);
   const history=c.orders.map(o=>o.order_number||o.id).join(", ");
-  return `<tr>
-   <td><strong>${escapeHTML(c.name)}</strong><br><small>${escapeHTML(c.email)}</small></td>
-   <td>${escapeHTML(c.phone||"—")}</td>
-   <td>${c.orders.length}</td>
-   <td>${money(c.total)}</td>
-   <td>${phone?`<a class="action-link" href="${phoneLink(c.phone)}">Call</a> <a class="action-link" href="${waLink(c.phone)}" target="_blank" rel="noopener">WhatsApp</a>`:"—"}</td>
-   <td><button class="btn btn-small btn-dark" data-customer="${i}">View History</button><div class="muted hidden" id="customer-history-${i}">${escapeHTML(history)}</div></td>
-  </tr>`;
+  return `<tr><td><strong>${escapeHTML(c.name)}</strong><br><small>${escapeHTML(c.email)}</small></td>
+   <td>${escapeHTML(c.phone||"—")}</td><td>${c.orders.length}</td><td>${money(c.total)}</td>
+   <td>${c.phone?`<a class="action-link" href="${phoneLink(c.phone)}">Call</a> <a class="action-link" href="${waLink(c.phone)}" target="_blank" rel="noopener">WhatsApp</a>`:"—"}</td>
+   <td><button class="btn btn-small btn-dark" data-customer="${i}">View History</button><div class="muted hidden" id="customer-history-${i}">${escapeHTML(history)}</div></td></tr>`;
  }).join(""):'<tr><td colspan="6" class="empty">No customers found.</td></tr>';
- $("customersTableBody").querySelectorAll("[data-customer]").forEach(b=>b.addEventListener("click",()=>{
-  $("customer-history-"+b.dataset.customer).classList.toggle("hidden");
- }));
+ $("customersTableBody").querySelectorAll("[data-customer]").forEach(b=>b.addEventListener("click",()=>$("customer-history-"+b.dataset.customer).classList.toggle("hidden")));
 }
 $("customerSearch").addEventListener("input",renderCustomers);
 
 /* INVENTORY */
-
 function renderInventory(){
  const q=$("inventorySearch").value.trim().toLowerCase();
  const list=adminProducts.filter(p=>[p.name,p.sku,p.category].join(" ").toLowerCase().includes(q));
  $("inventoryTableBody").innerHTML=list.length?list.map(p=>{
   const low=p.low_stock_alert&&Number(p.stock||0)<=Number(p.low_stock_threshold??5);
-  return `<tr>
-   <td>${escapeHTML(p.name)}</td>
-   <td>${escapeHTML(p.sku||"—")}</td>
-   <td><strong>${Number(p.stock||0)}</strong></td>
-   <td>${Number(p.low_stock_threshold??5)}</td>
-   <td>${money(p.supplier_cost)}</td>
-   <td>${low?'<span class="badge red">LOW STOCK</span>':'<span class="badge green">NORMAL</span>'}</td>
-   <td><button class="btn btn-small" data-stock-edit="${escapeHTML(p.id)}">Edit Stock</button></td>
-  </tr>`;
+  return `<tr><td>${escapeHTML(p.name)}</td><td>${escapeHTML(p.sku||"—")}</td>
+   <td><strong>${Number(p.stock||0)}</strong></td><td>${Number(p.low_stock_threshold??5)}</td>
+   <td>${money(p.supplier_cost)}</td><td>${low?'<span class="badge red">LOW STOCK</span>':'<span class="badge green">NORMAL</span>'}</td>
+   <td><button class="btn btn-small" data-stock-edit="${escapeHTML(p.id)}">Edit Stock</button></td></tr>`;
  }).join(""):'<tr><td colspan="7" class="empty">No inventory found.</td></tr>';
  $("inventoryTableBody").querySelectorAll("[data-stock-edit]").forEach(b=>b.addEventListener("click",()=>{
   const p=adminProducts.find(x=>x.id===b.dataset.stockEdit);if(!p)return;
-  const value=prompt("New stock quantity:",String(p.stock??0));
-  if(value===null)return;
-  const n=Number(value);
-  if(!Number.isInteger(n)||n<0){alert("সঠিক Stock Quantity দিন।");return}
+  const value=prompt("New stock quantity:",String(p.stock??0));if(value===null)return;
+  const n=Number(value);if(!Number.isInteger(n)||n<0){alert("সঠিক Stock Quantity দিন।");return}
   updateStock(p,n);
  }));
 }
 async function updateStock(p,n){
- try{
-  await window.store.updateProduct(p.id,{stock:n,updated_at:new Date().toISOString()});
-  await logActivity("STOCK_UPDATED",p.name+" → "+n);
-  await loadAdminProducts();renderInventory();
- }catch(e){alert("Stock update failed: "+e.message)}
+ try{await window.store.updateProduct(p.id,{stock:n,updated_at:new Date().toISOString()});await logActivity("STOCK_UPDATED",p.name+" → "+n);await loadAdminProducts();renderInventory()}
+ catch(e){alert("Stock update failed: "+e.message)}
 }
 $("inventorySearch").addEventListener("input",renderInventory);
 $("refreshInventoryButton").addEventListener("click",loadAdminProducts);
 
 /* REPORTS */
-
 function renderReports(){
  const valid=adminOrders.filter(o=>orderStatus(o)!=="cancelled");
- const revenue=valid.reduce((s,o)=>s+Number(o.total_amount||0),0);
- let cost=0;
- const sales={};
- valid.forEach(o=>{
-  getOrderItems(o).forEach(i=>{
-   const qty=itemQty(i);
-   const p=adminProducts.find(x=>x.id===i.product_id);
-   const unitCost=Number(i.supplier_cost??p?.supplier_cost??0);
-   cost+=unitCost*qty;
-   const name=itemName(i);
-   sales[name]=(sales[name]||0)+qty;
-  });
- });
- $("reportRevenue").textContent=money(revenue);
- $("reportCost").textContent=money(cost);
- $("reportProfit").textContent=money(revenue-cost);
- const today=new Date();
- const todayKey=today.toDateString();
- const monthKey=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0");
- const todayRev=valid.filter(o=>o.created_at&&new Date(o.created_at).toDateString()===todayKey).reduce((s,o)=>s+Number(o.total_amount||0),0);
- const monthRev=valid.filter(o=>String(o.created_at||"").slice(0,7)===monthKey).reduce((s,o)=>s+Number(o.total_amount||0),0);
- $("todayRevenue").textContent=money(todayRev);
- $("monthRevenue").textContent=money(monthRev);
+ const revenue=valid.reduce((s,o)=>s+Number(o.total_amount||0),0);let cost=0;const sales={};
+ valid.forEach(o=>getOrderItems(o).forEach(i=>{
+  const qty=itemQty(i),p=adminProducts.find(x=>x.id===i.product_id);
+  cost+=Number(i.supplier_cost??p?.supplier_cost??0)*qty;
+  const name=itemName(i);sales[name]=(sales[name]||0)+qty;
+ }));
+ $("reportRevenue").textContent=money(revenue);$("reportCost").textContent=money(cost);$("reportProfit").textContent=money(revenue-cost);
+ const today=new Date(),todayKey=today.toDateString(),monthKey=today.getFullYear()+"-"+String(today.getMonth()+1).padStart(2,"0");
+ $("todayRevenue").textContent=money(valid.filter(o=>o.created_at&&new Date(o.created_at).toDateString()===todayKey).reduce((s,o)=>s+Number(o.total_amount||0),0));
+ $("monthRevenue").textContent=money(valid.filter(o=>String(o.created_at||"").slice(0,7)===monthKey).reduce((s,o)=>s+Number(o.total_amount||0),0));
  $("deliveredCount").textContent=valid.filter(o=>orderStatus(o)==="delivered").length;
  const best=Object.entries(sales).sort((a,b)=>b[1]-a[1]).slice(0,10);
  $("bestSellingList").innerHTML=best.length?best.map((x,i)=>`<div class="log-item">${i+1}. <strong>${escapeHTML(x[0])}</strong> — ${x[1]} sold</div>`).join(""):"No sales data.";
- const months={};
- valid.forEach(o=>{
-  const k=String(o.created_at||"").slice(0,7)||"Unknown";
-  months[k]=(months[k]||0)+Number(o.total_amount||0);
- });
+ const months={};valid.forEach(o=>{const k=String(o.created_at||"").slice(0,7)||"Unknown";months[k]=(months[k]||0)+Number(o.total_amount||0)});
  const monthRows=Object.entries(months).sort((a,b)=>b[0].localeCompare(a[0]));
  $("monthlySalesList").innerHTML=monthRows.length?monthRows.map(x=>`<div class="log-item"><strong>${escapeHTML(x[0])}</strong> — ${money(x[1])}</div>`).join(""):"No sales data.";
  const cancelled=adminOrders.filter(o=>orderStatus(o)==="cancelled");
  $("cancelledOrdersList").innerHTML=cancelled.length?cancelled.map(o=>`<div class="log-item">${escapeHTML(o.order_number||o.id)} — ${escapeHTML(o.customer_name||"")} — ${money(o.total_amount)}</div>`).join(""):"No cancelled orders.";
 }
 
-/* STAFF DIRECTORY */
-
+/* STAFF */
 async function loadStaff(){
  const body=$("staffTableBody");body.innerHTML='<tr><td colspan="4" class="empty">Loading staff...</td></tr>';
  try{
   const {data,error}=await supabaseClient.from("profiles").select("id,full_name,role").order("full_name");
   if(error)throw error;
-  body.innerHTML=(data||[]).filter(p=>["owner","manager","admin"].includes(String(p.role||"").toLowerCase())).map(p=>`
-   <tr><td>${escapeHTML(p.full_name||"Staff")}</td>
-   <td>${p.id===currentUser?.id?escapeHTML(currentUser.email||"Current account"):"—"}</td>
-   <td><span class="badge silver">${escapeHTML(String(p.role||"").toUpperCase())}</span></td>
-   <td><small>${escapeHTML(p.id)}</small></td></tr>
-  `).join("")||'<tr><td colspan="4" class="empty">No staff found.</td></tr>';
+  body.innerHTML=(data||[]).filter(p=>["owner","manager","admin"].includes(String(p.role||"").toLowerCase())).map(p=>
+   `<tr><td>${escapeHTML(p.full_name||"Staff")}</td><td>${p.id===currentUser?.id?escapeHTML(currentUser.email||"Current account"):"—"}</td><td><span class="badge silver">${escapeHTML(String(p.role||"").toUpperCase())}</span></td><td><small>${escapeHTML(p.id)}</small></td></tr>`
+  ).join("")||'<tr><td colspan="4" class="empty">No staff found.</td></tr>';
  }catch(e){body.innerHTML=`<tr><td colspan="4" class="empty">Staff loading failed: ${escapeHTML(e.message)}</td></tr>`}
 }
 
-/* ACTIVITY LOGS */
-
+/* ACTIVITY */
 async function loadActivity(){
- const box=$("activityList");box.innerHTML="Loading activity logs...";
- clearMessage($("activityMessage"));
+ const box=$("activityList");box.innerHTML="Loading activity logs...";clearMessage($("activityMessage"));
  try{
   const {data,error}=await supabaseClient.from("activity_logs").select("*").order("created_at",{ascending:false}).limit(100);
   if(error)throw error;
-  box.innerHTML=(data||[]).length?(data||[]).map(x=>`
-   <div class="log-item">
-    <strong>${escapeHTML(x.action||"Activity")}</strong><br>
-    ${escapeHTML(x.details||"")}<br>
-    <span class="muted">${x.created_at?new Date(x.created_at).toLocaleString("en-BD"):""}</span>
-   </div>`).join(""):'<div class="empty">No activity logs found.</div>';
- }catch(e){
-  box.innerHTML="";
-  showMessage($("activityMessage"),"Activity Logs load করা যায়নি। activity_logs table এবং permission পরীক্ষা করুন। "+e.message);
- }
+  box.innerHTML=(data||[]).length?(data||[]).map(x=>`<div class="log-item"><strong>${escapeHTML(x.action||"Activity")}</strong><br>${escapeHTML(x.details||"")}<br><span class="muted">${x.created_at?new Date(x.created_at).toLocaleString("en-BD"):""}</span></div>`).join(""):'<div class="empty">No activity logs found.</div>';
+ }catch(e){box.innerHTML="";showMessage($("activityMessage"),"Activity Logs load করা যায়নি। "+e.message)}
 }
 $("refreshActivityButton").addEventListener("click",loadActivity);
 
-/* SETTINGS */
-
+/* PASSWORD SETTINGS */
 $("passwordForm").addEventListener("submit",async e=>{
  e.preventDefault();clearMessage($("passwordMessage"));
- const p=$("newPassword").value;
- const c=$("confirmPassword").value;
+ const p=$("newPassword").value,c=$("confirmPassword").value;
  if(p.length<8){showMessage($("passwordMessage"),"Password কমপক্ষে 8 characters হতে হবে।");return}
  if(p!==c){showMessage($("passwordMessage"),"দুইটি Password মিলছে না।");return}
  const b=$("passwordButton");b.disabled=true;b.textContent="UPDATING...";
  try{
-  const {error}=await supabaseClient.auth.updateUser({password:p});
-  if(error)throw error;
+  const {error}=await supabaseClient.auth.updateUser({password:p});if(error)throw error;
   await logActivity("PASSWORD_UPDATED","Admin password updated");
-  showMessage($("passwordMessage"),"Password updated successfully!","success");
-  $("passwordForm").reset();
+  showMessage($("passwordMessage"),"Password updated successfully!","success");$("passwordForm").reset();
  }catch(err){showMessage($("passwordMessage"),err.message)}
  finally{b.disabled=false;b.textContent="UPDATE PASSWORD"}
 });
 
 /* INITIALIZATION */
-
 async function initializeAdmin(){
  if(!supabaseClient){showMessage($("loginMessage"),"Supabase Client পাওয়া যায়নি। config.js পরীক্ষা করুন।");return}
  if(!window.store){showMessage($("loginMessage"),"Store functions পাওয়া যায়নি। store.js পরীক্ষা করুন।");return}
+ resetProductForm();
  try{
-  const {data,error}=await supabaseClient.auth.getSession();
-  if(error)throw error;
+  const {data,error}=await supabaseClient.auth.getSession();if(error)throw error;
   if(data.session?.user)await startApp(data.session.user);
  }catch(e){showMessage($("loginMessage"),e.message||"Session check failed.")}
 }
@@ -1121,8 +1078,7 @@ if(supabaseClient){
  supabaseClient.auth.onAuthStateChange(event=>{
   if(event==="SIGNED_OUT"){
    currentUser=null;currentProfile=null;
-   $("adminApp").classList.add("hidden");
-   $("loginScreen").classList.remove("hidden");
+   $("adminApp").classList.add("hidden");$("loginScreen").classList.remove("hidden");
   }
  });
 }
