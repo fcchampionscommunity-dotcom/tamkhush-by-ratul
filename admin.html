@@ -648,41 +648,195 @@ return `<tr>
 }).join('')||'<tr><td colspan="7" class="empty">No orders found</td></tr>';
 }
 
-async function sendAndConfirm(id){
-if(!canManage()){notify('You do not have permission.');return}
-const order=orders.find(x=>String(x.id)===String(id));
-if(!order)return;
-if(String(order.submission_status||'').toLowerCase()==='submitted'){
-notify('এই Order ইতিমধ্যে DropBazar-এ পাঠানো হয়েছে।');return;
+/* ===========================
+   DROPBAZAR ITEM DATA MAPPING
+=========================== */
+
+function getDropBazarItemData(item) {
+  const product = products.find(p =>
+    String(p.id) === String(item.product_id || item.productId) ||
+    ((item.product_name || item.name) &&
+    String(p.name).toLowerCase() ===
+    String(item.product_name || item.name).toLowerCase())
+  );
+
+  const variation = variations.find(v => {
+    const sameProduct = product &&
+      String(v.product_id) === String(product.id);
+
+    const sameVariation =
+      item.variation_id &&
+      String(v.id) === String(item.variation_id);
+
+    const sameSku = item.supplier_sku &&
+      String(v.supplier_sku || '').toLowerCase() ===
+      String(item.supplier_sku).toLowerCase();
+
+    const sameColor = item.selected_color &&
+      String(v.color_name || '').toLowerCase() ===
+      String(item.selected_color).toLowerCase();
+
+    return sameVariation || sameSku || (sameProduct && sameColor);
+  });
+
+  return {
+    ...item,
+    product_id: item.product_id || product?.id || null,
+    supplier_sku:
+      item.supplier_sku ||
+      variation?.supplier_sku ||
+      product?.sku ||
+      null,
+    supplier_product_url:
+      item.supplier_product_url ||
+      variation?.supplier_product_url ||
+      null,
+    selected_color:
+      item.selected_color ||
+      variation?.color_name ||
+      null,
+    selected_size: item.selected_size || null,
+    image_url:
+      item.image_url ||
+      variation?.image_url ||
+      null
+  };
 }
-if(!confirm(`Order ${order.order_number||order.id} DropBazar-এ Send & Confirm করতে চাও?`))return;
 
-const button=[...document.querySelectorAll('#ordersTable button')].find(b=>b.getAttribute('onclick')===`sendAndConfirm('${id}')`);
-if(button){button.disabled=true;button.textContent='Sending...'}
-try{
-const {data,error}=await client.functions.invoke('dropbazar-order',{
-body:order
-});
-if(error)throw error;
-if(data?.success===false||data?.error)throw new Error(data.error||data.message||'DropBazar order submission failed.');
+async function getFunctionErrorMessage(error) {
+  let message = error?.message || 'Unknown error';
 
-const supplierOrderId=data?.supplier_order_id||data?.order_id||data?.id||data?.data?.order_id||null;
-const updates={
-submission_status:'submitted',
-order_status:'confirmed',
-...(supplierOrderId?{supplier_order_id:String(supplierOrderId)}:{})
-};
-const {error:updateError}=await client.from('orders').update(updates).eq('id',id);
-if(updateError)throw updateError;
+  try {
+    const response = error?.context;
 
-await logActivity('Sent order to DropBazar',`${order.order_number||id}${supplierOrderId?' | Supplier ID: '+supplierOrderId:''}`);
-await loadOrders();
-notify('Order successfully sent to DropBazar and confirmed!');
-}catch(error){
-console.error('DropBazar submission error:',error);
-notify('DropBazar Send failed: '+(error.message||'Unknown error'));
-if(button){button.disabled=false;button.textContent='Send & Confirm'}
+    if (response && typeof response.clone === 'function') {
+      const body = await response.clone().json();
+      message =
+        body.error ||
+        body.message ||
+        body.details ||
+        message;
+    }
+  } catch (e) {
+    // Keep the original error message.
+  }
+
+  return message;
 }
+
+/* ===========================
+   DROPBAZAR SEND & CONFIRM
+=========================== */
+
+async function sendAndConfirm(id) {
+  if (!canManage()) {
+    notify('You do not have permission.');
+    return;
+  }
+
+  const order = orders.find(x => String(x.id) === String(id));
+  if (!order) return;
+
+  if (String(order.submission_status || '').toLowerCase() === 'submitted') {
+    notify('এই Order ইতিমধ্যে DropBazar-এ পাঠানো হয়েছে।');
+    return;
+  }
+
+  if (!Array.isArray(order.order_items) || !order.order_items.length) {
+    notify('এই Order-এ কোনো Product Item পাওয়া যায়নি।');
+    return;
+  }
+
+  if (!confirm(
+    `Order ${order.order_number || order.id} DropBazar-এ Send & Confirm করতে চাও?`
+  )) return;
+
+  const button = [...document.querySelectorAll('#ordersTable button')]
+    .find(b => b.getAttribute('onclick') === `sendAndConfirm('${id}')`);
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Sending...';
+  }
+
+  try {
+    const orderItems = order.order_items.map(getDropBazarItemData);
+
+    const missingSku = orderItems.filter(item => !item.supplier_sku);
+
+    if (missingSku.length) {
+      throw new Error(
+        'কিছু Product-এর Supplier SKU পাওয়া যায়নি। Product Variations & SKU থেকে SKU ঠিক করো।'
+      );
+    }
+
+    const payload = {
+      ...order,
+      order_items: orderItems
+    };
+
+    // Existing Edge Function connection remains unchanged.
+    const { data, error } = await client.functions.invoke(
+      'dropbazar-order',
+      { body: payload }
+    );
+
+    if (error) {
+      throw new Error(await getFunctionErrorMessage(error));
+    }
+
+    if (data?.success === false || data?.error) {
+      throw new Error(
+        data.error || data.message ||
+        'DropBazar order submission failed.'
+      );
+    }
+
+    const supplierOrderId =
+      data?.supplier_order_id ||
+      data?.order_id ||
+      data?.id ||
+      data?.data?.order_id ||
+      null;
+
+    const updates = {
+      submission_status: 'submitted',
+      order_status: 'confirmed',
+      ...(supplierOrderId
+        ? { supplier_order_id: String(supplierOrderId) }
+        : {})
+    };
+
+    const { error: updateError } = await client
+      .from('orders')
+      .update(updates)
+      .eq('id', id);
+
+    if (updateError) throw updateError;
+
+    await logActivity(
+      'Sent order to DropBazar',
+      `${order.order_number || id}${supplierOrderId
+        ? ' | Supplier ID: ' + supplierOrderId
+        : ''}`
+    );
+
+    await loadOrders();
+
+    notify('Order successfully sent to DropBazar and confirmed!');
+
+  } catch (error) {
+    console.error('DropBazar submission error:', error);
+
+    const message = await getFunctionErrorMessage(error);
+
+    notify('DropBazar Send failed: ' + message);
+
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Send & Confirm';
+    }
+  }
 }
 
 async function updateOrderStatus(id,status){
