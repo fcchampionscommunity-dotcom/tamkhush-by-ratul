@@ -195,6 +195,53 @@ header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-colo
 #receiptPage{display:block!important;position:absolute!important;left:0!important;top:0!important;width:100%!important;padding:0!important;margin:0!important}
 #receiptContent{box-shadow:none!important;border-radius:0!important;padding:10px!important}#receiptActions{display:none!important}
 }
+
+/* TAMKHUSH BY RATUL — premium storefront refinements */
+:root{--brand-orange:#f47b20;--brand-green:#123b31;--brand-blue:#174f8a;--brand-white:#fff}
+html{scroll-padding-top:90px}
+body{background:#f5f7f8;color:#17232b}
+header{background:rgba(18,59,49,.97);box-shadow:0 5px 24px #123b3118}
+.logo-mark{border-color:#ffad70;color:#ffb36e}
+.btn,.category button,.filter.active,.buy-button{background:var(--brand-orange);color:#fff}
+.btn:hover,.category button:hover,.buy-button:hover{background:#d96812}
+.btn-outline{border-color:#ffad70;color:#fff}
+.hero{background-image:linear-gradient(90deg,rgba(13,48,40,.96),rgba(13,48,40,.58)),url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1800')}
+.product,.panel,.drawer-content{background:#fff;color:#17232b;border-color:#dce4e9}
+.product{border-radius:12px;box-shadow:0 8px 24px #123b310a}
+.product:hover{border-color:#f47b20;box-shadow:0 14px 30px #123b3118}
+.product-image-button,.main-image-box,.thumbnail,.cart-item img{background:#f1f4f6}
+.product-info small,.detail-description,.note,.stock-note{color:#667684}
+.about{background:#eaf2ef;border-color:#d4e3dc}.about p{color:#53665f}
+.search,.option-select,.quantity-input,.field input,.field textarea,.field select{background:#fff;color:#17232b;border-color:#cbd5de}
+.back-button{background:#fff;color:#174f8a;border-color:#174f8a}
+.detail-benefits{background:#edf5f1;border-color:#d6e5dd;color:#31584a}
+.detail-benefits div{border-color:#d6e5dd}.add-button{color:#174f8a;border-color:#174f8a}
+.panel{border-radius:12px;box-shadow:0 8px 24px #123b310a}
+.delivery-auto-note{display:flex;justify-content:space-between;align-items:center;gap:12px;background:#edf5f1;border-color:#d6e5dd;color:#174f8a}
+.delivery-auto-note strong{color:#123b31;letter-spacing:1px}
+.summary-product{padding:14px;margin:10px 0;background:#fff;border:1px solid #e2e9ed;border-left:4px solid #f47b20;border-radius:9px;box-shadow:0 4px 14px #123b3108}
+.summary-product strong{color:#123b31}
+.receipt-card{background:#fff;color:#17232b;border:1px solid #dce4e9;border-radius:14px;box-shadow:0 14px 40px #123b3118}
+.receipt-brand{border-color:#123b31}
+.receipt-monogram{border-color:#f47b20;color:#174f8a}
+.receipt-brand h1{color:#123b31}
+.receipt-brand p{color:#174f8a}
+.receipt-title{color:#123b31}
+.receipt-customer{background:#edf5f1;border-left:4px solid #f47b20;border-radius:8px;color:#244b3f}
+.receipt-table th{background:#123b31;color:#fff}
+.receipt-table td{color:#24333b}
+.receipt-totals .total{color:#123b31;border-top:2px solid #f47b20}
+.receipt-footer{color:#174f8a;border-color:#dce4e9}
+.status-pill{background:#eaf2ef;color:#123b31}
+.brand-label{color:#174f8a}
+.cart-total{color:#123b31}
+.whatsapp-order-button{background:#168653}
+@media(max-width:580px){
+ .delivery-auto-note{align-items:flex-start;flex-direction:column;gap:4px}
+ .summary-product{padding:12px}
+ .receipt-card{padding:18px 13px}
+}
+
 </style>
 </head>
 <body>
@@ -248,6 +295,7 @@ header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-colo
 <div class="quantity-row"><button onclick="changeDetailQuantity(-1)">−</button><input class="quantity-input" id="detailQuantity" type="number" min="1" max="99" value="1"><button onclick="changeDetailQuantity(1)">+</button></div>
 <div class="stock-note" id="detailStock"></div>
 <div class="detail-actions"><button class="buy-button" onclick="buySelectedProduct()">BUY NOW</button><button class="add-button" onclick="addSelectedProductToCart()">ADD TO CART</button></div>
+<button class="view-btn" id="wishlistButton" style="width:100%;margin-top:10px" onclick="toggleWishlist()">♡ ADD TO WISHLIST</button>
 <div class="detail-benefits"><div>✓ Premium fashion collection</div><div>✓ Size and color selection</div><div>✓ Secure order processing</div><div>✓ Delivery information at checkout</div></div>
 </div></div>
 </section>
@@ -267,13 +315,13 @@ header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-colo
 <div class="field full"><label for="customerAddress">সম্পূর্ণ ঠিকানা *</label><textarea id="customerAddress" required minlength="8" placeholder="বাসা/বাড়ি নম্বর, রোড, এলাকার নামসহ সম্পূর্ণ ঠিকানা লিখুন"></textarea></div>
 <div class="field full"><label for="customerPostal">পোস্ট কোড (ঐচ্ছিক)</label><input id="customerPostal" type="text" placeholder="পোস্ট কোড"></div>
 <div class="field full">
-<div class="delivery-auto-note"><strong>অটোমেটিক ডেলিভারি চার্জ</strong><br>ঢাকা জেলা: ৳৭০<br>অন্যান্য জেলা: ৳১২০<br><span id="deliveryHint">জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।</span></div>
+<div class="delivery-auto-note"><strong>DELIVERY CHARGE</strong><span id="deliveryHint">Inside Dhaka / Outside Dhaka</span></div>
 </div>
 <div class="field full"><label for="customerNote">অতিরিক্ত নির্দেশনা (ঐচ্ছিক)</label><textarea id="customerNote" placeholder="অর্ডার সম্পর্কে কোনো কথা থাকলে লিখুন"></textarea></div>
 </div></div>
 <div class="panel"><h2>আপনার অর্ডার</h2><div id="checkoutItems" class="summary-items"></div>
 <div class="summary-line"><span>পণ্যের মূল্য</span><strong>৳<span id="checkoutSubtotal">0</span></strong></div>
-<div class="summary-line"><span>ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">জেলা নির্বাচন করুন</span></strong></div>
+<div class="summary-line"><span id="deliveryChargeLabel">ডেলিভারি চার্জ</span><strong>৳<span id="checkoutDelivery">জেলা নির্বাচন করুন</span></strong></div>
 <div class="summary-line total"><span>সর্বমোট</span><strong>৳<span id="checkoutTotal">0</span></strong></div>
 <div id="checkoutMessage" class="checkout-message"></div>
 <button type="submit" id="checkoutSubmit" class="btn checkout-submit">অর্ডার কনফার্ম করুন</button>
@@ -285,7 +333,7 @@ header{background:#123b31;border-color:#0d3028;color:#fff}.logo-mark{border-colo
 <div class="receipt-card" id="receiptContent">
 <div class="receipt-brand"><div class="receipt-monogram">TKR</div><h1>TAMKHUSH BY RATUL</h1><p>PREMIUM FASHION LABEL</p></div>
 <h2 class="receipt-title">অর্ডার রসিদ</h2><div id="receiptDetails"></div>
-<div class="receipt-footer"><strong>ধন্যবাদ আমাদের সাথে কেনাকাটা করার জন্য!</strong><br>TKR — TAMKHUSH BY RATUL — Discover Your Style.</div>
+<div class="receipt-footer"><strong>Thank you for shopping with us.</strong><br>TKR — TAMKHUSH BY RATUL — Discover Your Style.</div>
 </div>
 <div class="receipt-actions" id="receiptActions"><button class="btn" onclick="downloadReceipt()">PDF ডাউনলোড / প্রিন্ট</button><button class="btn-outline" onclick="showHome()">হোম পেজে ফিরে যান</button></div>
 </div></section>
@@ -310,6 +358,7 @@ let productVariations=[];
 let selectedVariation=null;
 let selectedSizeOption=null;
 
+let publicSiteSettings={delivery_settings:{inside_dhaka:70,outside_dhaka:120}};
 let customerContacts={
 whatsapp_order_number:'01623851172',
 customer_support_number:'01623851172',
@@ -325,6 +374,8 @@ let selectedDeliveryZone=null;
 const requestedProductId=new URLSearchParams(window.location.search).get('product');
 let productLinkHandled=false;
 
+let wishlist=[];
+try{wishlist=JSON.parse(localStorage.getItem('tkr_wishlist')||'[]');if(!Array.isArray(wishlist))wishlist=[];}catch(error){wishlist=[];}
 let cart=[];
 try{
 const savedCart=JSON.parse(localStorage.getItem('tkr_cart')||'[]');
@@ -378,6 +429,8 @@ return [...new Set(images)];
 function productImage(product){
 return getProductImages(product)[0];
 }
+
+function getProductSizeOptions(product){return getOptions(product?.sizes);}
 
 function getOptions(value){
 if(Array.isArray(value))return value.filter(Boolean).map(String);
@@ -520,26 +573,9 @@ return sameColor&&sameSize;
 
 function getCartItemStock(item){
 const product=products.find(p=>String(p.id)===String(item.id));
-if(!product)return null;
-
-let variation=productVariations.find(v=>
-String(getVariationId(v)||'')===String(item.variation_id||'')
-);
-
-if(!variation&&item.color)variation=findVariation(item.color);
-
-if(variation){
-const sizeOption=getVariationSizeOptions(variation).find(s=>
-s.size.toLowerCase()===String(item.size||'').toLowerCase()
-);
-const stock=getSizeStock(variation,sizeOption);
-if(stock!==null)return stock;
-}
-if(product.stock!==null&&product.stock!==undefined&&product.stock!==''){
+if(!product||product.stock===null||product.stock===undefined||product.stock==='')return null;
 const stock=Number(product.stock);
 return Number.isFinite(stock)?stock:null;
-}
-return null;
 }
 
 /* AUTO OPEN PRODUCT FROM LINK */
@@ -663,23 +699,23 @@ function calculateDeliveryFromDistrict(){
 const select=document.getElementById('customerDistrict');
 const option=select.options[select.selectedIndex];
 const districtName=String(option?.dataset?.name||option?.textContent||'').trim().toLowerCase();
-
+const hint=document.getElementById('deliveryHint');
+const label=document.getElementById('deliveryChargeLabel');
 if(!select.value||!districtName){
 selectedDeliveryCharge=null;
 selectedDeliveryZone=null;
-document.getElementById('deliveryHint').textContent='জেলা নির্বাচন করলে চার্জ স্বয়ংক্রিয়ভাবে হিসাব হবে।';
+if(hint)hint.textContent='Inside Dhaka / Outside Dhaka';
+if(label)label.textContent='ডেলিভারি চার্জ';
 updateCheckoutSummary();
 return;
 }
-
 const isDhaka=districtName==='dhaka'||districtName==='ঢাকা'||districtName.includes('dhaka')||districtName.includes('ঢাকা');
-selectedDeliveryCharge=isDhaka?70:120;
 selectedDeliveryZone=isDhaka?'inside_dhaka':'outside_dhaka';
-
-document.getElementById('deliveryHint').textContent=isDhaka?
-'ঢাকা জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳৭০।':
-'ঢাকার বাইরের জেলা নির্বাচন করা হয়েছে — ডেলিভারি চার্জ ৳১২০।';
-
+const settings=publicSiteSettings?.delivery_settings||{};
+const configured=Number(isDhaka?(settings.inside_dhaka??settings.dhaka??70):(settings.outside_dhaka??settings.outside??120));
+selectedDeliveryCharge=Number.isFinite(configured)&&configured>=0?configured:(isDhaka?70:120);
+if(hint)hint.textContent=isDhaka?'Inside Dhaka':'Outside Dhaka';
+if(label)label.textContent=isDhaka?'Inside Dhaka':'Outside Dhaka';
 updateCheckoutSummary();
 }
 
@@ -808,8 +844,12 @@ colorSelect.innerHTML=colors.length?
 colors.map(color=>`<option value="${escapeHTML(color)}">${escapeHTML(color)}</option>`).join('')
 :'';
 
-sizeSelect.innerHTML='<option value="">'+(colors.length?'Select color first':'Choose size')+'</option>';
-sizeSelect.disabled=colors.length>0;
+const productSizes=getProductSizeOptions(selectedProduct);
+sizeSelect.innerHTML=productSizes.length?
+'<option value="">Choose size</option>'+
+productSizes.map(size=>`<option value="${escapeHTML(size)}">${escapeHTML(size)}</option>`).join('')
+:'<option value="">Size not available</option>';
+sizeSelect.disabled=false;
 
 colorSelect.onchange=()=>{
 selectProductColor(colorSelect.value);
@@ -821,6 +861,8 @@ updateDetailStock();
 };
 
 document.getElementById('detailQuantity').value=1;
+const wishlistButton=document.getElementById('wishlistButton');
+if(wishlistButton)wishlistButton.textContent=wishlist.some(item=>String(item.id)===String(selectedProduct.id))?'♥ SAVED TO WISHLIST':'♡ ADD TO WISHLIST';
 renderDetailGallery();
 updateDetailStock();
 
@@ -852,28 +894,13 @@ document.getElementById('detailThumbnails').innerHTML=detailImages.map((image,in
 function selectProductColor(color){
 selectedVariation=color?findVariation(color):null;
 selectedSizeOption=null;
-
 const sizeSelect=document.getElementById('detailSize');
-const sizes=selectedVariation?getVariationSizeOptions(selectedVariation):[];
-
-if(selectedVariation){
-if(sizes.length){
+const sizes=getProductSizeOptions(selectedProduct);
 sizeSelect.disabled=false;
-sizeSelect.innerHTML='<option value="">Choose size</option>'+
-sizes.map(item=>`<option value="${escapeHTML(item.size)}">${escapeHTML(item.size)}</option>`).join('');
-}else{
-const legacySizes=getOptions(selectedProduct?.sizes);
-sizeSelect.disabled=false;
-sizeSelect.innerHTML=legacySizes.length?
+sizeSelect.innerHTML=sizes.length?
 '<option value="">Choose size</option>'+
-legacySizes.map(size=>`<option value="${escapeHTML(size)}">${escapeHTML(size)}</option>`).join('')
+sizes.map(size=>`<option value="${escapeHTML(size)}">${escapeHTML(size)}</option>`).join('')
 :'<option value="">Size not available</option>';
-}
-}else{
-sizeSelect.disabled=productVariations.length>0;
-sizeSelect.innerHTML='<option value="">Select color first</option>';
-}
-
 document.getElementById('detailQuantity').value=1;
 renderDetailGallery();
 updateDetailStock();
@@ -905,7 +932,7 @@ stockBox.textContent='Please select a color to view available sizes and stock.';
 return;
 }
 
-const sizes=selectedVariation?getVariationSizeOptions(selectedVariation):[];
+const sizes=getProductSizeOptions(selectedProduct);
 const size=document.getElementById('detailSize').value;
 
 if(sizes.length&&!size){
@@ -913,13 +940,7 @@ stockBox.textContent='Please select a size to check stock.';
 return;
 }
 
-const sizeOption=selectedVariation?getVariationSizeOptions(selectedVariation).find(s=>
-s.size.toLowerCase()===String(size).toLowerCase()
-):null;
-
-const stock=selectedVariation?
-getSizeStock(selectedVariation,sizeOption):
-(selectedProduct.stock!==null&&selectedProduct.stock!==undefined&&selectedProduct.stock!==''?
+const stock=(selectedProduct.stock!==null&&selectedProduct.stock!==undefined&&selectedProduct.stock!==''?
 Number(selectedProduct.stock):null);
 
 if(stock===null||!Number.isFinite(stock)){
@@ -951,29 +972,18 @@ alert('Selected color variation is unavailable. Please select again.');
 return null;
 }
 
-const variationSizes=variation?getVariationSizeOptions(variation):[];
-const legacySizes=getOptions(selectedProduct.sizes);
-const sizes=variationSizes.length?variationSizes:legacySizes;
+const sizes=getProductSizeOptions(selectedProduct);
 
 if(sizes.length&&!size){
 alert('Please select a size first.');
 return null;
 }
 
-const sizeOption=variationSizes.find(item=>
-item.size.toLowerCase()===String(size).toLowerCase()
-)||null;
-
-if(variationSizes.length&&!sizeOption){
-alert('Selected size is not available for this color.');
-return null;
-}
+const sizeOption=null;
 
 const quantity=Math.max(1,Math.min(99,Number(document.getElementById('detailQuantity').value||1)));
 
-const stock=variation?
-getSizeStock(variation,sizeOption):
-(selectedProduct.stock!==null&&selectedProduct.stock!==undefined&&selectedProduct.stock!==''?
+const stock=(selectedProduct.stock!==null&&selectedProduct.stock!==undefined&&selectedProduct.stock!==''?
 Number(selectedProduct.stock):null);
 
 if(stock!==null&&Number.isFinite(stock)){
@@ -1029,6 +1039,17 @@ const options=getSelectedProductOptions();
 if(!options)return;
 addProductToCart(options,false);
 openCheckout();
+}
+
+/* WISHLIST — saved locally on this device */
+function toggleWishlist(){
+if(!selectedProduct)return;
+const id=String(selectedProduct.id);
+const exists=wishlist.some(item=>String(item.id)===id);
+wishlist=exists?wishlist.filter(item=>String(item.id)!==id):[...wishlist,{id,name:selectedProduct.name,image:productImage(selectedProduct)}];
+localStorage.setItem('tkr_wishlist',JSON.stringify(wishlist));
+const button=document.getElementById('wishlistButton');
+if(button)button.textContent=exists?'♡ ADD TO WISHLIST':'♥ SAVED TO WISHLIST';
 }
 
 /* CART */
@@ -1475,6 +1496,37 @@ lines.join('\n')+
 );
 }
 
+/* PUBLIC WEBSITE SETTINGS — public-safe values only */
+async function loadPublicSiteSettings(){
+try{
+const client=window.supabaseClient;
+if(!client)return;
+const {data,error}=await client.rpc('get_public_site_settings');
+if(error)throw error;
+if(data&&typeof data==='object'){
+publicSiteSettings={...publicSiteSettings,...data};
+if(data.delivery_settings&&typeof data.delivery_settings==='object'){
+publicSiteSettings.delivery_settings={...publicSiteSettings.delivery_settings,...data.delivery_settings};
+}
+const profile=data.store_profile||data.website_settings||{};
+const storeName=profile.store_name||profile.website_name;
+if(storeName){
+document.querySelectorAll('.receipt-brand h1').forEach(el=>el.textContent=storeName);
+}
+const contacts=data.contact_settings||data.contacts||{};
+customerContacts={
+...customerContacts,
+whatsapp_order_number:contacts.whatsapp_order_number||contacts.whatsapp||customerContacts.whatsapp_order_number,
+customer_support_number:contacts.customer_support_number||contacts.phone_1||customerContacts.customer_support_number,
+customer_support_number_2:contacts.customer_support_number_2||contacts.phone_2||customerContacts.customer_support_number_2
+};
+if(document.getElementById('customerDistrict')?.value)calculateDeliveryFromDistrict();
+}
+}catch(error){
+console.warn('Public site settings could not be loaded; using safe defaults:',error.message);
+}
+}
+
 /* CUSTOMER CONTACT SETTINGS */
 async function loadCustomerContacts(){
 try{
@@ -1489,7 +1541,11 @@ const {data,error}=await client.from('store_settings')
 
 if(error)throw error;
 
-if(data)customerContacts={...customerContacts,...data};
+if(data)customerContacts={
+whatsapp_order_number:customerContacts.whatsapp_order_number||data.whatsapp_order_number,
+customer_support_number:customerContacts.customer_support_number||data.customer_support_number,
+customer_support_number_2:customerContacts.customer_support_number_2||data.customer_support_number_2
+};
 
 document.querySelectorAll('[data-contact-link]').forEach(a=>{
 const key=a.dataset.contactLink==='1'?
@@ -1513,7 +1569,7 @@ document.getElementById('year').textContent=new Date().getFullYear();
 updateCart();
 loadProducts();
 loadDistricts();
-loadCustomerContacts();
+loadPublicSiteSettings().then(loadCustomerContacts);
 </script>
 </body>
 </html>
