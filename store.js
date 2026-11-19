@@ -2,10 +2,11 @@
 /* =====================================
    TAMKHUSH BY RATUL
    PRODUCT DATABASE FUNCTIONS
-   PRODUCT VARIATIONS + CACHE + RETRY
+   SHARED PRODUCT SIZES
+   COLOR VARIATIONS + CACHE + RETRY
 ===================================== */
 
-const PRODUCT_CACHE_KEY = "tkr_products_cache_v3";
+const PRODUCT_CACHE_KEY = "tkr_products_cache_v4";
 const PRODUCT_CACHE_TIME = 3 * 60 * 1000;
 const PRODUCT_RETRY_LIMIT = 3;
 
@@ -53,6 +54,7 @@ async function fetchWithRetry(requestFunction) {
       return await requestFunction();
     } catch (error) {
       lastError = error;
+
       if (attempt < PRODUCT_RETRY_LIMIT) {
         await wait(500 * Math.pow(2, attempt - 1));
       }
@@ -62,15 +64,65 @@ async function fetchWithRetry(requestFunction) {
   throw lastError;
 }
 
+function normalizeSizes(sizes) {
+  if (!Array.isArray(sizes)) return [];
+
+  return [...new Set(
+    sizes
+      .map(size => String(size || "").trim())
+      .filter(Boolean)
+  )];
+}
+
+function normalizeProduct(product) {
+  if (!product) return product;
+
+  return {
+    ...product,
+    sizes: normalizeSizes(product.sizes),
+    colors: Array.isArray(product.colors) ? product.colors : [],
+    images: Array.isArray(product.images) ? product.images : [],
+    variations: Array.isArray(product.variations)
+      ? product.variations
+      : []
+  };
+}
+
 function normalizeVariations(data) {
   return (data || []).map(item => ({
     id: item.id,
     product_id: item.product_id,
-    color_name: item.color_name || "",
-    supplier_sku: item.supplier_sku || "",
+
+    color: item.color || item.color_name || "",
+    color_name: item.color_name || item.color || "",
+
+    sku: item.sku || "",
+    supplier_sku: item.sku || "",
+
     supplier_product_url: item.supplier_product_url || "",
+    supplier_order_id: item.supplier_order_id || "",
+
     image_url: item.image_url || "",
+    images: Array.isArray(item.images) ? item.images : [],
+
     sort_order: Number(item.sort_order || 0)
+  }));
+}
+
+function groupVariationsByProduct(products, variations) {
+  const grouped = {};
+
+  normalizeVariations(variations).forEach(variation => {
+    if (!grouped[variation.product_id]) {
+      grouped[variation.product_id] = [];
+    }
+
+    grouped[variation.product_id].push(variation);
+  });
+
+  return (products || []).map(product => ({
+    ...normalizeProduct(product),
+    variations: grouped[product.id] || []
   }));
 }
 
@@ -80,7 +132,9 @@ const store = {
   async getProducts(options = {}) {
     const forceRefresh = options.forceRefresh === true;
 
-    if (productsRequest && !forceRefresh) return productsRequest;
+    if (productsRequest && !forceRefresh) {
+      return productsRequest;
+    }
 
     const cached = getCachedProducts();
 
@@ -107,31 +161,27 @@ const store = {
 
       const products = data || [];
 
-      if (products.length) {
-        const ids = products.map(p => p.id);
-
-        const { data: variations, error: variationError } =
-          await window.supabaseClient
-            .from("product_variations")
-            .select("*")
-            .in("product_id", ids)
-            .order("sort_order", { ascending: true });
-
-        if (variationError) throw variationError;
-
-        const grouped = {};
-        normalizeVariations(variations).forEach(v => {
-          if (!grouped[v.product_id]) grouped[v.product_id] = [];
-          grouped[v.product_id].push(v);
-        });
-
-        products.forEach(p => {
-          p.variations = grouped[p.id] || [];
-        });
+      if (!products.length) {
+        saveProductsCache([]);
+        return [];
       }
 
-      saveProductsCache(products);
-      return products;
+      const ids = products.map(product => product.id);
+
+      const { data: variations, error: variationError } =
+        await window.supabaseClient
+          .from("product_variations")
+          .select("*")
+          .in("product_id", ids)
+          .order("sort_order", { ascending: true });
+
+      if (variationError) throw variationError;
+
+      const result = groupVariationsByProduct(products, variations);
+
+      saveProductsCache(result);
+
+      return result;
     });
 
     try {
@@ -151,7 +201,9 @@ const store = {
 
   // CUSTOMER: GET ONE PRODUCT
   async getProductById(id) {
-    if (!id) throw new Error("Product ID is required.");
+    if (!id) {
+      throw new Error("Product ID is required.");
+    }
 
     const cached = getCachedProducts();
 
@@ -159,7 +211,8 @@ const store = {
       const found = cached.data.find(
         product => String(product.id) === String(id)
       );
-      if (found) return found;
+
+      if (found) return normalizeProduct(found);
     }
 
     const { data, error } = await window.supabaseClient
@@ -172,8 +225,11 @@ const store = {
     if (error) throw error;
     if (!data) return null;
 
-    data.variations = await this.getProductVariations(id);
-    return data;
+    const product = normalizeProduct(data);
+
+    product.variations = await this.getProductVariations(id);
+
+    return product;
   },
 
   // ADMIN: ALL PRODUCTS
@@ -187,35 +243,27 @@ const store = {
 
     const products = data || [];
 
-    if (products.length) {
-      const ids = products.map(p => p.id);
+    if (!products.length) return [];
 
-      const { data: variations, error: variationError } =
-        await window.supabaseClient
-          .from("product_variations")
-          .select("*")
-          .in("product_id", ids)
-          .order("sort_order", { ascending: true });
+    const ids = products.map(product => product.id);
 
-      if (variationError) throw variationError;
+    const { data: variations, error: variationError } =
+      await window.supabaseClient
+        .from("product_variations")
+        .select("*")
+        .in("product_id", ids)
+        .order("sort_order", { ascending: true });
 
-      const grouped = {};
-      normalizeVariations(variations).forEach(v => {
-        if (!grouped[v.product_id]) grouped[v.product_id] = [];
-        grouped[v.product_id].push(v);
-      });
+    if (variationError) throw variationError;
 
-      products.forEach(p => {
-        p.variations = grouped[p.id] || [];
-      });
-    }
-
-    return products;
+    return groupVariationsByProduct(products, variations);
   },
 
   // VARIATIONS: GET ALL FOR ONE PRODUCT
   async getProductVariations(productId) {
-    if (!productId) throw new Error("Product ID is required.");
+    if (!productId) {
+      throw new Error("Product ID is required.");
+    }
 
     const { data, error } = await window.supabaseClient
       .from("product_variations")
@@ -224,69 +272,183 @@ const store = {
       .order("sort_order", { ascending: true });
 
     if (error) throw error;
+
     return normalizeVariations(data);
   },
 
-  // VARIATIONS: SAVE / UPDATE
+  // PRODUCT: NORMALIZE SHARED SIZES
+  normalizeProductSizes(sizes) {
+    return normalizeSizes(sizes);
+  },
+
+  // PRODUCT: SAVE SHARED SIZES
+  async saveProductSizes(productId, sizes) {
+    if (!productId) {
+      throw new Error("Product ID is required.");
+    }
+
+    const cleanedSizes = normalizeSizes(sizes);
+
+    const { data, error } = await window.supabaseClient
+      .from("products")
+      .update({
+        sizes: cleanedSizes
+      })
+      .eq("id", productId)
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    clearProductsCache();
+
+    return normalizeProduct(data);
+  },
+
+  // VARIATIONS: SAVE / UPDATE COLOR VARIATIONS
   async saveProductVariations(productId, variations) {
-    if (!productId) throw new Error("Product ID is required.");
+    if (!productId) {
+      throw new Error("Product ID is required.");
+    }
+
     if (!Array.isArray(variations)) {
       throw new Error("Variations must be an array.");
     }
 
-    const cleaned = variations.map((v, index) => ({
-      ...(v.id ? { id: v.id } : {}),
-      product_id: productId,
-      color_name: String(v.color_name || "").trim(),
-      supplier_sku: String(v.supplier_sku || "").trim() || null,
-      supplier_product_url:
-        String(v.supplier_product_url || "").trim() || null,
-      image_url: String(v.image_url || "").trim() || null,
-      sort_order: index
-    }));
+    const cleaned = variations.map((variation, index) => {
+      const color = String(
+        variation.color ||
+        variation.color_name ||
+        ""
+      ).trim();
 
-    if (cleaned.some(v => !v.color_name)) {
-      throw new Error("প্রতিটি Variation-এর Color Name দিতে হবে।");
+      const sku = String(
+        variation.sku ||
+        variation.supplier_sku ||
+        ""
+      ).trim();
+
+      const supplierUrl = String(
+        variation.supplier_product_url || ""
+      ).trim();
+
+      const images = Array.isArray(variation.images)
+        ? variation.images
+            .map(image => String(image || "").trim())
+            .filter(Boolean)
+        : [];
+
+      const imageUrl = String(
+        variation.image_url || images[0] || ""
+      ).trim();
+
+      return {
+        ...(variation.id ? { id: variation.id } : {}),
+
+        product_id: productId,
+
+        color: color,
+        color_name: color,
+
+        sku: sku,
+
+        supplier_product_url: supplierUrl || null,
+
+        supplier_order_id:
+          String(variation.supplier_order_id || "").trim() || null,
+
+        image_url: imageUrl || null,
+
+        images: images,
+
+        sort_order: Number.isFinite(Number(variation.sort_order))
+          ? Number(variation.sort_order)
+          : index
+      };
+    });
+
+    if (cleaned.some(variation => !variation.color)) {
+      throw new Error(
+        "প্রতিটি Color Variation-এর Color Name দিতে হবে।"
+      );
     }
 
-    const { data: existing, error: existingError } =
-      await window.supabaseClient
-        .from("product_variations")
-        .select("id")
-        .eq("product_id", productId);
-
-    if (existingError) throw existingError;
-
-    if (cleaned.length) {
-      const { error: saveError } = await window.supabaseClient
-        .from("product_variations")
-        .upsert(cleaned, { onConflict: "id" });
-
-      if (saveError) throw saveError;
+    if (cleaned.some(variation => !variation.sku)) {
+      throw new Error(
+        "প্রতিটি Color Variation-এর Supplier SKU দিতে হবে।"
+      );
     }
 
-    const keepIds = cleaned.filter(v => v.id).map(v => v.id);
-    const removeIds = (existing || [])
-      .map(v => v.id)
-      .filter(id => !keepIds.includes(id));
-
-    if (removeIds.length) {
-      const { error: deleteError } = await window.supabaseClient
-        .from("product_variations")
-        .delete()
-        .eq("product_id", productId)
-        .in("id", removeIds);
-
-      if (deleteError) throw deleteError;
+    if (cleaned.some(variation => !variation.supplier_product_url)) {
+      throw new Error(
+        "প্রতিটি Color Variation-এর Supplier Product URL দিতে হবে।"
+      );
     }
+
+    // Existing variation IDs must belong to this product.
+    const existingIds = cleaned
+      .filter(variation => variation.id)
+      .map(variation => variation.id);
+
+    if (existingIds.length) {
+      const { data: existing, error: existingError } =
+        await window.supabaseClient
+          .from("product_variations")
+          .select("id")
+          .eq("product_id", productId)
+          .in("id", existingIds);
+
+      if (existingError) throw existingError;
+
+      const validIds = new Set(
+        (existing || []).map(item => item.id)
+      );
+
+      if (existingIds.some(id => !validIds.has(id))) {
+        throw new Error(
+          "একটি Variation এই Product-এর অন্তর্ভুক্ত নয়।"
+        );
+      }
+    }
+
+    // Update existing variations.
+    const updates = cleaned.filter(variation => variation.id);
+
+    if (updates.length) {
+      const { error: updateError } =
+        await window.supabaseClient
+          .from("product_variations")
+          .upsert(updates, { onConflict: "id" });
+
+      if (updateError) throw updateError;
+    }
+
+    // Insert new variations.
+    const inserts = cleaned.filter(variation => !variation.id);
+
+    if (inserts.length) {
+      const { error: insertError } =
+        await window.supabaseClient
+          .from("product_variations")
+          .insert(inserts);
+
+      if (insertError) throw insertError;
+    }
+
+    // Important:
+    // Variations omitted from this request are NOT deleted.
+    // Explicit deletion must use deleteProductVariation().
 
     clearProductsCache();
+
     return await this.getProductVariations(productId);
   },
 
-  // VARIATIONS: DELETE ONE
+  // VARIATIONS: DELETE ONE EXPLICITLY
   async deleteProductVariation(variationId) {
-    if (!variationId) throw new Error("Variation ID is required.");
+    if (!variationId) {
+      throw new Error("Variation ID is required.");
+    }
 
     const { error } = await window.supabaseClient
       .from("product_variations")
@@ -296,28 +458,47 @@ const store = {
     if (error) throw error;
 
     clearProductsCache();
+
     return true;
   },
 
   // ADMIN: ADD PRODUCT
   async addProduct(product) {
+    const cleanedProduct = {
+      ...product,
+      sizes: normalizeSizes(product.sizes)
+    };
+
     const { data, error } = await window.supabaseClient
       .from("products")
-      .insert([product])
+      .insert([cleanedProduct])
       .select()
       .single();
 
     if (error) throw error;
 
     clearProductsCache();
-    return data;
+
+    return normalizeProduct(data);
   },
 
   // ADMIN: UPDATE PRODUCT
   async updateProduct(id, updates) {
+    if (!id) {
+      throw new Error("Product ID is required.");
+    }
+
+    const cleanedUpdates = {
+      ...updates
+    };
+
+    if (Object.prototype.hasOwnProperty.call(cleanedUpdates, "sizes")) {
+      cleanedUpdates.sizes = normalizeSizes(cleanedUpdates.sizes);
+    }
+
     const { data, error } = await window.supabaseClient
       .from("products")
-      .update(updates)
+      .update(cleanedUpdates)
       .eq("id", id)
       .select()
       .single();
@@ -325,11 +506,16 @@ const store = {
     if (error) throw error;
 
     clearProductsCache();
-    return data;
+
+    return normalizeProduct(data);
   },
 
   // ADMIN: DELETE PRODUCT
   async deleteProduct(id) {
+    if (!id) {
+      throw new Error("Product ID is required.");
+    }
+
     const { error } = await window.supabaseClient
       .from("products")
       .delete()
@@ -338,6 +524,7 @@ const store = {
     if (error) throw error;
 
     clearProductsCache();
+
     return true;
   },
 
@@ -354,7 +541,7 @@ const store = {
     return (data || []).filter(product =>
       Number(product.stock || 0) <=
       Number(product.low_stock_threshold ?? 5)
-    );
+    ).map(normalizeProduct);
   },
 
   // CLEAR CUSTOMER CACHE
