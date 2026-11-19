@@ -277,6 +277,37 @@ footer{background:#f8f9f7;color:#596970;border-top:1px solid #e1e6e3}.footer-mar
 @media(max-width:760px){header{padding:12px 4%;flex-wrap:wrap}.mobile-menu-toggle{display:block;order:2}.header-actions{order:3;margin-left:auto}nav#mainNavigation{display:none;order:4;width:100%;flex-direction:column;gap:0;padding:8px 0;border-top:1px solid #e1e6e3}nav#mainNavigation.open{display:flex}nav#mainNavigation a{padding:12px 4px;border-bottom:1px solid #edf0ee}.logo{font-size:15px;letter-spacing:1px}.logo-mark{width:38px;height:38px}.detail-layout{grid-template-columns:1fr;gap:22px}.main-image-box{height:390px}.detail-info{padding:0}.checkout-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.page-wrap{padding:22px 4% 55px}.panel{padding:17px}.payment-option{gap:8px;padding:10px}.payment-status{font-size:10px}}
 @media(max-width:420px){.logo-text{font-size:12px}.logo-text span{font-size:8px;letter-spacing:2px}.header-actions .btn-outline{padding:9px 10px;font-size:11px}.main-image-box{height:320px}.detail-actions{grid-template-columns:1fr}.payment-option-main strong{font-size:13px}}
 
+
+/* PREMIUM CUSTOMER MENU — monochrome outline icons */
+.mobile-menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:43px;height:43px;padding:9px;background:#fff;border:1px solid #174f8a;border-radius:10px;color:#174f8a}
+.mobile-menu-toggle svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.premium-menu-backdrop{position:fixed;inset:0;background:rgba(13,35,29,.48);z-index:80;opacity:0;visibility:hidden;transition:.22s}
+.premium-menu{position:fixed;z-index:81;top:0;right:0;width:min(390px,90vw);height:100dvh;background:#fff;box-shadow:-15px 0 45px #123b3120;transform:translateX(105%);transition:transform .25s ease;padding:25px 20px;overflow-y:auto;color:#17232b}
+.premium-menu.open{transform:translateX(0)}
+.premium-menu-backdrop.open{opacity:1;visibility:visible}
+.premium-menu-head{display:flex;align-items:center;justify-content:space-between;padding:5px 2px 22px;border-bottom:1px solid #e1e8e4}
+.premium-menu-head small{font-size:10px;letter-spacing:2px;color:#174f8a;font-weight:800}
+.premium-menu-head h2{font-size:25px;color:#123b31;margin-top:6px}
+.icon-close{width:38px;height:38px;border:1px solid #dce4e9;background:#f8f9f7;border-radius:9px;color:#174f8a;font-size:25px;line-height:1}
+.premium-menu-links{display:grid;gap:5px;padding:16px 0}
+.premium-menu-links button{display:flex;align-items:center;gap:14px;width:100%;padding:13px 11px;background:#fff;border:1px solid transparent;border-radius:10px;color:#173d33;text-align:left;font-weight:650;font-size:14px}
+.premium-menu-links button:hover{background:#f4f8f5;border-color:#dce9e1}
+.premium-menu-links button b{margin-left:auto;background:#edf5f1;color:#174f8a;border-radius:20px;min-width:24px;text-align:center;padding:3px 7px;font-size:11px}
+.menu-icon{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;color:#174f8a;flex:0 0 22px}
+.menu-icon svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.premium-menu-foot{border-top:1px solid #e1e8e4;padding:17px 3px;color:#667684;font-size:11px;letter-spacing:2px}
+.customer-extra-page{display:none;min-height:70vh}
+.customer-extra-page.active{display:block}
+.tracking-panel{max-width:620px}
+.tracking-intro{color:#53665f;line-height:1.8;margin-bottom:20px}
+.tracking-result{display:none;margin-top:18px;padding:15px;border:1px solid #dce4e9;background:#f8f9f7;border-radius:10px;line-height:1.8;color:#173d33}
+.tracking-result.show{display:block}
+.tracking-note{margin-top:18px;color:#667684;font-size:12px;line-height:1.7}
+.saved-product-actions{display:flex;gap:8px;margin-top:10px}
+.saved-product-actions button{flex:1;padding:10px;border-radius:7px;border:1px solid #174f8a;background:#fff;color:#174f8a;font-weight:700}
+.saved-product-actions button.primary{background:#f47b20;color:#fff;border-color:#f47b20}
+@media(max-width:760px){nav#mainNavigation{display:none!important}.header-actions{order:3}.mobile-menu-toggle{order:2}.logo{order:1}}
+
 </style>
 </head>
 <body>
@@ -285,12 +316,58 @@ footer{background:#f8f9f7;color:#596970;border-top:1px solid #e1e6e3}.footer-mar
 <div class="logo-mark">TKR</div>
 <div class="logo-text">TAMKHUSH BY RATUL<span>PREMIUM FASHION LABEL</span></div>
 </a>
-<button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="মেনু খুলুন" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
+<button class="mobile-menu-toggle" id="mobileMenuToggle" type="button" aria-label="Open customer menu" aria-expanded="false" onclick="togglePremiumMenu()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
 <nav id="mainNavigation">
 <a href="#home" onclick="showHome()">HOME</a><a href="#collections" onclick="showHome()">COLLECTIONS</a><a href="#products" onclick="showHome()">SHOP</a><a href="#about" onclick="showHome()">ABOUT</a>
 </nav>
 <div class="header-actions"><button class="btn-outline" onclick="openCart()">CART (<span id="cartCount">0</span>)</button></div>
 </header>
+<div class="premium-menu-backdrop" id="premiumMenuBackdrop" onclick="closePremiumMenu()"></div>
+<aside class="premium-menu" id="premiumMenu" aria-label="Customer menu" aria-hidden="true">
+ <div class="premium-menu-head">
+  <div><small>TAMKHUSH BY RATUL</small><h2>Explore</h2></div>
+  <button class="icon-close" type="button" onclick="closePremiumMenu()" aria-label="Close menu">×</button>
+ </div>
+ <div class="premium-menu-links">
+  <button onclick="menuGo('home')"><span class="menu-icon" data-icon="home"></span><span>Home</span></button>
+  <button onclick="menuGo('shop')"><span class="menu-icon" data-icon="shopping-bag"></span><span>Shop All Products</span></button>
+  <button onclick="menuGo('categories')"><span class="menu-icon" data-icon="grid"></span><span>Categories</span></button>
+  <button onclick="showSavedPage('wishlist')"><span class="menu-icon" data-icon="heart"></span><span>My Wishlist / Saved Products</span><b id="menuWishlistCount">0</b></button>
+  <button onclick="menuGo('cart')"><span class="menu-icon" data-icon="shopping-cart"></span><span>My Cart</span><b id="menuCartCount">0</b></button>
+  <button onclick="showTrackingPage()"><span class="menu-icon" data-icon="package"></span><span>Track My Order</span></button>
+  <button onclick="showSavedPage('recent')"><span class="menu-icon" data-icon="clock"></span><span>Recently Viewed</span></button>
+  <button onclick="menuGo('size')"><span class="menu-icon" data-icon="ruler"></span><span>Size Guide</span></button>
+  <button onclick="menuGo('offers')"><span class="menu-icon" data-icon="tag"></span><span>Special Offers</span></button>
+  <button onclick="menuGo('support')"><span class="menu-icon" data-icon="headset"></span><span>Contact & Support</span></button>
+ </div>
+ <div class="premium-menu-foot">Premium Fashion Label</div>
+</aside>
+
+<section id="savedProductsPage" class="page-wrap customer-extra-page">
+ <button class="back-button" onclick="showHome()">← BACK TO SHOP</button>
+ <div class="page-heading"><small>TAMKHUSH BY RATUL</small><h1 id="savedPageTitle">My Wishlist</h1></div>
+ <div class="products" id="savedProductsGrid"></div>
+</section>
+
+<section id="trackingPage" class="page-wrap customer-extra-page">
+ <button class="back-button" onclick="showHome()">← BACK TO SHOP</button>
+ <div class="page-heading"><small>TAMKHUSH BY RATUL</small><h1>Track My Order</h1></div>
+ <div class="panel tracking-panel">
+  <p class="tracking-intro">আপনার TKR Order ID এবং অর্ডারের সময় ব্যবহৃত মোবাইল নম্বর দিয়ে অর্ডারের অবস্থা দেখুন।</p>
+  <div class="field"><label for="trackingOrderNumber">TKR Order ID *</label><input id="trackingOrderNumber" type="text" placeholder="যেমন: TKR-XXXXXXXX" required></div>
+  <div class="field"><label for="trackingPhone">মোবাইল নম্বর *</label><input id="trackingPhone" type="tel" placeholder="01XXXXXXXXX" required></div>
+  <button class="btn" type="button" id="trackOrderButton" onclick="trackCustomerOrder()">অর্ডার ট্র্যাক করুন</button>
+  <div id="trackingResult" class="tracking-result" aria-live="polite"></div>
+  <p class="tracking-note">অর্ডার ট্র্যাকিং ও নিরাপদ Cancellation-এর জন্য Supabase-এ customer-order-tracking এবং customer-cancel-order Edge Functions চালু থাকতে হবে।</p>
+ </div>
+</section>
+
+<section id="sizeGuidePage" class="page-wrap customer-extra-page">
+ <button class="back-button" onclick="showHome()">← BACK TO SHOP</button>
+ <div class="page-heading"><small>TAMKHUSH BY RATUL</small><h1>Size Guide</h1></div>
+ <div class="panel"><p>প্রোডাক্টভেদে সাইজ আলাদা হতে পারে। সঠিক মাপের জন্য সংশ্লিষ্ট প্রোডাক্টের বিবরণ দেখুন অথবা অর্ডারের আগে আমাদের Support-এ যোগাযোগ করুন।</p></div>
+</section>
+
 
 <main id="homePage">
 <section class="hero" id="home"><div class="hero-content">
@@ -420,6 +497,8 @@ let productLinkHandled=false;
 
 let wishlist=[];
 try{wishlist=JSON.parse(localStorage.getItem('tkr_wishlist')||'[]');if(!Array.isArray(wishlist))wishlist=[];}catch(error){wishlist=[];}
+let recentlyViewed=[];
+try{recentlyViewed=JSON.parse(localStorage.getItem('tkr_recently_viewed')||'[]');if(!Array.isArray(recentlyViewed))recentlyViewed=[];}catch(error){recentlyViewed=[];}
 let cart=[];
 try{
 const savedCart=JSON.parse(localStorage.getItem('tkr_cart')||'[]');
@@ -748,7 +827,7 @@ const label=document.getElementById('deliveryChargeLabel');
 if(!select.value||!districtName){
 selectedDeliveryCharge=null;
 selectedDeliveryZone=null;
-if(hint)hint.textContent='Inside Dhaka / Outside Dhaka';
+if(hint)hint.textContent='জেলা নির্বাচন করলে চার্জ অটোমেটিক নির্ধারিত হবে';
 if(label)label.textContent='ডেলিভারি চার্জ';
 updateCheckoutSummary();
 return;
@@ -758,8 +837,8 @@ selectedDeliveryZone=isDhaka?'inside_dhaka':'outside_dhaka';
 const settings=publicSiteSettings?.delivery_settings||{};
 const configured=Number(isDhaka?(settings.inside_dhaka??settings.dhaka??70):(settings.outside_dhaka??settings.outside??120));
 selectedDeliveryCharge=Number.isFinite(configured)&&configured>=0?configured:(isDhaka?70:120);
-if(hint)hint.textContent=isDhaka?'Inside Dhaka':'Outside Dhaka';
-if(label)label.textContent=isDhaka?'Inside Dhaka':'Outside Dhaka';
+if(hint)hint.textContent=(isDhaka?'Inside Dhaka':'Outside Dhaka')+' — ৳'+money(selectedDeliveryCharge);
+if(label)label.textContent=(isDhaka?'Inside Dhaka':'Outside Dhaka')+' — Delivery Charge';
 updateCheckoutSummary();
 }
 
@@ -826,6 +905,7 @@ function hideOtherPages(){
 document.getElementById('checkoutPage').style.display='none';
 document.getElementById('receiptPage').style.display='none';
 document.getElementById('productDetailsPage').classList.remove('active');
+['savedProductsPage','trackingPage','sizeGuidePage'].forEach(id=>document.getElementById(id)?.classList.remove('active'));
 }
 
 function showHome(){
@@ -842,6 +922,9 @@ window.scrollTo({top:0,behavior:'smooth'});
 async function openProductDetails(id){
 selectedProduct=products.find(item=>String(item.id)===String(id));
 if(!selectedProduct)return;
+recentlyViewed=[String(selectedProduct.id),...recentlyViewed.filter(x=>String(x)!==String(selectedProduct.id))].slice(0,20);
+localStorage.setItem('tkr_recently_viewed',JSON.stringify(recentlyViewed));
+
 
 productVariations=[];
 selectedVariation=null;
@@ -913,6 +996,7 @@ updateDetailStock();
 document.getElementById('homePage').style.display='none';
 document.getElementById('checkoutPage').style.display='none';
 document.getElementById('receiptPage').style.display='none';
+['savedProductsPage','trackingPage','sizeGuidePage'].forEach(pageId=>document.getElementById(pageId)?.classList.remove('active'));
 document.getElementById('productDetailsPage').classList.add('active');
 
 window.scrollTo({top:0,behavior:'smooth'});
@@ -1092,6 +1176,7 @@ const id=String(selectedProduct.id);
 const exists=wishlist.some(item=>String(item.id)===id);
 wishlist=exists?wishlist.filter(item=>String(item.id)!==id):[...wishlist,{id,name:selectedProduct.name,image:productImage(selectedProduct)}];
 localStorage.setItem('tkr_wishlist',JSON.stringify(wishlist));
+updatePremiumMenuCounts();
 const button=document.getElementById('wishlistButton');
 if(button)button.textContent=exists?'♡ ADD TO WISHLIST':'♥ SAVED TO WISHLIST';
 }
@@ -1138,6 +1223,7 @@ updateCart();
 function updateCart(){
 document.getElementById('cartCount').textContent=
 cart.reduce((sum,item)=>sum+Number(item.quantity||0),0);
+updatePremiumMenuCounts();
 
 document.getElementById('cartItems').innerHTML=cart.length?cart.map((item,index)=>`
 <div class="cart-item">
@@ -1225,6 +1311,7 @@ closeCart();
 document.getElementById('homePage').style.display='none';
 document.getElementById('productDetailsPage').classList.remove('active');
 document.getElementById('receiptPage').style.display='none';
+['savedProductsPage','trackingPage','sizeGuidePage'].forEach(pageId=>document.getElementById(pageId)?.classList.remove('active'));
 document.getElementById('checkoutPage').style.display='block';
 document.getElementById('checkoutMessage').style.display='none';
 
@@ -1260,6 +1347,8 @@ const subtotal=getCartSubtotal();
 document.getElementById('checkoutSubtotal').textContent=money(subtotal);
 document.getElementById('checkoutDelivery').textContent=
 selectedDeliveryCharge===null?'জেলা নির্বাচন করুন':money(selectedDeliveryCharge);
+const chargeLabel=document.getElementById('deliveryChargeLabel');
+if(chargeLabel&&selectedDeliveryZone)chargeLabel.textContent=(selectedDeliveryZone==='inside_dhaka'?'Inside Dhaka':'Outside Dhaka')+' — Delivery Charge';
 document.getElementById('checkoutTotal').textContent=
 money(subtotal+(selectedDeliveryCharge||0));
 }
@@ -1627,6 +1716,142 @@ document.querySelectorAll('#mainNavigation a').forEach(link=>link.addEventListen
  nav?.classList.remove('open');button?.setAttribute('aria-expanded','false');if(button)button.textContent='☰';
 }));
 
+
+/* PREMIUM MENU ICONS — single-colour SVG outline set */
+const MENU_ICON_PATHS={
+ home:'<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
+ 'shopping-bag':'<path d="M5 8h14l1 13H4L5 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/>',
+ grid:'<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
+ heart:'<path d="M20.8 8.8c0 5.2-8.8 11-8.8 11s-8.8-5.8-8.8-11A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z"/>',
+ 'shopping-cart':'<circle cx="9" cy="20" r="1"/><circle cx="18" cy="20" r="1"/><path d="M2 3h2l2.5 12.5a2 2 0 0 0 2 1.5h9.8a2 2 0 0 0 2-1.6L22 8H5"/>',
+ package:'<path d="m12 3 9 5v8l-9 5-9-5V8l9-5Z"/><path d="m3 8 9 5 9-5M12 13v8M8 5l9 5"/>',
+ clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+ ruler:'<path d="m3 16 13-13 5 5L8 21H3z"/><path d="m13 6 5 5M10 9l2 2M7 12l2 2"/>',
+ tag:'<path d="M20.5 13 13 20.5a2 2 0 0 1-3 0L3.5 14a2 2 0 0 1 0-3L11 3.5H20v9.5Z"/><circle cx="16" cy="8" r="1"/>',
+ headset:'<path d="M3 13v-2a9 9 0 0 1 18 0v2"/><path d="M3 13h4v7H5a2 2 0 0 1-2-2zM21 13h-4v7h2a2 2 0 0 0 2-2z"/>'
+};
+function renderMenuIcons(){
+document.querySelectorAll('.menu-icon[data-icon]').forEach(el=>{
+const path=MENU_ICON_PATHS[el.dataset.icon]||'';
+el.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true">'+path+'</svg>';
+});
+}
+function togglePremiumMenu(){
+const menu=document.getElementById('premiumMenu');
+const backdrop=document.getElementById('premiumMenuBackdrop');
+const open=!menu.classList.contains('open');
+menu.classList.toggle('open',open);backdrop.classList.toggle('open',open);
+menu.setAttribute('aria-hidden',String(!open));
+document.getElementById('mobileMenuToggle')?.setAttribute('aria-expanded',String(open));
+}
+function closePremiumMenu(){
+document.getElementById('premiumMenu')?.classList.remove('open');
+document.getElementById('premiumMenuBackdrop')?.classList.remove('open');
+document.getElementById('premiumMenu')?.setAttribute('aria-hidden','true');
+document.getElementById('mobileMenuToggle')?.setAttribute('aria-expanded','false');
+}
+function updatePremiumMenuCounts(){
+const w=document.getElementById('menuWishlistCount'),c=document.getElementById('menuCartCount');
+if(w)w.textContent=wishlist.length;
+if(c)c.textContent=cart.reduce((n,x)=>n+Number(x.quantity||0),0);
+}
+function menuGo(destination){
+closePremiumMenu();
+if(destination==='cart'){openCart();return;}
+if(destination==='home'){showHome();return;}
+if(destination==='shop'||destination==='categories'||destination==='offers'){
+showHome();
+setTimeout(()=>{
+const target=destination==='categories'?'collections':'products';
+document.getElementById(target)?.scrollIntoView({behavior:'smooth'});
+},80);return;
+}
+if(destination==='size'){showCustomerExtraPage('sizeGuidePage');return;}
+if(destination==='support'){
+closePremiumMenu();showHome();
+setTimeout(()=>document.querySelector('footer')?.scrollIntoView({behavior:'smooth'}),80);
+}
+}
+function showCustomerExtraPage(id){
+closePremiumMenu();hideOtherPages();
+document.getElementById('homePage').style.display='none';
+document.getElementById('savedProductsPage').classList.remove('active');
+document.getElementById('trackingPage').classList.remove('active');
+document.getElementById('sizeGuidePage').classList.remove('active');
+document.getElementById(id).classList.add('active');
+window.scrollTo({top:0,behavior:'smooth'});
+}
+function showSavedPage(type){
+showCustomerExtraPage('savedProductsPage');
+const isWishlist=type==='wishlist';
+document.getElementById('savedPageTitle').textContent=isWishlist?'My Wishlist / Saved Products':'Recently Viewed';
+const ids=isWishlist?wishlist.map(x=>String(x.id)):recentlyViewed.map(String);
+const items=ids.map(id=>products.find(p=>String(p.id)===id)).filter(Boolean);
+const grid=document.getElementById('savedProductsGrid');
+if(!items.length){grid.innerHTML='<div class="empty">'+(isWishlist?'আপনার Wishlist এখনো খালি।':'Recently Viewed-এ কোনো পণ্য নেই।')+'</div>';return;}
+grid.innerHTML=items.map(product=>`
+<article class="product">
+ <button class="product-image-button" onclick="openProductDetails('${escapeHTML(product.id)}')"><img src="${escapeHTML(productImage(product))}" alt="${escapeHTML(product.name)}" loading="lazy"></button>
+ <div class="product-info"><small>${escapeHTML(product.category||'Fashion')}</small><h3>${escapeHTML(product.name)}</h3><div class="price">৳${money(product.selling_price)}</div>
+ <div class="saved-product-actions"><button class="primary" onclick="openProductDetails('${escapeHTML(product.id)}')">View Product</button>
+ ${isWishlist?`<button onclick="removeWishlistItem('${escapeHTML(product.id)}')">Remove</button>`:''}</div></div>
+</article>`).join('');
+}
+function removeWishlistItem(id){
+wishlist=wishlist.filter(x=>String(x.id)!==String(id));
+localStorage.setItem('tkr_wishlist',JSON.stringify(wishlist));
+updatePremiumMenuCounts();showSavedPage('wishlist');
+}
+function showTrackingPage(){
+showCustomerExtraPage('trackingPage');
+document.getElementById('trackingResult').classList.remove('show');
+}
+async function trackCustomerOrder(){
+const orderNumber=document.getElementById('trackingOrderNumber').value.trim();
+const phone=document.getElementById('trackingPhone').value.trim();
+const result=document.getElementById('trackingResult');
+const button=document.getElementById('trackOrderButton');
+if(!orderNumber||!phone){result.textContent='Order ID এবং মোবাইল নম্বর দুটোই লিখুন।';result.classList.add('show');return;}
+button.disabled=true;button.textContent='খোঁজা হচ্ছে...';result.classList.remove('show');
+try{
+const client=window.supabaseClient;
+if(!client?.functions)throw new Error('Supabase connection is unavailable');
+const {data,error}=await client.functions.invoke('customer-order-tracking',{body:{order_number:orderNumber,phone}});
+if(error)throw await getUsefulFunctionError(error);
+if(!data?.success||!data.order)throw new Error(data?.error||'অর্ডার পাওয়া যায়নি।');
+const order=data.order;
+const status=escapeHTML(order.order_status||order.status||'অজানা');
+result.innerHTML='<strong>Order: </strong>'+escapeHTML(order.order_number||orderNumber)+'<br><strong>Status: </strong>'+status+
+(order.created_at?'<br><strong>Date: </strong>'+escapeHTML(formatReceiptDate(order.created_at)):'')+
+(order.tracking_number?'<br><strong>Tracking: </strong>'+escapeHTML(order.tracking_number):'');
+if(order.can_cancel){
+ const cancelButton=document.createElement('button');
+ cancelButton.className='btn';cancelButton.type='button';cancelButton.style.marginTop='12px';
+ cancelButton.textContent='Cancel Order';
+ cancelButton.addEventListener('click',()=>cancelTrackedOrder(order.order_number||orderNumber,phone));
+ result.appendChild(document.createElement('br'));result.appendChild(cancelButton);
+}
+result.classList.add('show');
+}catch(error){
+console.error('Order tracking error:',error);
+result.textContent='অর্ডার ট্র্যাক করা যায়নি। Tracking backend চালু আছে কি না পরীক্ষা করুন। '+(error.message||'');
+result.classList.add('show');
+}finally{button.disabled=false;button.textContent='অর্ডার ট্র্যাক করুন';}
+}
+async function cancelTrackedOrder(orderNumber,phone){
+if(!confirm('আপনি কি এই অর্ডারটি বাতিল করতে চান?'))return;
+const result=document.getElementById('trackingResult');
+try{
+const client=window.supabaseClient;
+const {data,error}=await client.functions.invoke('customer-cancel-order',{body:{order_number:orderNumber,phone}});
+if(error)throw await getUsefulFunctionError(error);
+if(!data?.success)throw new Error(data?.error||'Cancellation was not approved');
+result.textContent='আপনার অর্ডার বাতিলের অনুরোধ সফল হয়েছে।';
+}catch(error){result.textContent='অর্ডার বাতিল করা যায়নি: '+(error.message||'সার্ভার যাচাই ব্যর্থ হয়েছে।');}
+result.classList.add('show');
+}
+
+
 /* PAYMENT METHOD: COD works; other methods remain visible but disabled */
 document.querySelectorAll('input[name="paymentMethod"]').forEach(input=>{
  input.addEventListener('change',()=>{
@@ -1645,7 +1870,9 @@ document.querySelectorAll('input[name="paymentMethod"]').forEach(input=>{
 /* INITIALIZE */
 document.getElementById('year').textContent=new Date().getFullYear();
 
+renderMenuIcons();
 updateCart();
+updatePremiumMenuCounts();
 loadProducts();
 loadDistricts();
 loadPublicSiteSettings().then(loadCustomerContacts);
