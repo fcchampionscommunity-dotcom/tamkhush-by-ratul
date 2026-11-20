@@ -1,1021 +1,152 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TAMKHUSH BY RATUL | Admin Login & Dashboard</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TAMKHUSH BY RATUL | Admin Dashboard</title>
 <meta name="robots" content="noindex,nofollow">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Cache-Control" content="no-cache,no-store,must-revalidate">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="store.js"></script>
+<script src="config.js"></script><script src="store.js"></script>
 <style>
-:root{
---green:#123b31;--green2:#0d3028;--orange:#f47b20;
---blue:#174f8a;--bg:#f3f6f7;--white:#fff;
---text:#17232b;--muted:#687783;--line:#dce4e9;
---red:#d64545;--shadow:0 5px 22px #173c3010
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
-button,input,select,textarea{font:inherit}button{cursor:pointer}
-.hidden{display:none!important}
-#loginScreen{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,var(--green),#174f8a)}
-.login-card{width:min(420px,100%);background:white;padding:35px;border-radius:12px;box-shadow:0 20px 60px #0003}
-.brand{text-align:center;margin-bottom:28px}
-.brand-mark{display:inline-grid;place-items:center;width:58px;height:58px;background:var(--green);color:#ffad65;border:2px solid var(--orange);font-weight:900;letter-spacing:2px;border-radius:8px}
-.brand h1{font-size:20px;letter-spacing:1px;margin-top:13px}
-.brand p{font-size:10px;letter-spacing:3px;color:var(--muted);margin-top:6px}
-.login-card h2{font-size:19px;margin-bottom:20px}
-.field{margin-bottom:15px}
-.field label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
-.field input,.field select,.field textarea{width:100%;padding:12px;border:1px solid #cbd5de;border-radius:6px;background:white;color:var(--text);outline:none}
-.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange)}
-.field textarea{min-height:90px;resize:vertical}
-.btn{border:0;background:var(--orange);color:white;padding:11px 17px;border-radius:6px;font-weight:700}
-.btn:hover{background:#d96812}
-.btn-green{background:var(--green)}.btn-blue{background:var(--blue)}
-.btn-red{background:var(--red)}
-.btn-light{background:white;color:var(--green);border:1px solid var(--line)}
-.btn-small{padding:7px 10px;font-size:12px}
-.login-card .btn{width:100%;padding:14px}
-.error{color:var(--red);font-size:13px;margin-top:12px;line-height:1.5}
-#app{min-height:100vh}
-.topbar{height:68px;background:var(--green);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 24px;position:sticky;top:0;z-index:20;box-shadow:var(--shadow)}
-.top-brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:1px}
-.top-mark{width:39px;height:39px;border:1px solid var(--orange);color:#ffad65;display:grid;place-items:center;border-radius:5px;font-size:12px}
-.top-brand small{display:block;font-size:9px;letter-spacing:3px;color:#ffad65;margin-top:4px}
-.top-right{display:flex;align-items:center;gap:12px}
-.role-pill{background:#ffffff20;border:1px solid #ffffff35;border-radius:30px;padding:7px 12px;font-size:11px}
-.layout{display:grid;grid-template-columns:245px minmax(0,1fr);min-height:calc(100vh - 68px)}
-.sidebar{background:white;border-right:1px solid var(--line);padding:20px 13px;position:sticky;top:68px;height:calc(100vh - 68px);overflow:auto}
-.side-label{font-size:10px;color:#91a0a9;letter-spacing:2px;font-weight:bold;padding:13px 12px 8px}
-.nav-btn{width:100%;display:flex;align-items:center;gap:11px;text-align:left;border:0;background:transparent;padding:12px;border-radius:7px;color:#53636d;font-size:13px;margin:2px 0}
-.nav-btn:hover,.nav-btn.active{background:#eaf2ef;color:var(--green);font-weight:700}
-.nav-btn.active{border-left:3px solid var(--orange)}
-.nav-icon{width:20px;text-align:center;font-size:16px}
-.main{padding:27px;min-width:0}
-.page{display:none}.page.active{display:block}
-.page-head{display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap;margin-bottom:23px}
-.page-head h1{font-size:25px}.page-head p{font-size:12px;color:var(--muted);margin-top:6px}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:22px}
-.stat-card{background:white;border:1px solid var(--line);padding:19px;border-radius:9px;box-shadow:var(--shadow)}
-.stat-card small{color:var(--muted);font-size:12px}
-.stat-card strong{display:block;font-size:27px;margin-top:12px;color:var(--green)}
-.stat-card .stat-icon{float:right;background:#fff0e5;color:var(--orange);width:35px;height:35px;border-radius:8px;display:grid;place-items:center}
-.panel{background:white;border:1px solid var(--line);padding:20px;border-radius:9px;box-shadow:var(--shadow);margin-bottom:20px;min-width:0}
-.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:17px}
-.panel-head h2{font-size:16px}
-.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:17px}
-.search{flex:1;min-width:180px;padding:11px 13px;border:1px solid var(--line);border-radius:6px}
-.table-wrap{width:100%;overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{text-align:left;padding:12px 10px;border-bottom:1px solid #edf0f2;font-size:12px;vertical-align:middle}
-th{background:#f6f8f8;color:#64747e;font-size:11px;white-space:nowrap}
-td strong{font-size:12px}
-.product-cell{display:flex;align-items:center;gap:10px;min-width:160px}
-.product-cell img{width:43px;height:48px;object-fit:contain;background:#f1f4f6;border-radius:5px}
-.actions{display:flex;gap:6px;flex-wrap:wrap}
-.badge{display:inline-block;padding:5px 9px;border-radius:30px;font-size:10px;font-weight:700;background:#eaf2ef;color:var(--green)}
-.badge.orange{background:#fff0e5;color:#bd5c12}
-.badge.red{background:#ffeded;color:#c03939}
-.badge.blue{background:#eaf2fb;color:var(--blue)}
-.empty{text-align:center;padding:30px;color:var(--muted);font-size:13px}
-.modal{position:fixed;inset:0;background:#0008;z-index:50;display:none;align-items:center;justify-content:center;padding:15px}
-.modal.open{display:flex}
-.modal-box{background:white;border-radius:10px;width:min(950px,100%);max-height:92vh;overflow:auto;padding:23px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.modal-head h2{font-size:19px}
-.close-btn{border:0;background:#edf1f3;border-radius:5px;padding:8px 12px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 15px}
-.full{grid-column:1/-1}
-.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:15px;flex-wrap:wrap}
-.image-preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:10px;margin-top:12px}
-.image-item{position:relative;background:#f1f4f6;border:1px solid var(--line);border-radius:6px;padding:5px}
-.image-item img{width:100%;height:95px;object-fit:contain}
-.image-item button{position:absolute;top:3px;right:3px;background:var(--red);color:white;border:0;border-radius:4px;padding:3px 7px}
-.variation-card{border:1px solid var(--line);border-radius:8px;padding:15px;margin:12px 0;background:#fbfcfc}
-.variation-card-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
-.variation-card-head strong{color:var(--green)}
-.variation-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
-.variation-size-row{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:7px;margin:8px 0}
-.variation-size-row input,.variation-card input{min-width:0}
-.notice{padding:12px;border-radius:6px;background:#eaf2ef;color:var(--green);font-size:12px;line-height:1.7;margin-bottom:15px}
-.notice.warn{background:#fff3e8;color:#9b5118}
-.order-detail{line-height:1.9;font-size:13px}
-.order-detail strong{color:var(--green)}
-.setting-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}
-.mobile-menu{display:none}
-@media(max-width:950px){.layout{grid-template-columns:205px 1fr}.cards{grid-template-columns:repeat(2,1fr)}.main{padding:20px}}
-@media(max-width:650px){
-.topbar{padding:0 13px;height:60px}.top-brand{font-size:12px}.top-mark{width:34px;height:34px}
-.top-brand small{font-size:8px}.role-pill{display:none}
-.layout{display:block}.sidebar{position:fixed;z-index:30;top:60px;left:-260px;width:245px;height:calc(100vh - 60px);transition:.25s;box-shadow:0 10px 30px #0002}
-.sidebar.open{left:0}.mobile-menu{display:inline-block;background:transparent;color:white;border:0;font-size:23px;margin-right:8px}
-.main{padding:15px}.page-head h1{font-size:21px}.cards{gap:9px}.stat-card{padding:13px}
-.stat-card strong{font-size:22px}.stat-card small{font-size:10px}.panel{padding:13px}
-.form-grid,.setting-grid,.variation-grid{grid-template-columns:1fr}.full{grid-column:auto}
-.variation-size-row{grid-template-columns:1fr 1fr}.variation-size-row button{grid-column:1/-1}
-}
-</style>
-</head>
-<body>
-
-<section id="loginScreen">
-<div class="login-card">
-<div class="brand">
-<div class="brand-mark">TKR</div>
-<h1>TAMKHUSH BY RATUL</h1>
-<p>ADMIN CONTROL PANEL</p>
-</div>
-<h2>Admin Login</h2>
-<form id="loginForm">
-<div class="field"><label>Email Address</label><input id="loginEmail" type="email" required placeholder="Admin email"></div>
-<div class="field"><label>Password</label><input id="loginPassword" type="password" required placeholder="Password"></div>
-<button class="btn" type="submit" id="loginButton">LOGIN TO DASHBOARD</button>
-<div id="loginError" class="error"></div>
-</form>
-</div>
-</section>
-
-<div id="app" class="hidden">
-<header class="topbar">
-<div class="top-brand">
-<button class="mobile-menu" onclick="toggleSidebar()">☰</button>
-<div class="top-mark">TKR</div>
-<div>TAMKHUSH BY RATUL<small>ADMIN DASHBOARD</small></div>
-</div>
-<div class="top-right">
-<span id="roleBadge" class="role-pill">ADMIN</span>
-<button class="btn btn-small btn-light" onclick="logout()">LOGOUT</button>
-</div>
-</header>
-
-<div class="layout">
-<aside class="sidebar" id="sidebar">
-<div class="side-label">MAIN MENU</div>
-<button class="nav-btn active" data-page="dashboard" onclick="navigate('dashboard',this)">▦ Dashboard</button>
-<button class="nav-btn" data-page="products" onclick="navigate('products',this)">◈ Products</button>
-<button class="nav-btn" data-page="variations" onclick="navigate('variations',this)">◉ Variations & SKU</button>
-<button class="nav-btn" data-page="orders" onclick="navigate('orders',this)">▤ Orders</button>
-<button class="nav-btn" data-page="customers" onclick="navigate('customers',this)">♙ Customers</button>
- <button class="nav-btn" data-page="suppliers" onclick="navigate('suppliers',this)">♧ Suppliers</button>
-<button class="nav-btn" data-page="inventory" onclick="navigate('inventory',this)">▣ Inventory</button>
-<div class="side-label">MANAGEMENT</div>
-<button class="nav-btn" data-page="reports" onclick="navigate('reports',this)">▥ Reports</button>
-<button class="nav-btn" data-page="staff" onclick="navigate('staff',this)">♧ Staff & Roles</button>
-<button class="nav-btn" data-page="activity" onclick="navigate('activity',this)">◷ Activity Logs</button>
-<button class="nav-btn" data-page="settings" onclick="navigate('settings',this)">⚙ Settings</button>
-</aside>
-
-<main class="main">
-
-<section class="page active" id="page-dashboard">
-<div class="page-head"><div><h1>Dashboard Overview</h1><p>Welcome to TAMKHUSH BY RATUL management panel.</p></div><button class="btn" onclick="refreshAll()">↻ Refresh Data</button></div>
-<div class="cards">
-<div class="stat-card"><small>Total Revenue</small><strong id="statRevenue">৳0</strong></div>
-<div class="stat-card"><small>Total Orders</small><strong id="statOrders">0</strong></div>
-<div class="stat-card"><small>Total Products</small><strong id="statProducts">0</strong></div>
-<div class="stat-card"><small>Customers</small><strong id="statCustomers">0</strong></div>
-</div>
-<div class="cards">
-<div class="stat-card"><small>Pending Orders</small><strong id="statPending">0</strong></div>
-<div class="stat-card"><small>Low Stock Products</small><strong id="statLowStock">0</strong></div>
-<div class="stat-card"><small>Delivered Orders</small><strong id="statDelivered">0</strong></div>
-<div class="stat-card"><small>Cancelled Orders</small><strong id="statCancelled">0</strong></div><div class="stat-card"><small>Processing Orders</small><strong id="statProcessing">0</strong></div><div class="stat-card"><small>Total Product Cost</small><strong id="statCost">৳0</strong></div><div class="stat-card"><small>Estimated Profit</small><strong id="statProfit">৳0</strong></div>
-</div>
-<div class="panel"><div class="panel-head"><h2>Recent Orders</h2><button class="btn btn-small btn-light" onclick="navigate('orders')">View All</button></div><div class="table-wrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div>
-<div class="panel"><div class="panel-head"><h2>Low Stock Alerts</h2><button class="btn btn-small btn-light" onclick="navigate('inventory')">Inventory</button></div><div id="lowStockList"></div></div>
-</section>
-
-<section class="page" id="page-products">
-<div class="page-head"><div><h1>Products</h1><p>Add, edit and manage your fashion collection.</p></div><button class="btn" onclick="openProductModal()">+ Add Product</button></div>
-<div class="panel"><div class="toolbar"><input id="productSearch" class="search" placeholder="Search product name or SKU..." oninput="renderProducts()"><select id="productCategoryFilter" class="search" onchange="renderProducts()"><option value="">All Categories</option><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
-<div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Discount</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-variations">
-<div class="page-head"><div><h1>Variations & Supplier SKU</h1><p>Manage color-wise images, sizes, stock and supplier details.</p></div></div>
-<div class="panel"><div class="toolbar"><input id="variationSearch" class="search" placeholder="Search product..." oninput="renderVariations()"></div>
-<div class="table-wrap"><table><thead><tr><th>Product</th><th>Color</th><th>Sizes / Stock</th><th>Supplier SKU</th><th>Supplier Order ID</th><th>Supplier URL</th></tr></thead><tbody id="variationsTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-orders">
-<div class="page-head"><div><h1>Orders Management</h1><p>View orders and update order status.</p></div><button class="btn btn-light" onclick="loadOrders()">↻ Refresh</button></div>
-<div class="panel"><div class="toolbar"><input id="orderSearch" class="search" placeholder="Search order, name or phone..." oninput="renderOrders()"><select id="orderStatusFilter" class="search" onchange="renderOrders()"><option value="">All Status</option><option value="new">New</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div>
-<div class="table-wrap"><table><thead><tr><th>Order No.</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-customers">
-<div class="page-head"><div><h1>Customers</h1><p>Customer information collected from orders.</p></div></div>
-<div class="panel"><div class="toolbar"><input id="customerSearch" class="search" placeholder="Search customer..." oninput="renderCustomers()"></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-suppliers"><div class="page-head"><div><h1>Supplier Management</h1><p>Private supplier information from product variations.</p></div></div><div class="panel"><div class="toolbar"><input id="supplierSearch" class="search" placeholder="Search supplier, ID or product…" oninput="renderSuppliers()"></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>Color</th><th>Supplier Order ID</th><th>Supplier SKU</th><th>Supplier URL</th><th>Supplier Cost</th></tr></thead><tbody id="suppliersTable"></tbody></table></div></div></section>
-<section class="page" id="page-inventory">
-<div class="page-head"><div><h1>Inventory Management</h1><p>Monitor stock levels and low-stock products.</p></div></div>
-<div class="panel"><div class="toolbar"><input id="inventorySearch" class="search" placeholder="Search inventory..." oninput="renderInventory()"></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Stock</th><th>Alert Level</th><th>Stock Status</th><th>Action</th></tr></thead><tbody id="inventoryTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-reports">
-<div class="page-head"><div><h1>Reports</h1><p>Sales and order performance overview.</p></div><button class="btn" onclick="exportOrdersCSV()">Export Orders CSV</button></div>
-<div class="cards">
-<div class="stat-card"><small>Total Sales</small><strong id="reportSales">৳0</strong></div>
-<div class="stat-card"><small>Average Order</small><strong id="reportAverage">৳0</strong></div>
-<div class="stat-card"><small>Delivered Revenue</small><strong id="reportDelivered">৳0</strong></div>
-<div class="stat-card"><small>Products in Stock</small><strong id="reportStock">0</strong></div>
- <div class="stat-card"><small>Product Cost</small><strong id="reportCost">৳0</strong></div>
- <div class="stat-card"><small>Estimated Profit</small><strong id="reportProfit">৳0</strong></div>
-</div>
-<div class="panel"><h2>Order Status Summary</h2><div id="reportStatuses" style="margin-top:15px;line-height:2.2;font-size:13px"></div></div>
-</section>
-
-<section class="page" id="page-staff">
-<div class="page-head"><div><h1>Staff & Roles</h1><p>Manage dashboard access by assigned profile roles.</p></div></div>
-<div class="notice">Owner has full access. Manager and Admin access depend on their assigned role. Role changes should be performed only by the Owner.</div>
-<div class="panel"><div class="panel-head"><h2>Staff Accounts</h2><button class="btn btn-light btn-small" onclick="loadStaff()">Refresh</button></div><div class="table-wrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Account</th></tr></thead><tbody id="staffTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-activity">
-<div class="page-head"><div><h1>Activity Logs</h1><p>Recent admin activity records.</p></div><button class="btn btn-light" onclick="loadActivity()">Refresh</button></div>
-<div class="panel"><div class="table-wrap"><table><thead><tr><th>Activity</th><th>Details</th><th>User</th><th>Date</th></tr></thead><tbody id="activityTable"></tbody></table></div></div>
-</section>
-
-<section class="page" id="page-settings">
-<div class="page-head"><div><h1>Store Settings</h1><p>Manage customer contact information.</p></div></div>
-<div class="panel"><h2 style="margin-bottom:18px">Customer Contact Settings</h2><div class="setting-grid">
-<div class="field"><label>WhatsApp Order Number</label><input id="settingWhatsapp" placeholder="016XXXXXXXX"></div>
-<div class="field"><label>Customer Support Number</label><input id="settingSupport1" placeholder="016XXXXXXXX"></div>
-<div class="field"><label>Secondary Support Number</label><input id="settingSupport2" placeholder="017XXXXXXXX"></div>
-</div><button class="btn" onclick="saveSettings()">Save Settings</button></div>
-<div class="panel"><h2 style="margin-bottom:18px">Delivery Settings</h2><div class="setting-grid"><div class="field"><label>Inside Dhaka (৳)</label><input id="settingDhakaDelivery" type="number" min="0" value="70"></div><div class="field"><label>Outside Dhaka (৳)</label><input id="settingOutsideDelivery" type="number" min="0" value="120"></div></div><div class="notice">Saved through the secure save_site_setting backend function.</div><button class="btn" onclick="saveDeliverySettings()">Save Delivery Settings</button></div>
-<div class="panel"><h2 style="margin-bottom:15px">Payment Management</h2><div class="notice warn">COD should remain the only active method until merchant credentials and verified server-side gateway integration are configured. Never expose API secrets in this HTML.</div><div id="paymentConfigStatus">Online gateways require secure server-side configuration.</div></div>
-<div class="panel"><h2 style="margin-bottom:15px">DropBazar Integration</h2><div class="notice">Order submission uses the existing secure dropbazar-order Edge Function.</div><div id="dropbazarTestResult" class="error">A real API test requires a dedicated server-side test endpoint; no such endpoint is present in the supplied project file.</div></div>
-<div class="panel"><h2 style="margin-bottom:15px">Change Password</h2><div class="field"><label>New Password</label><input id="newPassword" type="password" minlength="6" placeholder="At least 6 characters"></div><button class="btn btn-blue" onclick="changePassword()">Update Password</button></div>
-</section>
-
-</main>
-</div>
-</div>
-
-<!-- PRODUCT MODAL -->
-<div class="modal" id="productModal"><div class="modal-box">
-<div class="modal-head"><h2 id="productModalTitle">Add New Product</h2><button class="close-btn" onclick="closeModal('productModal')">✕</button></div>
-<form id="productForm">
-<input type="hidden" id="editProductId">
-<div class="form-grid">
-<div class="field"><label>Product Name *</label><input id="pName" required></div>
-<div class="field"><label>Product TKR SKU / Code</label><input id="pSku" placeholder="TKR-001"></div>
-<div class="field"><label>Category *</label><select id="pCategory" required><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div>
-<div class="field"><label>Selling Price (৳) *</label><input id="pPrice" type="number" min="0" required></div>
-<div class="field"><label>Discount Price (৳)</label><input id="pDiscount" type="number" min="0" placeholder="0 = No discount"></div>
-<div class="field"><label>Supplier Cost (৳)</label><input id="pCost" type="number" min="0" value="0"></div>
-<div class="field"><label>Parent Stock Quantity</label><input id="pStock" type="number" min="0" value="0"></div>
-<div class="field"><label>Low Stock Alert / Minimum Stock</label><input id="pAlert" type="number" min="0" value="5"></div>
-<div class="field"><label>Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL"></div>
-<div class="field"><label>Supplier Product URL (optional)</label><input id="pSupplierUrl" type="url" placeholder="https://..."></div>
-<div class="field"><label>DropBazar Product ID</label><input id="pDropbazarId" placeholder="DropBazar Product ID"></div>
+:root{--g:#123b31;--g2:#0d3028;--o:#f47b20;--b:#174f8a;--bg:#f3f6f7;--w:#fff;--t:#17232b;--m:#687783;--l:#dce4e9;--r:#d64545}
+*{box-sizing:border-box;margin:0;padding:0}body{font:14px Arial,Helvetica,sans-serif;background:var(--bg);color:var(--t)}button,input,select,textarea{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.btn{border:0;background:var(--o);color:white;padding:10px 15px;border-radius:6px;font-weight:700}.btn:hover{filter:brightness(.94)}.green{background:var(--g)}.blue{background:var(--b)}.red{background:var(--r)}.light{background:white;color:var(--g);border:1px solid var(--l)}.small{padding:6px 9px;font-size:12px}
+.field{margin:0 0 13px}.field label{display:block;font-weight:700;font-size:12px;margin-bottom:6px}.field input,.field select,.field textarea,.input{width:100%;padding:10px;border:1px solid #cbd5de;border-radius:6px;background:white;min-width:0}.field textarea{min-height:85px;resize:vertical}
+#loginScreen{min-height:100vh;display:grid;place-items:center;padding:18px;background:linear-gradient(135deg,var(--g),#174f8a)}.login{width:min(420px,100%);background:white;padding:30px;border-radius:12px}.brand{text-align:center;margin-bottom:24px}.mark{display:inline-grid;place-items:center;width:55px;height:55px;border:2px solid var(--o);background:var(--g);color:#ffad65;font-weight:900;border-radius:8px}.brand h2{margin-top:12px}.brand small{letter-spacing:3px;color:var(--m)}
+#app{min-height:100vh}.top{height:64px;background:var(--g);color:white;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:20}.topname{font-weight:800;letter-spacing:1px}.topname small{display:block;color:#ffad65;font-size:9px;margin-top:4px}.topright{display:flex;gap:10px;align-items:center}.layout{display:grid;grid-template-columns:235px minmax(0,1fr);min-height:calc(100vh - 64px)}aside{background:white;border-right:1px solid var(--l);padding:15px 12px;position:sticky;top:64px;height:calc(100vh - 64px);overflow:auto}.nav{width:100%;text-align:left;border:0;background:transparent;padding:11px;border-radius:6px;color:#52616a;margin:2px 0}.nav.active,.nav:hover{background:#eaf2ef;color:var(--g);font-weight:bold}.navlabel{font-size:10px;color:#91a0a9;letter-spacing:2px;padding:15px 10px 6px}.main{padding:24px;min-width:0}.page{display:none}.page.active{display:block}.head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:20px}.head h1{font-size:24px}.muted{color:var(--m);font-size:12px;margin-top:5px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:18px}.stat,.panel{background:white;border:1px solid var(--l);border-radius:9px;padding:17px;margin-bottom:17px;min-width:0}.stat small{color:var(--m)}.stat strong{display:block;color:var(--g);font-size:25px;margin-top:9px}.panel h2{font-size:16px;margin-bottom:14px}.toolbar{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:14px}.toolbar input,.toolbar select{flex:1;min-width:150px;padding:10px;border:1px solid var(--l);border-radius:6px}.tablewrap{overflow:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{text-align:left;padding:10px;border-bottom:1px solid #edf0f2;font-size:12px;vertical-align:middle}th{background:#f6f8f8;color:#64747e;white-space:nowrap}.actions{display:flex;gap:5px;flex-wrap:wrap}.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#eaf2ef;color:var(--g);font-size:10px;font-weight:bold}.badge.warn{background:#fff0e5;color:#bd5c12}.badge.bad{background:#ffeded;color:#c03939}.empty{text-align:center;padding:25px;color:var(--m)}.modal{display:none;position:fixed;inset:0;background:#0008;z-index:50;align-items:center;justify-content:center;padding:12px}.modal.open{display:flex}.modalbox{width:min(1050px,100%);max-height:94vh;overflow:auto;background:white;border-radius:10px;padding:20px}.modalhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:0;background:#edf1f3;padding:8px 12px;border-radius:5px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.full{grid-column:1/-1}.actionsend{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:15px}.notice{padding:11px;background:#eaf2ef;color:var(--g);border-radius:6px;font-size:12px;line-height:1.6;margin:10px 0}.notice.warn{background:#fff3e8;color:#9b5118}.variation{border:1px solid var(--l);border-radius:8px;padding:13px;margin:12px 0;background:#fbfcfc}.variationhead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px}.vgrid{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}.preview{display:grid;grid-template-columns:repeat(auto-fill,minmax(85px,1fr));gap:8px;margin-top:8px}.thumb{position:relative;border:1px solid var(--l);padding:4px;border-radius:5px}.thumb img{width:100%;height:80px;object-fit:contain}.thumb button{position:absolute;right:2px;top:2px;border:0;background:var(--r);color:white;border-radius:3px;padding:2px 6px}.settingtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}.settingtab{border:1px solid var(--l);background:white;padding:8px 10px;border-radius:6px;font-size:12px}.settingtab.active{background:var(--g);color:white}.settingsection{display:none}.settingsection.active{display:block}.menu{display:none;color:white;background:none;border:0;font-size:23px}
+@media(max-width:850px){.layout{grid-template-columns:195px 1fr}.main{padding:17px}}
+@media(max-width:650px){.top{height:58px;padding:0 12px}.menu{display:block}.layout{display:block}aside{position:fixed;z-index:30;top:58px;left:-260px;width:245px;height:calc(100vh - 58px);transition:.2s;box-shadow:0 8px 25px #0002}aside.open{left:0}.main{padding:13px}.head h1{font-size:21px}.grid,.vgrid{grid-template-columns:1fr}.full{grid-column:auto}.modalbox{padding:14px}.topname{font-size:11px}.topname small{font-size:8px}}
+</style></head><body>
+<section id="loginScreen"><div class="login"><div class="brand"><div class="mark">TKR</div><h2>TAMKHUSH BY RATUL</h2><small>ADMIN CONTROL PANEL</small></div><h3 style="margin-bottom:15px">Admin Login</h3><form id="loginForm"><div class="field"><label>Email Address</label><input id="loginEmail" type="email" required></div><div class="field"><label>Password</label><input id="loginPassword" type="password" required></div><button class="btn" id="loginButton" style="width:100%">LOGIN TO DASHBOARD</button><p id="loginError" style="color:#d64545;margin-top:10px;font-size:12px"></p></form></div></section>
+<div id="app" class="hidden"><header class="top"><div style="display:flex;align-items:center;gap:10px"><button class="menu" onclick="toggleSidebar()">☰</button><div class="topname">TAMKHUSH BY RATUL<small>ADMIN DASHBOARD</small></div></div><div class="topright"><span id="roleBadge"></span><button class="btn light small" onclick="logout()">LOGOUT</button></div></header>
+<div class="layout"><aside id="sidebar">
+<div class="navlabel">MAIN MENU</div>
+<button class="nav active" data-page="dashboard" onclick="navigate('dashboard')">▦ Dashboard</button><button class="nav" data-page="products" onclick="navigate('products')">◈ Products</button><button class="nav" data-page="variations" onclick="navigate('variations')">◉ Variations & SKU</button><button class="nav" data-page="orders" onclick="navigate('orders')">▤ Orders</button><button class="nav" data-page="customers" onclick="navigate('customers')">♙ Customers</button><button class="nav" data-page="suppliers" onclick="navigate('suppliers')">♧ Suppliers</button><button class="nav" data-page="inventory" onclick="navigate('inventory')">▣ Inventory</button><div class="navlabel">MANAGEMENT</div><button class="nav" data-page="reports" onclick="navigate('reports')">▥ Reports</button><button class="nav" data-page="staff" onclick="navigate('staff')">♧ Staff & Roles</button><button class="nav" data-page="activity" onclick="navigate('activity')">◷ Activity Logs</button><button class="nav" data-page="settings" onclick="navigate('settings')">⚙ Settings Center</button>
+</aside><main class="main">
+<section class="page active" id="page-dashboard"><div class="head"><div><h1>Dashboard Overview</h1><p class="muted">TAMKHUSH BY RATUL management panel</p></div><button class="btn" onclick="refreshAll()">↻ Refresh</button></div><div class="cards">
+<div class="stat"><small>Total Revenue</small><strong id="statRevenue">৳0</strong></div><div class="stat"><small>Total Orders</small><strong id="statOrders">0</strong></div><div class="stat"><small>Total Products</small><strong id="statProducts">0</strong></div><div class="stat"><small>Customers</small><strong id="statCustomers">0</strong></div><div class="stat"><small>Pending Orders</small><strong id="statPending">0</strong></div><div class="stat"><small>Low Stock</small><strong id="statLowStock">0</strong></div><div class="stat"><small>Delivered</small><strong id="statDelivered">0</strong></div><div class="stat"><small>Estimated Profit</small><strong id="statProfit">৳0</strong></div></div><div class="panel"><h2>Recent Orders</h2><div class="tablewrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Total</th><th>Status</th><th>Date</th></tr></thead><tbody id="recentOrders"></tbody></table></div></div><div class="panel"><h2>Low Stock Alerts</h2><div id="lowStockList"></div></div></section>
+<section class="page" id="page-products"><div class="head"><div><h1>Products</h1><p class="muted">Add, edit and manage products</p></div><button class="btn" onclick="openProductModal()">+ Add Product</button></div><div class="panel"><div class="toolbar"><input id="productSearch" placeholder="Search product / SKU" oninput="renderProducts()"><select id="productCategoryFilter" onchange="renderProducts()"><option value="">All Categories</option><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div><div class="tablewrap"><table><thead><tr><th>Product</th><th>SKU</th><th>Category</th><th>Price</th><th>Discount</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div></div></section>
+<section class="page" id="page-variations"><div class="head"><div><h1>Variations & SKU</h1><p class="muted">Color-wise supplier information and galleries</p></div></div><div class="panel"><input class="input" id="variationSearch" placeholder="Search product..." oninput="renderVariations()"><div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Product</th><th>Color</th><th>Sizes</th><th>Supplier SKU</th><th>Supplier Order ID</th><th>Supplier URL</th></tr></thead><tbody id="variationsTable"></tbody></table></div></div></section>
+<section class="page" id="page-orders"><div class="head"><div><h1>Orders Management</h1></div><button class="btn light" onclick="loadOrders()">↻ Refresh</button></div><div class="panel"><div class="toolbar"><input id="orderSearch" placeholder="Search order / customer / phone" oninput="renderOrders()"><select id="orderStatusFilter" onchange="renderOrders()"><option value="">All Status</option><option value="new">Pending</option><option value="confirmed">Confirmed</option><option value="processing">Processing</option><option value="shipped">Shipped</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></div><div class="tablewrap"><table><thead><tr><th>Order</th><th>Customer</th><th>Phone</th><th>Total</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead><tbody id="ordersTable"></tbody></table></div></div></section>
+<section class="page" id="page-customers"><div class="head"><h1>Customers</h1></div><div class="panel"><input class="input" id="customerSearch" placeholder="Search customer" oninput="renderCustomers()"><div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Orders</th><th>Total Spent</th><th>Last Order</th></tr></thead><tbody id="customersTable"></tbody></table></div></div></section>
+<section class="page" id="page-suppliers"><div class="head"><h1>Supplier Management</h1></div><div class="panel"><input class="input" id="supplierSearch" placeholder="Search supplier/product" oninput="renderSuppliers()"><div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Product</th><th>Color</th><th>Supplier Order ID</th><th>Supplier SKU</th><th>Supplier URL</th><th>Cost</th></tr></thead><tbody id="suppliersTable"></tbody></table></div></div></section>
+<section class="page" id="page-inventory"><div class="head"><h1>Inventory Management</h1></div><div class="panel"><input class="input" id="inventorySearch" placeholder="Search inventory" oninput="renderInventory()"><div class="tablewrap" style="margin-top:12px"><table><thead><tr><th>Product</th><th>SKU</th><th>Stock</th><th>Alert Level</th><th>Status</th><th>Action</th></tr></thead><tbody id="inventoryTable"></tbody></table></div></div></section>
+<section class="page" id="page-reports"><div class="head"><h1>Reports</h1><button class="btn" onclick="exportOrdersCSV()">Export Orders CSV</button></div><div class="cards"><div class="stat"><small>Total Sales</small><strong id="reportSales">৳0</strong></div><div class="stat"><small>Average Order</small><strong id="reportAverage">৳0</strong></div><div class="stat"><small>Delivered Revenue</small><strong id="reportDelivered">৳0</strong></div><div class="stat"><small>Product Cost</small><strong id="reportCost">৳0</strong></div><div class="stat"><small>Estimated Profit</small><strong id="reportProfit">৳0</strong></div></div><div class="panel"><h2>Order Status Summary</h2><div id="reportStatuses"></div></div></section>
+<section class="page" id="page-staff"><div class="head"><h1>Staff & Roles</h1><button class="btn light" onclick="loadStaff()">Refresh</button></div><div class="notice">Role changes require a separately secured server-side permission workflow. This panel displays current profiles and roles.</div><div class="panel"><div class="tablewrap"><table><thead><tr><th>User ID</th><th>Role</th><th>Account</th></tr></thead><tbody id="staffTable"></tbody></table></div></div></section>
+<section class="page" id="page-activity"><div class="head"><h1>Activity Logs</h1><button class="btn light" onclick="loadActivity()">Refresh</button></div><div class="panel"><div class="tablewrap"><table><thead><tr><th>Activity</th><th>Details</th><th>User</th><th>Date</th></tr></thead><tbody id="activityTable"></tbody></table></div></div></section>
+<section class="page" id="page-settings"><div class="head"><div><h1>Settings Center</h1><p class="muted">১২টি Settings বিভাগ</p></div></div><div class="settingtabs" id="settingTabs"></div><div id="settingsSections"></div></section>
+</main></div></div>
+<div class="modal" id="productModal"><div class="modalbox"><div class="modalhead"><h2 id="productModalTitle">Add Product</h2><button class="close" onclick="closeModal('productModal')">✕</button></div><form id="productForm"><input type="hidden" id="editProductId"><div class="grid">
+<div class="field"><label>Product Name *</label><input id="pName" required></div><div class="field"><label>Product SKU / TKR Code</label><input id="pSku"></div>
+<div class="field"><label>Category *</label><select id="pCategory" required><option value="men">Men</option><option value="women">Women</option><option value="accessories">Accessories</option><option value="unisex">Unisex</option></select></div><div class="field"><label>Regular / Selling Price (৳) *</label><input id="pPrice" type="number" min="0" required></div>
+<div class="field"><label>Discount Price (৳)</label><input id="pDiscount" type="number" min="0"></div><div class="field"><label>Product Supplier Cost (৳)</label><input id="pCost" type="number" min="0" value="0"></div>
+<div class="field"><label>Total Product Stock</label><input id="pStock" type="number" min="0" value="0"></div><div class="field"><label>Low Stock Alert</label><input id="pAlert" type="number" min="0" value="5"></div>
+<div class="field"><label>Available Sizes (comma separated)</label><input id="pSizes" placeholder="S, M, L, XL"></div><div class="field"><label>Product Supplier URL (optional)</label><input id="pSupplierUrl" type="url"></div>
+<div class="field"><label>DropBazar Product ID (admin only)</label><input id="pDropbazarId"></div><div class="field"><label>Product Status</label><select id="pActive"><option value="true">Active</option><option value="false">Hidden</option></select></div>
 <div class="field full"><label>Product Description</label><textarea id="pDescription"></textarea></div>
-<div class="field full"><label>Product Images (Select multiple)</label><input id="pImages" type="file" accept="image/png,image/jpeg,image/webp" multiple><small style="color:var(--muted)">Maximum 5MB per image. Images upload to Supabase Storage.</small><div id="imagePreview" class="image-preview"></div></div>
-<div class="field full">
-<label><input id="pNewArrival" type="checkbox" style="width:auto"> New Arrival</label>
-<label><input id="pBestSeller" type="checkbox" style="width:auto"> Best Seller</label>
-<label><input id="pActive" type="checkbox" checked style="width:auto"> Show this product on customer website</label>
-</div>
-<div class="field full"><hr style="border:0;border-top:1px solid var(--line);margin:8px 0 16px">
-<div class="panel-head"><h2>Color Variations & Supplier Information</h2><button type="button" class="btn btn-small" onclick="addVariationRow()">+ Add Color</button></div>
-<div class="notice">প্রতিটি Color Variation-এর জন্য আলাদা Supplier SKU, Supplier URL, DropBazar Product ID, ছবি, Size এবং Legacy Size Values (product-level sizes are managed above) দিতে পারবে।</div>
-<div id="variationEditor"></div>
-</div>
-</div>
-<div class="form-actions"><button type="button" class="btn btn-light" onclick="closeModal('productModal')">Cancel</button><button type="submit" class="btn" id="saveProductButton">Save Product</button></div>
-<div id="productFormError" class="error"></div>
-</form>
-</div></div>
-
-<!-- ORDER MODAL -->
-<div class="modal" id="orderModal"><div class="modal-box">
-<div class="modal-head"><h2 id="orderModalTitle">Order Details</h2><button class="close-btn" onclick="closeModal('orderModal')">✕</button></div>
-<div id="orderModalContent" class="order-detail"></div>
-<div class="form-actions"><button class="btn btn-light" onclick="closeModal('orderModal')">Close</button></div>
-</div></div>
-
+<div class="field full"><label>Product Image Gallery — মোবাইল Gallery থেকে একাধিক ছবি নির্বাচন</label><input id="pImages" type="file" accept="image/*" multiple><div class="preview" id="imagePreview"></div></div>
+<div class="field"><label><input id="pNewArrival" type="checkbox" style="width:auto"> New Arrival</label></div><div class="field"><label><input id="pBestSeller" type="checkbox" style="width:auto"> Best Seller</label></div>
+<div class="field full"><hr style="border:0;border-top:1px solid var(--l);margin:5px 0 14px"><div class="variationhead"><strong>Unlimited Color Variations</strong><button type="button" class="btn small" onclick="addVariationRow()">+ Add Color</button></div><div class="notice">প্রতিটি Color-এর আলাদা নাম, Gallery, Supplier Information এবং একাধিক Size থাকবে। Stock কেবল Product-level-এ থাকবে; Color/Size অনুযায়ী ভাগ হবে না।</div><div id="variationEditor"></div></div>
+</div><div class="actionsend"><button type="button" class="btn light" onclick="closeModal('productModal')">Cancel</button><button type="submit" class="btn" id="saveProductButton">Save Product</button></div><p id="productFormError" style="color:#d64545;margin-top:10px"></p></form></div></div>
+<div class="modal" id="orderModal"><div class="modalbox"><div class="modalhead"><h2>Order Details</h2><button class="close" onclick="closeModal('orderModal')">✕</button></div><div id="orderModalContent"></div></div></div>
 <script>
 const client=window.supabaseClient||window.supabase_client||null;
-let currentUser=null,currentProfile=null,currentRole='';
-let products=[],orders=[],customers=[],variations=[];
-let existingImages=[],variationDraft=[],settingsRow=null;
-let sendingOrders=new Set();
-
-const $=id=>document.getElementById(id);
-const money=v=>Number(v||0).toLocaleString('en-BD');
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const dateText=v=>v?new Date(v).toLocaleString('en-BD'):'—';
-const roleName=r=>({owner:'Owner',manager:'Manager',admin:'Admin'}[String(r||'').toLowerCase()]||r||'Unknown');
-const orderStatus=o=>String(o?.order_status||'new').toLowerCase();
-
-function notify(message){alert(message)}
-function canManage(){return ['owner','manager'].includes(currentRole)}
-function isOwner(){return currentRole==='owner'}
-
-
-
-function nextProductCode(){
- const nums=products.map(p=>String(p.sku||'').match(/TKR-(\\d+)/i)).filter(Boolean).map(m=>Number(m[1]));
- return 'TKR-'+String(Math.max(0,...nums)+1).padStart(3,'0');
-}
-async function duplicateProduct(id){
- const p=products.find(x=>String(x.id)===String(id));if(!p)return;
- if(!canManage()){notify('You do not have permission.');return}
- if(!confirm('এই Product-এর একটি Copy তৈরি করবে?'))return;
- const payload={...p};delete payload.id;delete payload.created_at;delete payload.updated_at;
- payload.name=(p.name||'Product')+' (Copy)';payload.sku=nextProductCode();
- const {data,error}=await client.from('products').insert(payload).select().single();
- if(error){notify('Duplicate failed: '+error.message);return}
- await logActivity('Duplicated product',`${p.name} → ${payload.name}`);
- await loadProducts();notify('Product duplicated successfully.');
-}
-function renderSuppliers(){
- const term=($('supplierSearch')?.value||'').toLowerCase();
- $('suppliersTable').innerHTML=variations.filter(v=>{
-  const p=products.find(x=>String(x.id)===String(v.product_id));
-  return (`${p?.name||''} ${v.color_name||v.color||''} ${v.supplier_order_id||''} ${v.supplier_sku||v.sku||''}`).toLowerCase().includes(term);
- }).map(v=>{
-  const p=products.find(x=>String(x.id)===String(v.product_id));
-  const url=v.supplier_product_url||'';
-  return `<tr><td>${esc(p?.name||'—')}</td><td>${esc(v.color_name||v.color||'—')}</td><td>${esc(v.supplier_order_id||'—')}</td><td>${esc(v.supplier_sku||v.sku||'—')}</td><td>${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open Supplier Link</a>`:'—'}</td><td>৳${money(v.supplier_cost??p?.supplier_cost??0)}</td></tr>`;
- }).join('')||'<tr><td colspan="6" class="empty">No supplier records found</td></tr>';
-}
-async function saveDeliverySettings(){
- if(!isOwner())return;
- const value={inside_dhaka:Number($('settingDhakaDelivery').value),outside_dhaka:Number($('settingOutsideDelivery').value)};
- if(!Number.isFinite(value.inside_dhaka)||!Number.isFinite(value.outside_dhaka)||value.inside_dhaka<0||value.outside_dhaka<0){notify('Valid non-negative delivery charges দিন।');return}
- try{
-  const {error}=await client.rpc('save_site_setting',{p_key:'delivery_settings',p_value:value});
-  if(error)throw error;
-  await logActivity('Updated delivery settings',JSON.stringify(value));notify('Delivery settings saved.');
- }catch(e){notify('Delivery settings save হয়নি: '+e.message)}
-}
-
-async function init(){
-if(!client){
- $('loginError').textContent='Supabase client পাওয়া যায়নি। একই folder-এ config.js রাখুন এবং Supabase CDN load হয়েছে কি না পরীক্ষা করুন।';
- return;
-}
-try{
- const {data,error}=await client.auth.getSession();
- if(error)throw error;
- const session=data?.session;
- if(session?.user)await verifyUser(session.user);
-}catch(error){
- console.error('Admin session initialization failed:',error);
- $('loginError').textContent='Login system initialize হয়নি: '+(error.message||'Unknown error')+'. পেজ Refresh করে আবার চেষ্টা করুন।';
-}
-}
-async function verifyUser(user){
-try{
-const {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
-if(error)throw error;
-if(!data)throw new Error('আপনার profiles record পাওয়া যায়নি।');
-const role=String(data.role||'').toLowerCase();
-if(!['owner','manager','admin'].includes(role))throw new Error('আপনার Admin Dashboard access নেই।');
-currentUser=user;currentProfile=data;currentRole=role;
-$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');
-$('roleBadge').textContent=roleName(role).toUpperCase();
-applyRolePermissions();await refreshAll();
-}catch(error){
-await client.auth.signOut();
-$('loginError').textContent=error.message||'Login verification failed.';
-$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden');
-}
-}
-$('loginForm').addEventListener('submit',async e=>{
-e.preventDefault();
-$('loginError').textContent='';
-if(!client){$('loginError').textContent='Supabase সংযোগ পাওয়া যায়নি। config.js ও Supabase CDN পরীক্ষা করুন।';return;}
-$('loginButton').disabled=true;$('loginButton').textContent='PLEASE WAIT...';
-try{
-const {data,error}=await client.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});
-if(error)throw error;await verifyUser(data.user);
-}catch(error){$('loginError').textContent=error.message||'Login failed.'}
-finally{$('loginButton').disabled=false;$('loginButton').textContent='LOGIN TO DASHBOARD'}
-});
+let currentUser=null,currentProfile=null,currentRole='',products=[],orders=[],variations=[],settingsRow=null,existingImages=[],variationDraft=[],pendingProductFiles=[],sendingOrders=new Set(),settingsCache={};
+const $=id=>document.getElementById(id),money=v=>Number(v||0).toLocaleString('en-BD'),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),dateText=v=>v?new Date(v).toLocaleString('en-BD'):'—';
+const roleName=r=>({owner:'Owner',manager:'Manager',admin:'Admin'}[String(r||'').toLowerCase()]||r||'Unknown'),orderStatus=o=>String(o?.order_status||'new').toLowerCase();
+function notify(m){alert(m)}function canManage(){return ['owner','manager'].includes(currentRole)}function isOwner(){return currentRole==='owner'}
+function productImages(p){if(Array.isArray(p.images))return p.images;if(typeof p.images==='string'){try{let a=JSON.parse(p.images);return Array.isArray(a)?a:[p.images]}catch{return p.images?[p.images]:[]}}return []}
+function parseArray(v){if(Array.isArray(v))return v;if(!v)return [];if(typeof v==='string'){try{let a=JSON.parse(v);return Array.isArray(a)?a:[]}catch{return v.split(',').map(x=>x.trim()).filter(Boolean)}}return []}
+function normalizeSizes(v){if(Array.isArray(v))return v.map(x=>typeof x==='object'?x:{size:String(x)});if(typeof v==='string')return v.split(',').map(x=>x.trim()).filter(Boolean).map(size=>({size}));if(v&&typeof v==='object')return Object.keys(v).map(size=>({size}));return []}
+function statusBadge(s){let x=String(s||'new').toLowerCase(),label={new:'Pending',pending:'Pending',confirmed:'Confirmed',processing:'Processing',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'}[x]||x;return `<span class="badge ${x==='cancelled'?'bad':['new','pending'].includes(x)?'warn':''}">${esc(label)}</span>`}
+function navigate(n){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+n)?.classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===n));$('sidebar').classList.remove('open')}
+function toggleSidebar(){$('sidebar').classList.toggle('open')}function openModal(id){$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open')}
+async function init(){if(!client){$('loginError').textContent='Supabase client পাওয়া যায়নি। config.js পরীক্ষা করুন।';return}try{let {data,error}=await client.auth.getSession();if(error)throw error;if(data.session?.user)await verifyUser(data.session.user)}catch(e){$('loginError').textContent=e.message}}
+async function verifyUser(user){try{let {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();if(error)throw error;if(!data)throw Error('profiles record পাওয়া যায়নি');let role=String(data.role||'').toLowerCase();if(!['owner','manager','admin'].includes(role))throw Error('Admin access নেই');currentUser=user;currentProfile=data;currentRole=role;$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('roleBadge').textContent=roleName(role);applyRolePermissions();await refreshAll()}catch(e){await client.auth.signOut();$('loginError').textContent=e.message;$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden')}}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginButton').disabled=true;try{let {data,error}=await client.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await verifyUser(data.user)}catch(x){$('loginError').textContent=x.message}finally{$('loginButton').disabled=false}});
 async function logout(){await client.auth.signOut();location.reload()}
-function applyRolePermissions(){
-if(currentRole!=='owner'){
-document.querySelector('[data-page="staff"]').classList.add('hidden');
-document.querySelector('[data-page="settings"]').classList.add('hidden');
-}
-if(currentRole==='admin'){
-document.querySelector('[data-page="reports"]').classList.add('hidden');
-document.querySelector('[data-page="activity"]').classList.add('hidden');
-}
-}
-function navigate(name,button){
-document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-$('page-'+name)?.classList.add('active');
-document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-(button||document.querySelector(`[data-page="${name}"]`))?.classList.add('active');
-$('sidebar').classList.remove('open');
-}
-function toggleSidebar(){$('sidebar').classList.toggle('open')}
-function openModal(id){$(id).classList.add('open')}
-function closeModal(id){$(id).classList.remove('open')}
+function applyRolePermissions(){if(currentRole!=='owner'){['staff','settings'].forEach(n=>document.querySelector(`[data-page="${n}"]`)?.classList.add('hidden'))}if(currentRole==='admin'){['reports','activity'].forEach(n=>document.querySelector(`[data-page="${n}"]`)?.classList.add('hidden'))}}
+async function refreshAll(){let r=await Promise.allSettled([loadProducts(),loadOrders(),loadVariations(),loadSettings()]);r.filter(x=>x.status==='rejected').forEach(x=>console.error(x.reason));renderDashboard();renderCustomers();renderInventory();renderReports();renderSuppliers();if(isOwner()){loadStaff();loadActivity()}}
+async function loadProducts(){let {data,error}=await client.from('products').select('*').order('created_at',{ascending:false});if(error)throw error;products=data||[];renderProducts()}
+async function loadOrders(){let {data,error}=await client.from('orders').select('*').order('created_at',{ascending:false});if(error)throw error;orders=data||[];renderOrders()}
+async function loadVariations(){let {data,error}=await client.from('product_variations').select('*');if(error)throw error;variations=data||[];renderVariations();renderSuppliers()}
+function renderProducts(){let term=($('productSearch')?.value||'').toLowerCase(),cat=$('productCategoryFilter')?.value||'';let list=products.filter(p=>(!cat||p.category===cat)&&(`${p.name} ${p.sku||''}`).toLowerCase().includes(term));$('productsTable').innerHTML=list.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td><td>৳${money(p.selling_price)}</td><td>${Number(p.discount_price||0)?'৳'+money(p.discount_price):'—'}</td><td>${Number(p.stock||0)}</td><td>${p.is_active===false?'<span class="badge bad">Hidden</span>':'<span class="badge">Active</span>'}</td><td><div class="actions"><button class="btn blue small" onclick="editProduct('${esc(p.id)}')">Edit</button><button class="btn light small" onclick="duplicateProduct('${esc(p.id)}')">Copy</button><button class="btn red small" onclick="deleteProduct('${esc(p.id)}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="8" class="empty">No products found</td></tr>'}
+function nextProductCode(){let nums=products.map(p=>String(p.sku||'').match(/TKR-(\d+)/i)).filter(Boolean).map(x=>+x[1]);return 'TKR-'+String(Math.max(0,...nums)+1).padStart(3,'0')}
+function openProductModal(){$('productForm').reset();$('editProductId').value='';$('productModalTitle').textContent='Add New Product';$('pSku').value=nextProductCode();$('pStock').value=0;$('pAlert').value=5;$('pActive').value='true';existingImages=[];pendingProductFiles=[];variationDraft=[];$('pImages').value='';$('imagePreview').innerHTML='';$('variationEditor').innerHTML='';$('productFormError').textContent='';openModal('productModal')}
+async function editProduct(id){let p=products.find(x=>String(x.id)===String(id));if(!p)return;$('productForm').reset();$('editProductId').value=p.id;$('productModalTitle').textContent='Edit Product';$('pName').value=p.name||'';$('pSku').value=p.sku||'';$('pCategory').value=p.category||'men';$('pPrice').value=p.selling_price||0;$('pDiscount').value=p.discount_price||'';$('pCost').value=p.supplier_cost||0;$('pStock').value=p.stock||0;$('pAlert').value=p.low_stock_threshold??p.low_stock_alert??p.alert_level??5;$('pSizes').value=Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||'';$('pSupplierUrl').value=p.supplier_product_url||'';$('pDropbazarId').value=p.dropbazar_product_id||'';$('pDescription').value=p.description||'';$('pActive').value=String(p.is_active!==false);$('pNewArrival').checked=!!p.is_new_arrival;$('pBestSeller').checked=!!p.is_best_seller;existingImages=productImages(p).slice();pendingProductFiles=[];$('pImages').value='';renderImagePreview();let {data,error}=await client.from('product_variations').select('*').eq('product_id',p.id);if(error){notify('Variation load: '+error.message);return}variationDraft=(data||[]).map(v=>({...v,color_name:v.color_name||v.color||'',supplier_sku:v.supplier_sku||v.sku||'',supplier_product_url:v.supplier_product_url||'',supplier_order_id:v.supplier_order_id||'',supplier_cost:v.supplier_cost||0,dropbazar_product_id:v.dropbazar_product_id||'',sizes:normalizeSizes(v.sizes),images:parseArray(v.images||v.gallery_images),image_url:v.image_url||''}));renderVariationEditor();$('productFormError').textContent='';openModal('productModal')}
+function renderImagePreview(){$('imagePreview').innerHTML=existingImages.map((u,i)=>`<div class="thumb"><img src="${esc(u)}"><button type="button" onclick="existingImages.splice(${i},1);renderImagePreview()">×</button></div>`).join('')+pendingProductFiles.map((f,i)=>`<div class="thumb"><img src="${URL.createObjectURL(f)}"><button type="button" onclick="pendingProductFiles.splice(${i},1);renderImagePreview()">×</button></div>`).join('')}
+$('pImages').addEventListener('change',e=>{for(let f of [...e.target.files]){if(f.size>5*1024*1024){notify(f.name+' 5MB-এর বেশি');continue}pendingProductFiles.push(f)}renderImagePreview();e.target.value=''});
+function addVariationRow(v={}){variationDraft.push({id:v.id||null,color_name:v.color_name||v.color||'',supplier_sku:v.supplier_sku||v.sku||'',supplier_order_id:v.supplier_order_id||'',supplier_product_url:v.supplier_product_url||'',supplier_cost:v.supplier_cost||0,dropbazar_product_id:v.dropbazar_product_id||'',image_url:v.image_url||'',images:parseArray(v.images||v.gallery_images),sizes:normalizeSizes(v.sizes)});renderVariationEditor()}
+function addVSize(i){variationDraft[i].sizes.push({size:''});renderVariationEditor()}
+function renderVariationEditor(){$('variationEditor').innerHTML=variationDraft.map((v,i)=>`<div class="variation"><div class="variationhead"><strong>COLOR ${i+1}</strong><button type="button" class="btn red small" onclick="variationDraft.splice(${i},1);renderVariationEditor()">Remove Color</button></div><div class="vgrid">
+<div class="field"><label>Color Name *</label><input value="${esc(v.color_name)}" oninput="variationDraft[${i}].color_name=this.value" required></div><div class="field"><label>Supplier SKU</label><input value="${esc(v.supplier_sku)}" oninput="variationDraft[${i}].supplier_sku=this.value"></div>
+<div class="field"><label>Supplier Order ID</label><input value="${esc(v.supplier_order_id)}" oninput="variationDraft[${i}].supplier_order_id=this.value"></div><div class="field"><label>Supplier Product URL</label><input type="url" value="${esc(v.supplier_product_url)}" oninput="variationDraft[${i}].supplier_product_url=this.value"></div>
+<div class="field"><label>Supplier Cost (৳)</label><input type="number" min="0" value="${Number(v.supplier_cost||0)}" oninput="variationDraft[${i}].supplier_cost=Number(this.value||0)"></div><div class="field"><label>DropBazar Product ID (Admin only)</label><input value="${esc(v.dropbazar_product_id)}" oninput="variationDraft[${i}].dropbazar_product_id=this.value"></div>
+<div class="field full"><label>Color Main Image URL (optional)</label><input value="${esc(v.image_url)}" oninput="variationDraft[${i}].image_url=this.value"></div>
+<div class="field full"><label>Color Gallery — মোবাইল Gallery থেকে ছবি নির্বাচন</label><input type="file" accept="image/*" multiple onchange="addVariationFiles(${i},this.files)"><div class="preview" id="variationPreview${i}">${(v.images||[]).map((u,j)=>`<div class="thumb"><img src="${esc(u)}"><button type="button" onclick="variationDraft[${i}].images.splice(${j},1);renderVariationEditor()">×</button></div>`).join('')}</div></div>
+<div class="field full"><label>Sizes (একাধিক Size যোগ করুন)</label><div id="sizes${i}">${(v.sizes||[]).map((s,j)=>`<div style="display:flex;gap:7px;margin:6px 0"><input class="input" value="${esc(s.size||s)}" placeholder="Size e.g. S, M, L" oninput="variationDraft[${i}].sizes[${j}].size=this.value"><button type="button" class="btn red small" onclick="variationDraft[${i}].sizes.splice(${j},1);renderVariationEditor()">×</button></div>`).join('')}</div><button type="button" class="btn light small" onclick="addVSize(${i})">+ Add Size</button></div></div><div class="notice">Stock এই Product-এর Total Stock থেকে পরিচালিত হবে; Color/Size অনুযায়ী আলাদা Stock নয়।</div></div>`).join('')}
+async function addVariationFiles(i,files){for(let f of [...files]){if(f.size>5*1024*1024){notify(f.name+' 5MB-এর বেশি');continue}variationDraft[i].pendingFiles=variationDraft[i].pendingFiles||[];variationDraft[i].pendingFiles.push(f)}renderVariationEditor()}
+async function uploadFiles(files,folder){let urls=[];for(let f of files){let ext=(f.name.split('.').pop()||'jpg').toLowerCase(),path=`${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;let {error}=await client.storage.from('product-images').upload(path,f,{upsert:false,contentType:f.type});if(error)throw error;let {data}=client.storage.from('product-images').getPublicUrl(path);urls.push(data.publicUrl)}return urls}
+$('productForm').addEventListener('submit',async e=>{e.preventDefault();if(!canManage()){notify('Permission denied');return}$('saveProductButton').disabled=true;$('saveProductButton').textContent='Saving...';$('productFormError').textContent='';try{
+let id=$('editProductId').value;let payload={name:$('pName').value.trim(),sku:$('pSku').value.trim()||null,category:$('pCategory').value,selling_price:Number($('pPrice').value),discount_price:Number($('pDiscount').value||0),supplier_cost:Number($('pCost').value||0),stock:Number($('pStock').value||0),low_stock_threshold:Number($('pAlert').value||5),low_stock_alert:Number($('pAlert').value||5),sizes:$('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),description:$('pDescription').value.trim(),is_active:$('pActive').value==='true',is_new_arrival:$('pNewArrival').checked,is_best_seller:$('pBestSeller').checked,supplier_product_url:$('pSupplierUrl').value.trim()||null,dropbazar_product_id:$('pDropbazarId').value.trim()||null,images:existingImages};
+let productId=id;if(id){let {error}=await client.from('products').update(payload).eq('id',id);if(error)throw error}else{let {data,error}=await client.from('products').insert(payload).select().single();if(error)throw error;productId=data.id}
+let uploaded=await uploadFiles(pendingProductFiles,`products/${productId}`);payload.images=[...existingImages,...uploaded];let {error:imgErr}=await client.from('products').update({images:payload.images}).eq('id',productId);if(imgErr)throw imgErr;
+let active=variationDraft.filter(v=>v.color_name.trim());let rows=[];for(let v of active){let extra=await uploadFiles(v.pendingFiles||[],`products/${productId}/variations`);rows.push({...(v.id?{id:v.id}:{}),product_id:productId,color:v.color_name.trim(),sku:v.supplier_sku.trim()||payload.sku||'TKR-SUPPLIER',supplier_product_url:v.supplier_product_url.trim()||null,supplier_order_id:v.supplier_order_id.trim()||null,supplier_cost:Number(v.supplier_cost||0),dropbazar_product_id:v.dropbazar_product_id.trim()||null,image_url:v.image_url||null,images:[...(v.images||[]),...extra],sizes:(v.sizes||[]).map(s=>String(s.size||'').trim()).filter(Boolean)})}
+let {data:old,error:oldErr}=await client.from('product_variations').select('id').eq('product_id',productId);if(oldErr)throw oldErr;let keep=rows.filter(x=>x.id).map(x=>x.id),remove=(old||[]).map(x=>x.id).filter(x=>!keep.includes(x));if(remove.length){let {error}=await client.from('product_variations').delete().eq('product_id',productId).in('id',remove);if(error)throw error}if(rows.length){let {error}=await client.from('product_variations').upsert(rows,{onConflict:'id'});if(error)throw error}
+if(window.store)window.store.clearProductCache?.();await logActivity(id?'Updated product':'Created product',payload.name);closeModal('productModal');await Promise.all([loadProducts(),loadVariations()]);notify('Product saved successfully.')
+}catch(err){console.error(err);$('productFormError').textContent=err.message||'Save failed'}finally{$('saveProductButton').disabled=false;$('saveProductButton').textContent='Save Product'}});
+async function deleteProduct(id){if(!canManage())return;if(!confirm('Product Delete করতে চান?'))return;let {error}=await client.from('products').delete().eq('id',id);if(error){notify(error.message);return}await loadProducts();await loadVariations();await logActivity('Deleted product',id)}
+async function duplicateProduct(id){let p=products.find(x=>String(x.id)===String(id));if(!p||!canManage())return;let copy={...p,name:p.name+' (Copy)',sku:nextProductCode()};delete copy.id;delete copy.created_at;delete copy.updated_at;let {error}=await client.from('products').insert(copy);if(error)notify(error.message);else{await loadProducts();notify('Product duplicated')}}
+function renderVariations(){let term=($('variationSearch')?.value||'').toLowerCase();$('variationsTable').innerHTML=variations.filter(v=>{let p=products.find(x=>String(x.id)===String(v.product_id));return `${p?.name||''} ${v.color||v.color_name||''} ${v.sku||''}`.toLowerCase().includes(term)}).map(v=>{let p=products.find(x=>String(x.id)===String(v.product_id));return `<tr><td>${esc(p?.name||'—')}</td><td>${esc(v.color_name||v.color||'—')}</td><td>${esc(normalizeSizes(v.sizes).map(x=>x.size).join(', '))}</td><td>${esc(v.supplier_sku||v.sku||'—')}</td><td>${esc(v.supplier_order_id||'—')}</td><td>${v.supplier_product_url?`<a target="_blank" rel="noopener" href="${esc(v.supplier_product_url)}">Open Link</a>`:'—'}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">No variations</td></tr>'}
+function renderSuppliers(){let term=($('supplierSearch')?.value||'').toLowerCase();$('suppliersTable').innerHTML=variations.filter(v=>{let p=products.find(x=>String(x.id)===String(v.product_id));return `${p?.name||''} ${v.color||''} ${v.supplier_order_id||''}`.toLowerCase().includes(term)}).map(v=>{let p=products.find(x=>String(x.id)===String(v.product_id));return `<tr><td>${esc(p?.name||'—')}</td><td>${esc(v.color||v.color_name||'—')}</td><td>${esc(v.supplier_order_id||'—')}</td><td>${esc(v.supplier_sku||v.sku||'—')}</td><td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open</a>`:'—'}</td><td>৳${money(v.supplier_cost??p?.supplier_cost)}</td></tr>`}).join('')||'<tr><td colspan="6" class="empty">No supplier records</td></tr>'}
+function orderCostTotal(){return orders.filter(o=>orderStatus(o)!=='cancelled').reduce((s,o)=>s+(Array.isArray(o.order_items)?o.order_items:[]).reduce((a,i)=>{let v=variations.find(v=>String(v.id)===String(i.variation_id));let p=products.find(p=>String(p.id)===String(i.product_id));return a+Number(i.quantity||1)*Number(i.supplier_cost??v?.supplier_cost??p?.supplier_cost??0)},0),0)}
+function renderDashboard(){let valid=orders.filter(o=>orderStatus(o)!=='cancelled'),sales=valid.reduce((s,o)=>s+Number(o.total_amount||0),0),low=products.filter(p=>Number(p.stock||0)<=Number(p.low_stock_threshold??p.low_stock_alert??5));$('statRevenue').textContent='৳'+money(sales);$('statOrders').textContent=orders.length;$('statProducts').textContent=products.length;$('statCustomers').textContent=buildCustomers().length;$('statPending').textContent=orders.filter(o=>['new','pending'].includes(orderStatus(o))).length;$('statLowStock').textContent=low.length;$('statDelivered').textContent=orders.filter(o=>orderStatus(o)==='delivered').length;$('statProfit').textContent='৳'+money(sales-orderCostTotal());$('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td>${esc(o.order_number||o.id)}</td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders</td></tr>';$('lowStockList').innerHTML=low.map(p=>`<p style="padding:8px;border-bottom:1px solid var(--l)">${esc(p.name)} — <b>${Number(p.stock||0)} left</b></p>`).join('')||'<p class="empty">No low stock alerts</p>'}
+function renderOrders(){let term=($('orderSearch')?.value||'').toLowerCase(),status=$('orderStatusFilter')?.value||'';$('ordersTable').innerHTML=orders.filter(o=>(!status||orderStatus(o)===status)&&`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`.toLowerCase().includes(term)).map(o=>`<tr><td>${esc(o.order_number||o.id)}<br><small>${String(o.submission_status||'').toLowerCase()==='submitted'?'<span class="badge">Sent to DropBazar</span>':'<span class="badge warn">Not sent</span>'}</small></td><td>${esc(o.customer_name)}</td><td>${esc(o.customer_phone)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td><td><div class="actions"><button class="btn blue small" onclick="viewOrder('${esc(o.id)}')">Details</button><button class="btn small" onclick="sendAndConfirm('${esc(o.id)}')">Send & Confirm</button><button class="btn light small" onclick="editOrder('${esc(o.id)}')">Edit</button><button class="btn red small" onclick="deleteOrder('${esc(o.id)}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No orders</td></tr>'}
+async function sendAndConfirm(id){if(!canManage())return;let o=orders.find(x=>String(x.id)===String(id));if(!o||sendingOrders.has(String(id)))return;if(String(o.submission_status||'').toLowerCase()==='submitted'){notify('Already submitted');return}if(!confirm('এই Order DropBazar-এ পাঠাবেন?'))return;sendingOrders.add(String(id));try{let {data,error}=await client.functions.invoke('dropbazar-order',{body:{order_id:id}});if(error)throw error;if(data?.success===false||data?.error)throw Error(data.error||'Submission failed');let supplierId=data?.supplier_order_id||data?.order_id||data?.id||data?.data?.supplier_order_id||null;let updates={submission_status:'submitted',order_status:'confirmed',...(supplierId?{supplier_order_id:String(supplierId)}:{})};let {error:updateError}=await client.from('orders').update(updates).eq('id',id);if(updateError)throw updateError;await logActivity('Sent order to DropBazar',o.order_number||id);await loadOrders();notify('Order sent and confirmed')}catch(e){notify('DropBazar send failed: '+e.message)}finally{sendingOrders.delete(String(id))}}
+function viewOrder(id){let o=orders.find(x=>String(x.id)===String(id));if(!o)return;let items=Array.isArray(o.order_items)?o.order_items:[];$('orderModalContent').innerHTML=`<p><b>Order:</b> ${esc(o.order_number||o.id)}</p><p><b>Customer:</b> ${esc(o.customer_name)}</p><p><b>Phone:</b> ${esc(o.customer_phone)}</p><p><b>Email:</b> ${esc(o.customer_email||'—')}</p><p><b>Address:</b> ${esc(o.shipping_address||'')} ${esc(o.area||'')} ${esc(o.city||'')}</p><p><b>Status:</b> ${statusBadge(orderStatus(o))}</p><p><b>Payment:</b> ${esc(o.payment_method||'COD')} / ${esc(o.payment_status||'pending')}</p><p><b>Supplier Order ID (Admin only):</b> ${esc(o.supplier_order_id||'—')}</p><hr style="margin:12px 0">${items.map(i=>`<div style="padding:9px 0;border-bottom:1px solid var(--l)"><b>${esc(i.product_name||i.name||'Product')}</b> × ${Number(i.quantity||1)}<p>৳${money(i.unit_price)} · ${esc(i.selected_color||i.color||'')} · ${esc(i.selected_size||i.size||'')}</p><p>Supplier SKU: ${esc(i.supplier_sku||'—')} | DropBazar ID: ${esc(i.dropbazar_product_id||'—')}</p>${i.supplier_product_url?`<a href="${esc(i.supplier_product_url)}" target="_blank" rel="noopener">Supplier Link</a>`:''}</div>`).join('')}<hr style="margin:12px 0"><p>Subtotal: ৳${money(o.subtotal)} · Delivery: ৳${money(o.delivery_charge)} · Discount: ৳${money(o.discount)}</p><h3>Total: ৳${money(o.total_amount)}</h3>`;openModal('orderModal')}
+function editOrder(id){let o=orders.find(x=>String(x.id)===String(id));if(!o||!canManage())return;let s=['new','confirmed','processing','shipped','delivered','cancelled'];$('orderModalContent').innerHTML=`<form id="editOrderForm"><div class="grid">${[['Customer Name','customer_name'],['Phone','customer_phone'],['Email','customer_email'],['City','city'],['Area','area'],['Postal Code','postal_code']].map(([l,k])=>`<div class="field"><label>${l}</label><input id="e_${k}" value="${esc(o[k]||'')}"></div>`).join('')}<div class="field full"><label>Shipping Address</label><textarea id="e_shipping_address">${esc(o.shipping_address||'')}</textarea></div><div class="field"><label>Order Status</label><select id="e_order_status">${s.map(x=>`<option ${orderStatus(o)===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Payment Status</label><select id="e_payment_status">${['pending','paid','failed','refunded'].map(x=>`<option ${o.payment_status===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Payment Method</label><input id="e_payment_method" value="${esc(o.payment_method||'')}"></div><div class="field"><label>Delivery Charge</label><input id="e_delivery_charge" type="number" value="${Number(o.delivery_charge||0)}"></div><div class="field"><label>Discount</label><input id="e_discount" type="number" value="${Number(o.discount||0)}"></div><div class="field"><label>Total</label><input id="e_total_amount" type="number" value="${Number(o.total_amount||0)}"></div><div class="field full"><label>Customer Note</label><textarea id="e_customer_note">${esc(o.customer_note||'')}</textarea></div></div><button class="btn" type="submit">Update Order</button><p id="editOrderError" style="color:red"></p></form>`;$('editOrderForm').addEventListener('submit',async e=>{e.preventDefault();let keys=['customer_name','customer_phone','customer_email','city','area','postal_code','shipping_address','order_status','payment_status','payment_method','delivery_charge','discount','total_amount','customer_note'],payload={};keys.forEach(k=>{let el=$('e_'+k);if(el)payload[k]=['delivery_charge','discount','total_amount'].includes(k)?Number(el.value||0):el.value});let {error}=await client.from('orders').update(payload).eq('id',id);if(error){$('editOrderError').textContent=error.message;return}await loadOrders();await logActivity('Updated order',id);viewOrder(id)});openModal('orderModal')}
+async function deleteOrder(id){if(!canManage()||!confirm('Order delete করবেন?'))return;let {error}=await client.from('orders').delete().eq('id',id);if(error){notify(error.message);return}await loadOrders();await logActivity('Deleted order',id)}
+function buildCustomers(){let map=new Map();orders.forEach(o=>{let k=o.customer_phone||o.customer_email||o.customer_name||o.id;if(!map.has(k))map.set(k,{name:o.customer_name||'',phone:o.customer_phone||'',email:o.customer_email||'',count:0,total:0,last:null});let c=map.get(k);c.count++;c.total+=Number(o.total_amount||0);if(!c.last||new Date(o.created_at)>new Date(c.last))c.last=o.created_at});return [...map.values()]}
+function renderCustomers(){let term=($('customerSearch')?.value||'').toLowerCase();$('customersTable').innerHTML=buildCustomers().filter(c=>`${c.name} ${c.phone} ${c.email}`.toLowerCase().includes(term)).map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.email)}</td><td>${c.count}</td><td>৳${money(c.total)}</td><td>${dateText(c.last)}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No customers</td></tr>'}
+function renderInventory(){let term=($('inventorySearch')?.value||'').toLowerCase();$('inventoryTable').innerHTML=products.filter(p=>`${p.name} ${p.sku||''}`.toLowerCase().includes(term)).map(p=>{let n=Number(p.stock||0),a=Number(p.low_stock_threshold??p.low_stock_alert??5);return `<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'')}</td><td>${n}</td><td>${a}</td><td>${n<=a?'<span class="badge bad">Low Stock</span>':'<span class="badge">In Stock</span>'}</td><td><button class="btn blue small" onclick="editProduct('${esc(p.id)}')">Update</button></td></tr>`}).join('')||'<tr><td colspan="6" class="empty">No inventory</td></tr>'}
+function renderReports(){let valid=orders.filter(o=>orderStatus(o)!=='cancelled'),sales=valid.reduce((s,o)=>s+Number(o.total_amount||0),0),del=orders.filter(o=>orderStatus(o)==='delivered').reduce((s,o)=>s+Number(o.total_amount||0),0),cost=orderCostTotal();$('reportSales').textContent='৳'+money(sales);$('reportAverage').textContent='৳'+money(valid.length?sales/valid.length:0);$('reportDelivered').textContent='৳'+money(del);$('reportCost').textContent='৳'+money(cost);$('reportProfit').textContent='৳'+money(sales-cost);$('reportStatuses').innerHTML=['new','confirmed','processing','shipped','delivered','cancelled'].map(s=>`<p style="padding:7px;border-bottom:1px solid var(--l)">${s.toUpperCase()} <b style="float:right">${orders.filter(o=>orderStatus(o)===s).length}</b></p>`).join('')}
+async function loadStaff(){if(!isOwner())return;let {data,error}=await client.from('profiles').select('*');$('staffTable').innerHTML=error?`<tr><td>${esc(error.message)}</td></tr>`:(data||[]).map(p=>`<tr><td>${esc(p.id)}</td><td>${esc(roleName(p.role))}</td><td>${p.id===currentUser.id?'Current User':'Profile'}</td></tr>`).join('')}
+async function logActivity(action,details){try{await client.from('activity_logs').insert({user_id:currentUser?.id,action,details:String(details||'')})}catch(e){console.warn('Activity log:',e.message)}}
+async function loadActivity(){if(!isOwner())return;let {data,error}=await client.from('activity_logs').select('*').order('created_at',{ascending:false}).limit(100);$('activityTable').innerHTML=error?`<tr><td>${esc(error.message)}</td></tr>`:(data||[]).map(a=>`<tr><td>${esc(a.action)}</td><td>${esc(a.details)}</td><td>${esc(a.user_id)}</td><td>${dateText(a.created_at)}</td></tr>`).join('')}
+function exportOrdersCSV(){let rows=[['Order','Customer','Phone','Total','Status','Date'],...orders.map(o=>[o.order_number||o.id,o.customer_name,o.customer_phone,o.total_amount,orderStatus(o),o.created_at])],csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n'),blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TKR-orders.csv';a.click();URL.revokeObjectURL(a.href)}
 
-async function refreshAll(){
-const results=await Promise.allSettled([loadProducts(),loadOrders(),loadSettings(),loadVariations()]);
-const failed=results.filter(x=>x.status==='rejected');
-failed.forEach(x=>console.error('Dashboard data load failed:',x.reason));
-if(failed.length){const message=failed.map(x=>x.reason?.message||'Unknown data error').join(' | ');notify('Dashboard খোলা হয়েছে, তবে কিছু Database data load হয়নি: '+message);}
-renderDashboard();renderCustomers();renderInventory();renderReports();renderVariations();renderSuppliers();if(isOwner())loadActivity();
+const settingDefs=[
+['Website Settings','homepage_settings','Banner Title','banner_title','text','Banner Image URL','banner_image','url','About Text','about_text','textarea','Show Featured','show_featured','check','Show New Arrivals','show_new_arrivals','check','Show Best Sellers','show_best_sellers','check'],
+['Store Information','store_profile','Store Name','store_name','text','Logo URL','logo_url','url','Favicon URL','favicon_url','url','Currency','currency','text'],
+['Contact Information','contact_settings','WhatsApp Order Number','whatsapp_order_number','text','Customer Support Number 1','customer_support_number_1','text','Customer Support Number 2','customer_support_number_2','text','Email','email','email','Address','address','textarea'],
+['Delivery Charge Settings','delivery_settings','Inside Dhaka Charge','inside_dhaka_charge','number','Outside Dhaka Charge','outside_dhaka_charge','number','Free Delivery Enabled','free_delivery_enabled','check','Free Delivery Minimum','free_delivery_minimum','number'],
+['Order Settings','order_settings','Order Prefix','order_prefix','text','Minimum Order Amount','minimum_order_amount','number','Allow Customer Note','allow_customer_note','check','Auto Confirm Orders','auto_confirm_orders','check'],
+['API Settings','dropbazar_settings','DropBazar Enabled','enabled','check','API Configuration Status','configuration_note','textarea'],
+['Admin Profile','profile','Full Name','full_name','text','Email','email','email'],
+['Password Change','password','New Password','new_password','password'],
+['User Permissions','permissions','Role','role','readonly'],
+['Notification Settings','notification_settings','Order Email Notifications','order_email_enabled','check','Low Stock Notifications','low_stock_enabled','check','WhatsApp Notifications','whatsapp_enabled','check'],
+['Backup Options','backup','Export Backup','backup_export','button'],
+['Payment Settings','payment_settings','Cash on Delivery Enabled','cod_enabled','check','bKash Enabled','bkash_enabled','check','Nagad Enabled','nagad_enabled','check','Rocket Enabled','rocket_enabled','check','Card Enabled','card_enabled','check']
+];
+const saveKeys=new Set(['store_profile','contact_settings','delivery_settings','order_settings','payment_settings','product_settings','homepage_settings','notification_settings','dropbazar_settings']);
+let activeSetting='Website Settings';
+function buildSettingsUI(){
+$('settingTabs').innerHTML=settingDefs.map((d,i)=>`<button class="settingtab ${i===0?'active':''}" onclick="showSetting('${esc(d[0])}',this)">${i+1}. ${esc(d[0])}</button>`).join('');
+$('settingsSections').innerHTML=settingDefs.map((d,i)=>{let key=d[1],fields=d.slice(2),htmlFields='';for(let j=0;j<fields.length;j+=3){let [label,k,type]=fields.slice(j,j+3);if(!label)continue;if(type==='button')htmlFields+=`<div class="field full"><button class="btn" onclick="exportBackup()">Download JSON Backup</button><p class="muted">এটি dashboard-accessible data export; এটি পূর্ণ Supabase database backup নয়।</p></div>`;else if(type==='readonly')htmlFields+=`<div class="field"><label>${label}</label><input value="${esc(currentRole)}" readonly></div>`;else if(type==='check')htmlFields+=`<div class="field"><label><input type="checkbox" id="s_${key}_${k}" style="width:auto"> ${label}</label></div>`;else if(key==='profile'&&k==='full_name')htmlFields+=`<div class="field"><label>${label}</label><input id="s_profile_full_name" value="${esc(currentProfile?.full_name||currentProfile?.name||'')}"></div>`;else if(key==='profile'&&k==='email')htmlFields+=`<div class="field"><label>${label}</label><input value="${esc(currentUser?.email||'')}" readonly></div>`;else htmlFields+=`<div class="field ${type==='textarea'?'full':''}"><label>${label}</label>${type==='textarea'?`<textarea id="s_${key}_${k}"></textarea>`:`<input id="s_${key}_${k}" type="${type==='readonly'?'text':type}">`}</div>`}
+let note=key==='dropbazar_settings'?'<div class="notice warn">API Secret / Token এই HTML বা public settings-এ রাখা যাবে না। Edge Function-এর server-side secrets ব্যবহার করুন। এই অংশে শুধু non-secret settings metadata সংরক্ষণ করা যায়।</div>':key==='payment_settings'?'<div class="notice warn">Gateway toggles কেবল public display/config flags। বাস্তব online payment গ্রহণের জন্য verified server-side gateway integration ও credentials আবশ্যক। ততক্ষণ COD-ই চালু রাখুন।</div>':key==='backup'?'<div class="notice">JSON export পূর্ণ database backup নয়; শুধু এই dashboard-এ পড়তে পারা data export করে।</div>':'';
+return `<div class="settingsection ${i===0?'active':''}" id="setting_${i}"><div class="panel"><h2>${esc(d[0])}</h2>${note}<div class="grid">${htmlFields}</div>${['profile','password','permissions','backup'].includes(key)?'':`<button class="btn" onclick="saveSetting('${esc(key)}')">Save ${esc(d[0])}</button>`}${key==='profile'?'<button class="btn" onclick="saveAdminProfile()">Save Profile</button>':''}${key==='password'?'<button class="btn blue" onclick="changePassword()">Update Password</button>':''}</div></div>`}).join('');
 }
-async function loadProducts(){
-const {data,error}=await client.from('products').select('*').order('created_at',{ascending:false});
-if(error)throw error;products=data||[];renderProducts();renderInventory();renderDashboard();
+function showSetting(name,button){activeSetting=name;document.querySelectorAll('.settingtab').forEach(x=>x.classList.remove('active'));button?.classList.add('active');let i=settingDefs.findIndex(x=>x[0]===name);document.querySelectorAll('.settingsection').forEach(x=>x.classList.remove('active'));$('setting_'+i)?.classList.add('active')}
+async function loadSettings(){if(!isOwner())return;buildSettingsUI();try{let {data,error}=await client.from('site_settings').select('setting_key,setting_value');if(error)throw error;settingsCache={};(data||[]).forEach(x=>settingsCache[x.setting_key]=x.setting_value||{});for(let d of settingDefs){let key=d[1],obj=settingsCache[key]||{};if(key==='profile'||key==='password'||key==='permissions'||key==='backup')continue;for(let j=2;j<d.length;j+=3){let k=d[j+1],type=d[j+2],el=$(`s_${key}_${k}`);if(!el)continue;if(type==='check')el.checked=!!obj[k];else el.value=obj[k]??''}}}catch(e){console.warn('Settings load:',e.message)}
+let {data:store,error:storeError}=await client.from('store_settings').select('*').order('id',{ascending:true}).limit(1).maybeSingle();if(!storeError){settingsRow=store;if(store){let contact=settingsCache.contact_settings||{};contact.whatsapp_order_number=store.whatsapp_order_number||contact.whatsapp_order_number;contact.customer_support_number_1=store.customer_support_number||contact.customer_support_number_1;contact.customer_support_number_2=store.customer_support_number_2||contact.customer_support_number_2;settingsCache.contact_settings=contact;for(let k of Object.keys(contact)){let el=$(`s_contact_settings_${k}`);if(el)el.value=contact[k]||''}}}
+try{let {data:pub}=await client.rpc('get_public_site_settings');let ds=pub?.delivery_settings||{};for(let [id,k,fallback] of [['s_delivery_settings_inside_dhaka_charge','inside_dhaka_charge',70],['s_delivery_settings_outside_dhaka_charge','outside_dhaka_charge',120]])if($(id)&&!$(id).value)$(id).value=ds[k]??fallback}catch(e){console.warn(e)}
 }
-async function loadOrders(){
-const {data,error}=await client.from('orders').select('*').order('created_at',{ascending:false});
-if(error)throw error;orders=data||[];renderOrders();renderDashboard();renderCustomers();renderReports();
-}
-function orderCostTotal(){return orders.filter(o=>orderStatus(o)!=='cancelled').reduce((sum,o)=>sum+(Array.isArray(o.order_items)?o.order_items:[]).reduce((v,i)=>{const p=products.find(x=>String(x.id)===String(i.product_id));return v+Number(i.quantity||1)*Number(i.supplier_cost??p?.supplier_cost??0)},0),0)}
-function renderDashboard(){
- const valid=orders.filter(o=>orderStatus(o)!=='cancelled'),revenue=valid.reduce((s,o)=>s+Number(o.total_amount||0),0),cost=orderCostTotal();
- $('statRevenue').textContent='৳'+money(revenue);$('statOrders').textContent=orders.length;$('statProducts').textContent=products.length;$('statCustomers').textContent=buildCustomers().length;
- $('statPending').textContent=orders.filter(o=>['new','pending'].includes(orderStatus(o))).length;$('statDelivered').textContent=orders.filter(o=>orderStatus(o)==='delivered').length;$('statCancelled').textContent=orders.filter(o=>orderStatus(o)==='cancelled').length;
- $('statProcessing').textContent=orders.filter(o=>['processing','confirmed'].includes(orderStatus(o))).length;$('statCost').textContent='৳'+money(cost);$('statProfit').textContent='৳'+money(revenue-cost);
- const low=products.filter(p=>Number(p.stock||0)<=Number(p.low_stock_threshold??p.low_stock_alert??p.alert_level??5));$('statLowStock').textContent=low.length;
- $('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td><strong>${esc(o.order_number||o.id)}</strong></td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders yet</td></tr>';
- $('lowStockList').innerHTML=low.slice(0,6).map(p=>`<div style="padding:10px;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between"><span>${esc(p.name)}</span><strong style="color:var(--red)">${Number(p.stock||0)} left</strong></div>`).join('')||'<div class="empty">No low stock alerts</div>';
-}
-function statusBadge(status){
-const s=String(status||'new').toLowerCase();
-const label={new:'New',pending:'Pending',confirmed:'Confirmed',processing:'Processing',shipped:'Shipped',delivered:'Delivered',cancelled:'Cancelled'}[s]||s;
-const cls=['cancelled'].includes(s)?'red':['new','pending'].includes(s)?'orange':['shipped','processing'].includes(s)?'blue':'';
-return `<span class="badge ${cls}">${esc(label)}</span>`;
-}
-function productImages(p){
-if(Array.isArray(p.images))return p.images;
-if(typeof p.images==='string'){try{const parsed=JSON.parse(p.images);return Array.isArray(parsed)?parsed:[]}catch(e){return p.images?[p.images]:[]}}
-return [];
-}
-function getProductUrl(productId){
-const url=new URL('index.html',window.location.href);url.search='';url.searchParams.set('product',productId);return url.href;
-}
-async function copyProductUrl(id){
-try{
-const url=getProductUrl(id);
-if(navigator.clipboard&&window.isSecureContext)await navigator.clipboard.writeText(url);
-else{const input=document.createElement('textarea');input.value=url;input.style.position='fixed';input.style.opacity='0';document.body.appendChild(input);input.select();const copied=document.execCommand('copy');input.remove();if(!copied)throw new Error('Copy failed')}
-notify('Product URL copied successfully!');
-}catch(error){notify('URL copy করা যায়নি: '+error.message)}
-}
-function renderProducts(){
-const term=($('productSearch')?.value||'').toLowerCase(),cat=$('productCategoryFilter')?.value||'';
-const list=products.filter(p=>(!cat||p.category===cat)&&(`${p.name} ${p.sku||''}`).toLowerCase().includes(term));
-$('productsTable').innerHTML=list.map(p=>{
-const imgs=productImages(p);
-return `<tr><td><div class="product-cell"><img src="${esc(imgs[0]||'')}" onerror="this.style.visibility='hidden'"><strong>${esc(p.name)}</strong></div></td>
-<td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td><td>৳${money(p.selling_price)}</td>
-<td>${Number(p.discount_price||0)>0?'৳'+money(p.discount_price):'—'}</td><td>${Number(p.stock||0)}</td>
-<td>${p.is_active===false?'<span class="badge red">Hidden</span>':'<span class="badge">Active</span>'}</td>
-<td><div class="actions"><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Edit</button>
-<button class="btn btn-small btn-light" onclick="duplicateProduct('${esc(p.id)}')">Duplicate</button><button class="btn btn-small btn-light" onclick="copyProductUrl('${esc(p.id)}')">Copy URL</button>
-<button class="btn btn-small btn-red" onclick="deleteProduct('${esc(p.id)}')">Delete</button></div></td></tr>`;
-}).join('')||'<tr><td colspan="8" class="empty">No products found</td></tr>';
-}
-
-function parseJsonArray(value){
-if(Array.isArray(value))return value;
-if(!value)return [];
-if(typeof value==='string'){try{const p=JSON.parse(value);return Array.isArray(p)?p:[]}catch(e){return value.split(',').map(x=>x.trim()).filter(Boolean)}}
-return [];
-}
-function normalizeSizes(value){
-if(Array.isArray(value))return value.map(v=>typeof v==='object'?v:{size:String(v),stock:0});
-if(value&&typeof value==='object')return Object.entries(value).map(([size,stock])=>({size,stock:Number(stock||0)}));
-if(typeof value==='string')return value.split(',').map(x=>x.trim()).filter(Boolean).map(size=>({size,stock:0}));
-return [];
-}
-function openProductModal(){
-$('productForm').reset();$('editProductId').value='';
-$('productModalTitle').textContent='Add New Product';$('pSku').value=nextProductCode();
-$('pActive').checked=true;$('pNewArrival').checked=false;$('pBestSeller').checked=false;
-existingImages=[];variationDraft=[];$('imagePreview').innerHTML='';
-$('variationEditor').innerHTML='';$('productFormError').textContent='';
-openModal('productModal');
-}
-async function editProduct(id){
-const p=products.find(x=>String(x.id)===String(id));if(!p)return;
-$('productForm').reset();$('editProductId').value=p.id;
-$('productModalTitle').textContent='Edit Product';
-$('pName').value=p.name||'';$('pSku').value=p.sku||'';$('pCategory').value=p.category||'men';
-$('pPrice').value=p.selling_price||0;$('pDiscount').value=p.discount_price||'';
-$('pCost').value=p.supplier_cost||0;$('pStock').value=p.stock||0;
-$('pAlert').value=p.low_stock_threshold??p.low_stock_alert??p.alert_level??5;
-$('pSizes').value=Array.isArray(p.sizes)?p.sizes.join(', '):p.sizes||'';
-$('pSupplierUrl').value=p.supplier_product_url||'';
-$('pDropbazarId').value=p.dropbazar_product_id||'';
-$('pDescription').value=p.description||'';
-$('pActive').checked=p.is_active!==false;
-$('pNewArrival').checked=!!p.is_new_arrival;
-$('pBestSeller').checked=!!p.is_best_seller;
-existingImages=productImages(p).slice();renderImagePreview();
-variationDraft=[];
-try{
-const {data,error}=await client.from('product_variations').select('*').eq('product_id',p.id);
-if(error)throw error;
-variationDraft=(data||[]).map(v=>({
-...v,
-color_name:v.color_name||v.color||'',
-supplier_sku:v.supplier_sku||v.sku||'',
-supplier_order_id:v.supplier_order_id||'',
-sizes:normalizeSizes(v.sizes||v.size_stock||v.stock_by_size),
-images:parseJsonArray(v.images||v.gallery_images),
-dropbazar_product_id:v.dropbazar_product_id||'',supplier_order_id:v.supplier_order_id||'',
-supplier_cost:v.supplier_cost||0
-}));
-}catch(e){console.warn('Variation load:',e)}
-renderVariationEditor();$('productFormError').textContent='';openModal('productModal');
-}
-function renderImagePreview(){
-$('imagePreview').innerHTML=existingImages.map((url,i)=>`<div class="image-item"><img src="${esc(url)}"><button type="button" onclick="removeExistingImage(${i})">×</button></div>`).join('');
-}
-function removeExistingImage(i){existingImages.splice(i,1);renderImagePreview()}
-$('pImages').addEventListener('change',()=>{
-for(const file of [...$('pImages').files]){
-if(file.size>5*1024*1024){notify(file.name+' is larger than 5MB');continue}
-const reader=new FileReader();reader.onload=e=>{
-const box=document.createElement('div');box.className='image-item';
-const img=document.createElement('img');img.src=e.target.result;box.appendChild(img);
-const tag=document.createElement('small');tag.textContent=file.name;box.appendChild(tag);
-$('imagePreview').appendChild(box);
-};reader.readAsDataURL(file);
-}
-});
-
-function addVariationRow(item={}){
-variationDraft.push({
-id:item.id||null,color_name:item.color_name||'',
-supplier_sku:item.supplier_sku||'',
-supplier_product_url:item.supplier_product_url||'',
-dropbazar_product_id:item.dropbazar_product_id||'',
-supplier_cost:item.supplier_cost||0,
-image_url:item.image_url||'',
-images:parseJsonArray(item.images||item.gallery_images),
-sizes:normalizeSizes(item.sizes||item.size_stock||item.stock_by_size)
-});
-renderVariationEditor();
-}
-function addVariationSize(index,item={}){
-variationDraft[index].sizes=variationDraft[index].sizes||[];
-variationDraft[index].sizes.push({size:item.size||'',stock:Number(item.stock||0)});
-renderVariationEditor();
-}
-function removeVariationSize(index,sizeIndex){
-variationDraft[index].sizes.splice(sizeIndex,1);renderVariationEditor();
-}
-function renderVariationEditor(){
- $('variationEditor').innerHTML=variationDraft.map((v,i)=>`
- <div class="variation-card">
-  <div class="variation-card-head"><strong>COLOR VARIATION ${i+1}</strong><button type="button" class="btn btn-small btn-red" onclick="variationDraft.splice(${i},1);renderVariationEditor()">Remove Color</button></div>
-  <div class="variation-grid">
-   <div class="field"><label>Color Name *</label><input value="${esc(v.color_name)}" placeholder="Black / White / Navy" oninput="variationDraft[${i}].color_name=this.value"></div>
-   <div class="field"><label>Supplier SKU (this color)</label><input value="${esc(v.supplier_sku)}" placeholder="Supplier SKU" oninput="variationDraft[${i}].supplier_sku=this.value"></div>
-   <div class="field"><label>Supplier Product URL *</label><input value="${esc(v.supplier_product_url)}" placeholder="https://..." oninput="variationDraft[${i}].supplier_product_url=this.value"></div>
-   <div class="field"><label>Supplier Order ID</label><input value="${esc(v.supplier_order_id||'')}" placeholder="Supplier Order ID" oninput="variationDraft[${i}].supplier_order_id=this.value"></div>
-   <div class="field"><label>Color Main Image URL</label><input value="${esc(v.image_url||'')}" placeholder="https://..." oninput="variationDraft[${i}].image_url=this.value"></div>
-   <div class="field full"><label>Additional Gallery Image URLs (one URL per line)</label><textarea placeholder="https://image1.jpg&#10;https://image2.jpg" oninput="variationDraft[${i}].images=this.value.split('\\n').map(x=>x.trim()).filter(Boolean)">${esc((v.images||[]).join('\\n'))}</textarea></div>
-  </div>
-  <div class="notice">Shared product sizes: ${esc(($('pSizes').value||'—'))}. Stock is managed only at product level.</div>
- </div>`).join('');
-}
-async function uploadProductImages(productId){
-const files=[...$('pImages').files];
-for(const file of files){
-if(file.size>5*1024*1024)throw new Error(file.name+' is larger than 5MB');
-const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
-const path=`products/${productId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-const {error}=await client.storage.from('product-images').upload(path,file,{upsert:false,contentType:file.type});
-if(error)throw error;
-const {data}=client.storage.from('product-images').getPublicUrl(path);
-existingImages.push(data.publicUrl);
-}
-return existingImages;
-}
-$('productForm').addEventListener('submit',async e=>{
-e.preventDefault();
-$('saveProductButton').disabled=true;$('saveProductButton').textContent='Saving...';
-$('productFormError').textContent='';
-try{
-const id=$('editProductId').value;
-const payload={
-name:$('pName').value.trim(),
-sku:$('pSku').value.trim()||null,
-category:$('pCategory').value,
-selling_price:Number($('pPrice').value),
-discount_price:Number($('pDiscount').value||0),
-supplier_cost:Number($('pCost').value||0),
-stock:Number($('pStock').value||0),
-low_stock_threshold:Number($('pAlert').value||5),
-low_stock_alert:Number($('pAlert').value||5),
-sizes:$('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean),
-description:$('pDescription').value.trim(),
-is_active:$('pActive').checked,
-is_new_arrival:$('pNewArrival').checked,
-is_best_seller:$('pBestSeller').checked,
-supplier_product_url:$('pSupplierUrl').value.trim()||null,
-dropbazar_product_id:$('pDropbazarId').value.trim()||null,
-images:existingImages
-};
-let productId=id;
-if(id){
-const {error}=await client.from('products').update(payload).eq('id',id);
-if(error)throw error;
-}else{
-const {data,error}=await client.from('products').insert(payload).select().single();
-if(error)throw error;productId=data.id;
-}
-payload.images=await uploadProductImages(productId);
-const {error:imageError}=await client.from('products').update({images:payload.images}).eq('id',productId);
-if(imageError)throw imageError;
-
-const activeVariationDraft=variationDraft.filter(v=>String(v.color_name||'').trim());
-if(activeVariationDraft.some(v=>!String(v.supplier_product_url||'').trim()))throw new Error('প্রতিটি Color Variation-এর Supplier Product URL দিতে হবে।');
-const rows=activeVariationDraft.map(v=>({
-...(v.id?{id:v.id}:{}),
-product_id:productId,
-color:v.color_name.trim(),
-sku:String(v.supplier_sku||'').trim()||String($('pSku').value||'').trim()||'TKR-SUPPLIER',
-supplier_product_url:String(v.supplier_product_url||'').trim(),
-supplier_order_id:String(v.supplier_order_id||'').trim()||null,
-images:Array.isArray(v.images)?v.images:[],
-sizes:[]
-}));
-
-const {data:oldVariations,error:oldError}=await client.from('product_variations').select('id').eq('product_id',productId);
-if(oldError)throw oldError;
-const keepIds=rows.filter(v=>v.id).map(v=>v.id);
-const removeIds=(oldVariations||[]).map(v=>v.id).filter(v=>!keepIds.includes(v));
-if(removeIds.length){
-const {error}=await client.from('product_variations').delete().eq('product_id',productId).in('id',removeIds);
-if(error)throw error;
-}
-if(rows.length){
-const {error}=await client.from('product_variations').upsert(rows,{onConflict:'id'});
-if(error)throw error;
-}
-if(window.store)window.store.clearProductCache();
-await logActivity(id?'Updated product':'Created product',payload.name);
-closeModal('productModal');$('pImages').value='';
-await loadProducts();await loadVariations();
-notify('Product saved successfully.');
-}catch(error){
-console.error(error);
-$('productFormError').textContent=error.message||'Could not save product.';
-}finally{
-$('saveProductButton').disabled=false;$('saveProductButton').textContent='Save Product';
-}
-});
-
-async function deleteProduct(id){
-if(!canManage()){notify('You do not have permission.');return}
-if(!confirm('এই Product Delete করতে চাও?'))return;
-const {error}=await client.from('products').delete().eq('id',id);
-if(error){notify(error.message);return}
-if(window.store)window.store.clearProductCache();
-await logActivity('Deleted product',id);await loadProducts();await loadVariations();
-notify('Product deleted.');
-}
-async function loadVariations(){
-const {data,error}=await client.from('product_variations').select('*');
-if(error){console.warn(error);variations=[]}else variations=data||[];
-renderVariations();
-}
-function renderVariations(){
-if(!variations.length){$('variationsTable').innerHTML='<tr><td colspan="6" class="empty">No variations loaded</td></tr>';return}
-const term=($('variationSearch')?.value||'').toLowerCase();
-$('variationsTable').innerHTML=variations.filter(v=>{
-const p=products.find(x=>String(x.id)===String(v.product_id));
-return (`${p?.name||''} ${v.color_name||''} ${v.supplier_sku||''}`).toLowerCase().includes(term);
-}).map(v=>{
-const p=products.find(x=>String(x.id)===String(v.product_id));
-const sizes=(products.find(x=>String(x.id)===String(v.product_id))?.sizes||[]).map(size=>({size,stock:null}));
-return `<tr><td>${esc(p?.name||v.product_id)}</td><td>${esc(v.color_name||v.color||'—')}</td>
-<td>${sizes.map(s=>esc(s.size)).join(', ')||'—'}</td>
-<td>${esc(v.supplier_sku||v.sku||'—')}</td><td>${esc(v.supplier_order_id||'—')}</td>
-<td>${v.supplier_product_url?`<a href="${esc(v.supplier_product_url)}" target="_blank" rel="noopener">Open Link</a>`:'—'}</td></tr>`;
-}).join('')||'<tr><td colspan="6" class="empty">No variations found</td></tr>';
-}
-
-function renderOrders(){
-const term=($('orderSearch')?.value||'').toLowerCase(),status=$('orderStatusFilter')?.value||'';
-const list=orders.filter(o=>(!status||orderStatus(o)===status)&&(`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`).toLowerCase().includes(term));
-$('ordersTable').innerHTML=list.map(o=>{
-const submitted=String(o.submission_status||'').toLowerCase()==='submitted';
-const sending=sendingOrders.has(String(o.id));
-return `<tr>
-<td><strong>${esc(o.order_number||o.id)}</strong><br><small>${submitted?'<span class="badge">Sent to DropBazar</span>':'<span class="badge orange">Not sent</span>'}</small></td>
-<td>${esc(o.customer_name||'')}</td><td>${esc(o.customer_phone||'')}</td>
-<td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td>
-<td><div class="actions">
-<button class="btn btn-small btn-blue" onclick="viewOrder('${esc(o.id)}')">Details</button>
-<button class="btn btn-small" onclick="sendAndConfirm('${esc(o.id)}')" ${(submitted||sending)?'disabled':''}>${submitted?'Sent':sending?'Sending...':'Send & Confirm'}</button>
-<button class="btn btn-small btn-light" onclick="editOrder('${esc(o.id)}')">Edit</button>
-<button class="btn btn-small btn-red" onclick="deleteOrder('${esc(o.id)}')">Delete</button>
-</div></td></tr>`;
-}).join('')||'<tr><td colspan="7" class="empty">No orders found</td></tr>';
-}
-
-/* DropBazar item mapping */
-function getDropBazarItemData(item){
-const product=products.find(p=>
-String(p.id)===String(item.product_id||item.productId)||
-((item.product_name||item.name)&&String(p.name).toLowerCase()===String(item.product_name||item.name).toLowerCase())
-);
-const variation=variations.find(v=>{
-const sameProduct=product&&String(v.product_id)===String(product.id);
-const sameVariation=item.variation_id&&String(v.id)===String(item.variation_id);
-const sameSku=item.supplier_sku&&String(v.supplier_sku||'').toLowerCase()===String(item.supplier_sku).toLowerCase();
-const sameColor=(item.selected_color||item.color)&&String(v.color_name||'').toLowerCase()===String(item.selected_color||item.color).toLowerCase();
-return sameVariation||sameSku||(sameProduct&&sameColor);
-});
-const variationSizes=normalizeSizes(variation?.sizes||variation?.size_stock||variation?.stock_by_size);
-const chosenSize=String(item.selected_size||item.size||'').toLowerCase();
-const sizeInfo=variationSizes.find(s=>String(s.size||'').toLowerCase()===chosenSize)||{};
-return {
-...item,
-product_id:item.product_id||product?.id||null,
-supplier_sku:item.supplier_sku||sizeInfo.supplier_sku||variation?.supplier_sku||product?.sku||null,
-supplier_product_url:item.supplier_product_url||variation?.supplier_product_url||product?.supplier_product_url||null,
-dropbazar_product_id:item.dropbazar_product_id||variation?.dropbazar_product_id||product?.dropbazar_product_id||null,
-selected_color:item.selected_color||item.color||variation?.color_name||null,
-selected_size:item.selected_size||item.size||null,
-image_url:item.image_url||variation?.image_url||null
-};
-}
-async function getFunctionErrorMessage(error){
-let message=error?.message||'Unknown error';
-try{
-const response=error?.context;
-if(response&&typeof response.clone==='function'){
-const body=await response.clone().json();
-message=body.error||body.message||body.details||message;
-}
-}catch(e){}
-return message;
-}
-
-/* SEND & CONFIRM: Edge Function receives order_id only */
-async function sendAndConfirm(id){
-if(!canManage()){notify('You do not have permission.');return}
-const key=String(id);
-if(sendingOrders.has(key))return;
-const order=orders.find(x=>String(x.id)===key);
-if(!order)return;
-if(String(order.submission_status||'').toLowerCase()==='submitted'){
-notify('এই Order ইতিমধ্যে DropBazar-এ পাঠানো হয়েছে।');return;
-}
-if(!Array.isArray(order.order_items)||!order.order_items.length){
-notify('এই Order-এ কোনো Product Item পাওয়া যায়নি।');return;
-}
-if(!order.customer_name||!order.customer_phone||!order.shipping_address){
-notify('এই Order-এর Customer Name, Phone অথবা Shipping Address পাওয়া যায়নি।');return;
-}
-if(!confirm(`Order ${order.order_number||order.id} DropBazar-এ Send & Confirm করতে চাও?`))return;
-
-sendingOrders.add(key);renderOrders();
-try{
-/*
-  Edge Function নিজেই orders টেবিল থেকে order_id দিয়ে
-  order এবং order_items সংগ্রহ করবে।
-  এখানে আর পুরো order payload পাঠানো হচ্ছে না।
-*/
-const {data,error}=await client.functions.invoke(
-'dropbazar-order',
-{body:{order_id:id}}
-);
-if(error)throw new Error(await getFunctionErrorMessage(error));
-if(data?.success===false||data?.error){
-throw new Error(data.error||data.message||'DropBazar order submission failed.');
-}
-const supplierOrderId=
-data?.supplier_order_id||
-data?.order_id||
-data?.id||
-data?.data?.supplier_order_id||
-data?.data?.order_id||
-data?.data?.id||
-null;
-
-const updates={
-submission_status:'submitted',
-order_status:'confirmed',
-...(supplierOrderId?{supplier_order_id:String(supplierOrderId)}:{})
-};
-const {error:updateError}=await client.from('orders').update(updates).eq('id',id);
-if(updateError)throw updateError;
-
-await logActivity('Sent order to DropBazar',`${order.order_number||id}${supplierOrderId?' | Supplier ID: '+supplierOrderId:''}`);
-await loadOrders();
-notify('Order successfully sent to DropBazar and confirmed!');
-}catch(error){
-console.error('DropBazar submission error:',error);
-notify('DropBazar Send failed: '+(await getFunctionErrorMessage(error)));
-}finally{
-sendingOrders.delete(key);renderOrders();
-}
-}
-
-function viewOrder(id){
-const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
-const items=Array.isArray(o.order_items)?o.order_items:[];
-$('orderModalTitle').textContent='Order Details';
-$('orderModalContent').innerHTML=`
-<p><strong>Order:</strong> ${esc(o.order_number||o.id)}</p>
-<p><strong>Customer:</strong> ${esc(o.customer_name||'')}</p>
-<p><strong>Phone:</strong> ${esc(o.customer_phone||'')}</p>
-<p><strong>Email:</strong> ${esc(o.customer_email||'—')}</p>
-<p><strong>Address:</strong> ${esc(o.shipping_address||'')} — ${esc(o.area||'')}, ${esc(o.city||'')}</p>
-<p><strong>Postal Code:</strong> ${esc(o.postal_code||'—')}</p>
-<p><strong>Order Status:</strong> ${statusBadge(orderStatus(o))}</p>
-<p><strong>Submission Status:</strong> ${esc(o.submission_status||'pending')}</p>
-<p><strong>Supplier Order ID:</strong> ${esc(o.supplier_order_id||'—')}</p>
-<p><strong>Payment Method:</strong> ${esc(o.payment_method||'Cash on Delivery')}</p>
-<p><strong>Payment Status:</strong> ${esc(o.payment_status||'pending')}</p>
-<p><strong>Customer Note:</strong> ${esc(o.customer_note||'—')}</p>
-<p><strong>Date:</strong> ${dateText(o.created_at)}</p>
-<hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
-<strong>Order Items</strong>
-${items.map(i=>`<div style="padding:10px 0;border-bottom:1px solid var(--line)">
-<p><strong>${esc(i.product_name||i.name||'Product')}</strong> × ${Number(i.quantity||1)}</p>
-<p>Price: ৳${money(i.unit_price)} | Size: ${esc(i.selected_size||i.size||'—')} | Color: ${esc(i.selected_color||i.color||'—')}</p>
-<p>Supplier SKU: ${esc(i.supplier_sku||'—')}</p>
-<p>DropBazar Product ID: ${esc(i.dropbazar_product_id||'—')}</p>
-${i.supplier_product_url?`<p><a href="${esc(i.supplier_product_url)}" target="_blank" rel="noopener">Supplier Product Link</a></p>`:''}
-</div>`).join('')||'<p>No order items found.</p>'}
-<hr style="margin:15px 0;border:0;border-top:1px solid var(--line)">
-<p><strong>Subtotal:</strong> ৳${money(o.subtotal)}</p>
-<p><strong>Discount:</strong> ৳${money(o.discount)}</p>
-<p><strong>Delivery:</strong> ৳${money(o.delivery_charge)}</p>
-<p><strong>Total:</strong> ৳${money(o.total_amount)}</p>`;
-openModal('orderModal');
-}
-function editOrder(id){
-const o=orders.find(x=>String(x.id)===String(id));if(!o)return;
-if(!canManage()){notify('You do not have permission.');return}
-const statuses=['new','confirmed','processing','shipped','delivered','cancelled'];
-$('orderModalTitle').textContent='Edit Order';
-$('orderModalContent').innerHTML=`
-<form id="editOrderForm"><input type="hidden" id="editOrderId" value="${esc(o.id)}">
-<div class="form-grid">
-<div class="field"><label>Customer Name</label><input id="eCustomerName" value="${esc(o.customer_name||'')}"></div>
-<div class="field"><label>Phone</label><input id="eCustomerPhone" value="${esc(o.customer_phone||'')}"></div>
-<div class="field"><label>Email</label><input id="eCustomerEmail" type="email" value="${esc(o.customer_email||'')}"></div>
-<div class="field"><label>City</label><input id="eCity" value="${esc(o.city||'')}"></div>
-<div class="field"><label>Area</label><input id="eArea" value="${esc(o.area||'')}"></div>
-<div class="field"><label>Postal Code</label><input id="ePostalCode" value="${esc(o.postal_code||'')}"></div>
-<div class="field full"><label>Shipping Address</label><textarea id="eAddress">${esc(o.shipping_address||'')}</textarea></div>
-<div class="field"><label>Order Status</label><select id="eOrderStatus">${statuses.map(s=>`<option value="${s}" ${orderStatus(o)===s?'selected':''}>${s}</option>`).join('')}</select></div>
-<div class="field"><label>Payment Status</label><select id="ePaymentStatus">${['pending','paid','failed','refunded'].map(s=>`<option value="${s}" ${String(o.payment_status||'pending')===s?'selected':''}>${s}</option>`).join('')}</select></div>
-<div class="field"><label>Payment Method</label><input id="ePaymentMethod" value="${esc(o.payment_method||'')}"></div>
-<div class="field"><label>Delivery Charge</label><input id="eDelivery" type="number" min="0" value="${Number(o.delivery_charge||0)}"></div>
-<div class="field"><label>Discount</label><input id="eDiscount" type="number" min="0" value="${Number(o.discount||0)}"></div>
-<div class="field"><label>Total Amount</label><input id="eTotal" type="number" min="0" value="${Number(o.total_amount||0)}"></div>
-<div class="field full"><label>Customer Note</label><textarea id="eCustomerNote">${esc(o.customer_note||'')}</textarea></div>
-</div>
-<div class="form-actions"><button type="button" class="btn btn-light" onclick="viewOrder('${esc(o.id)}')">Cancel</button><button type="submit" class="btn" id="saveOrderButton">Update Order</button></div>
-<div id="editOrderError" class="error"></div></form>`;
-$('editOrderForm').addEventListener('submit',saveOrderEdit);openModal('orderModal');
-}
-async function saveOrderEdit(e){
-e.preventDefault();if(!canManage())return;
-const id=$('editOrderId').value,button=$('saveOrderButton');
-button.disabled=true;button.textContent='Updating...';$('editOrderError').textContent='';
-try{
-const payload={
-customer_name:$('eCustomerName').value.trim(),
-customer_phone:$('eCustomerPhone').value.trim(),
-customer_email:$('eCustomerEmail').value.trim()||null,
-city:$('eCity').value.trim(),area:$('eArea').value.trim(),
-postal_code:$('ePostalCode').value.trim()||null,
-shipping_address:$('eAddress').value.trim(),
-order_status:$('eOrderStatus').value,payment_status:$('ePaymentStatus').value,
-payment_method:$('ePaymentMethod').value.trim(),
-delivery_charge:Number($('eDelivery').value||0),
-discount:Number($('eDiscount').value||0),
-total_amount:Number($('eTotal').value||0),
-customer_note:$('eCustomerNote').value.trim()
-};
-const {error}=await client.from('orders').update(payload).eq('id',id);
-if(error)throw error;
-await logActivity('Updated order',id);await loadOrders();closeModal('orderModal');notify('Order updated successfully.');
-}catch(error){$('editOrderError').textContent=error.message||'Could not update order.';button.disabled=false;button.textContent='Update Order'}
-}
-async function deleteOrder(id){
-if(!canManage()){notify('You do not have permission.');return}
-const order=orders.find(o=>String(o.id)===String(id));
-if(!confirm(`Order ${order?.order_number||id} Delete করতে চাও?`))return;
-const {error}=await client.from('orders').delete().eq('id',id);
-if(error){notify(error.message);return}
-await logActivity('Deleted order',order?.order_number||id);await loadOrders();notify('Order deleted successfully.');
-}
-function buildCustomers(){
-const map=new Map();
-orders.forEach(o=>{
-const key=o.customer_phone||o.customer_email||o.customer_name||String(o.id);
-if(!map.has(key))map.set(key,{name:o.customer_name||'',phone:o.customer_phone||'',email:o.customer_email||'',count:0,total:0,last:null});
-const c=map.get(key);c.count++;c.total+=Number(o.total_amount||0);
-if(!c.last||new Date(o.created_at)>new Date(c.last))c.last=o.created_at;
-});
-return [...map.values()];
-}
-function renderCustomers(){
-customers=buildCustomers();const term=($('customerSearch')?.value||'').toLowerCase();
-$('customersTable').innerHTML=customers.filter(c=>(`${c.name} ${c.phone} ${c.email}`).toLowerCase().includes(term)).map(c=>`<tr><td>${esc(c.name)}</td><td>${esc(c.phone)}</td><td>${esc(c.email||'—')}</td><td>${c.count}</td><td>৳${money(c.total)}</td><td>${dateText(c.last)}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No customers found</td></tr>';
-}
-function renderInventory(){
-const term=($('inventorySearch')?.value||'').toLowerCase();
-$('inventoryTable').innerHTML=products.filter(p=>(`${p.name} ${p.sku||''}`).toLowerCase().includes(term)).map(p=>{
-const stock=Number(p.stock||0),alertLevel=Number(p.low_stock_threshold??p.low_stock_alert??p.alert_level??5);
-return `<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'—')}</td><td><strong>${stock}</strong></td><td>${alertLevel}</td><td>${stock<=alertLevel?'<span class="badge red">Low Stock</span>':'<span class="badge">In Stock</span>'}</td><td><button class="btn btn-small btn-blue" onclick="editProduct('${esc(p.id)}')">Update</button></td></tr>`;
-}).join('')||'<tr><td colspan="6" class="empty">No inventory records</td></tr>';
-}
-function renderReports(){
-const sales=orders.filter(o=>orderStatus(o)!=='cancelled').reduce((s,o)=>s+Number(o.total_amount||0),0);
-const delivered=orders.filter(o=>orderStatus(o)==='delivered').reduce((s,o)=>s+Number(o.total_amount||0),0);
-$('reportSales').textContent='৳'+money(sales);
-$('reportAverage').textContent='৳'+money(orders.length?sales/orders.length:0);
-$('reportDelivered').textContent='৳'+money(delivered);
-$('reportStock').textContent=products.reduce((s,p)=>s+Number(p.stock||0),0);$('reportCost').textContent='৳'+money(orderCostTotal());$('reportProfit').textContent='৳'+money(sales-orderCostTotal());
-const statuses=['new','confirmed','processing','shipped','delivered','cancelled'];
-$('reportStatuses').innerHTML=statuses.map(s=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid var(--line)"><span>${s.toUpperCase()}</span><strong>${orders.filter(o=>orderStatus(o)===s).length}</strong></div>`).join('');
-}
-async function loadStaff(){
-if(!isOwner())return;
-const {data,error}=await client.from('profiles').select('*');
-if(error){$('staffTable').innerHTML=`<tr><td colspan="3">${esc(error.message)}</td></tr>`;return}
-$('staffTable').innerHTML=(data||[]).map(p=>`<tr><td>${esc(p.id)}</td><td><span class="badge">${esc(roleName(p.role))}</span></td><td>${p.id===currentUser.id?'Current User':'Profile'}</td></tr>`).join('')||'<tr><td colspan="3" class="empty">No staff profiles</td></tr>';
-}
-async function logActivity(action,details){
-try{await client.from('activity_logs').insert({user_id:currentUser?.id,action,details:String(details||'')})}
-catch(e){console.warn('Activity log not saved:',e.message)}
-}
-async function loadActivity(){
-if(!isOwner())return;
-const {data,error}=await client.from('activity_logs').select('*').order('created_at',{ascending:false}).limit(100);
-if(error){$('activityTable').innerHTML=`<tr><td colspan="4">${esc(error.message)}</td></tr>`;return}
-$('activityTable').innerHTML=(data||[]).map(a=>`<tr><td>${esc(a.action||'')}</td><td>${esc(a.details||'')}</td><td>${esc(a.user_id||'')}</td><td>${dateText(a.created_at)}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No activity records</td></tr>';
-const preview=(data||[]).slice(0,5);
-if($('dashboardActivities'))$('dashboardActivities').innerHTML=preview.map(a=>`<div style="padding:9px 0;border-bottom:1px solid var(--line);font-size:12px"><strong>${esc(a.action||'Activity')}</strong><div>${esc(a.details||'')}</div><small style="color:var(--muted)">${dateText(a.created_at)}</small></div>`).join('')||'<div class="empty">No recent activities</div>';
-}
-async function loadSettings(){
-if(!isOwner())return;
-const {data,error}=await client.from('store_settings').select('*').order('id',{ascending:true}).limit(1).maybeSingle();
-if(error){console.warn(error);return}
-settingsRow=data;
-try{
- const {data:pub,error:pubError}=await client.rpc('get_public_site_settings');
- if(!pubError){
-  const ds=pub?.delivery_settings||pub?.deliverySettings||null;
-  if(ds){$('settingDhakaDelivery').value=Number(ds.inside_dhaka??ds.dhaka??70);$('settingOutsideDelivery').value=Number(ds.outside_dhaka??ds.outside??120)}
-  const payments=pub?.payment_settings||pub?.payments||{};
-  $('paymentConfigStatus').textContent='COD: '+(payments.cod_enabled===false?'Disabled':'Enabled')+' · Online gateway availability depends on server configuration.';
- }
-}catch(e){console.warn('Public settings read:',e.message)}
-if(data){
-$('settingWhatsapp').value=data.whatsapp_order_number||'';
-$('settingSupport1').value=data.customer_support_number||'';
-$('settingSupport2').value=data.customer_support_number_2||'';
-}
-}
-async function saveSettings(){
-if(!isOwner())return;
-const payload={
-whatsapp_order_number:$('settingWhatsapp').value.trim(),
-customer_support_number:$('settingSupport1').value.trim(),
-customer_support_number_2:$('settingSupport2').value.trim()
-};
-let result;
-if(settingsRow?.id)result=await client.from('store_settings').update(payload).eq('id',settingsRow.id);
-else result=await client.from('store_settings').insert(payload);
-if(result.error){notify(result.error.message);return}
-await logActivity('Updated store settings','Contact numbers');await loadSettings();notify('Settings saved.');
-}
-async function changePassword(){
-const password=$('newPassword').value;
-if(password.length<6){notify('Password must be at least 6 characters.');return}
-const {error}=await client.auth.updateUser({password});
-if(error){notify(error.message);return}
-$('newPassword').value='';notify('Password updated successfully.');
-}
-function exportOrdersCSV(){
-const rows=[['Order Number','Customer','Phone','Total','Status','Submission Status','Date'],...orders.map(o=>[o.order_number||o.id,o.customer_name,o.customer_phone,o.total_amount,orderStatus(o),o.submission_status,o.created_at])];
-const csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\n');
-const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
-const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TKR-orders.csv';a.click();URL.revokeObjectURL(a.href);
-}
-
-init().catch(e=>console.error(e));
-</script>
-</body>
-</html>
+async function saveSetting(key){if(!isOwner())return;if(!saveKeys.has(key)){notify('এই Settings key backend-এ অনুমোদিত নয়।');return}let d=settingDefs.find(x=>x[1]===key),obj={};for(let j=2;j<d.length;j+=3){let k=d[j+1],type=d[j+2],el=$(`s_${key}_${k}`);if(!el)continue;obj[k]=type==='check'?el.checked:type==='number'?Number(el.value||0):el.value}
+if(key==='contact_settings'){let payload={whatsapp_order_number:obj.whatsapp_order_number||'',customer_support_number:obj.customer_support_number_1||'',customer_support_number_2:obj.customer_support_number_2||''};let res=settingsRow?.id?await client.from('store_settings').update(payload).eq('id',settingsRow.id):await client.from('store_settings').insert(payload);if(res.error){notify(res.error.message);return}}
+try{let {error}=await client.rpc('save_site_setting',{p_setting_key:key,p_setting_value:obj});if(error)throw error;settingsCache[key]=obj;await logActivity('Updated settings',key);notify('Settings saved successfully')}catch(e){notify('Save failed: '+e.message)}}
+async function saveAdminProfile(){if(!isOwner())return;let name=$('s_profile_full_name')?.value?.trim();if(!name){notify('Name দিন');return}let {error}=await client.from('profiles').update({full_name:name}).eq('id',currentUser.id);if(error){notify(error.message);return}currentProfile.full_name=name;await logActivity('Updated admin profile',name);notify('Profile updated')}
+async function changePassword(){let el=$('s_password_new_password')||$('newPassword');let password=el?.value||'';if(password.length<6){notify('Password কমপক্ষে ৬ অক্ষর হতে হবে');return}let {error}=await client.auth.updateUser({password});if(error){notify(error.message);return}el.value='';notify('Password updated')}
+async function exportBackup(){try{let payload={exported_at:new Date().toISOString(),products,orders,product_variations:variations,settings:settingsCache};let blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='TKR-dashboard-export.json';a.click();URL.revokeObjectURL(a.href);await logActivity('Exported dashboard data','JSON export')}catch(e){notify(e.message)}}
+init().catch(console.error);
+</script></body></html>
