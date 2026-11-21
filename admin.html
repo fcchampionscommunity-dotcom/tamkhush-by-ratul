@@ -56,6 +56,7 @@
 <script>
 const client=window.supabaseClient||window.supabase_client||null;
 let currentUser=null,currentProfile=null,currentRole='',products=[],orders=[],variations=[],settingsRow=null,variationDraft=[],sendingOrders=new Set(),settingsCache={};
+let orderRefreshTimer=null,orderRefreshBusy=false;
 const $=id=>document.getElementById(id),money=v=>Number(v||0).toLocaleString('en-BD'),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),dateText=v=>v?new Date(v).toLocaleString('en-BD'):'—';
 const roleName=r=>({owner:'Owner',manager:'Manager',admin:'Admin'}[String(r||'').toLowerCase()]||r||'Unknown'),orderStatus=o=>String(o?.order_status||'new').toLowerCase();
 function notify(m){alert(m)}function canManage(){return ['owner','manager'].includes(currentRole)}function isOwner(){return currentRole==='owner'}
@@ -66,13 +67,31 @@ function statusBadge(s){let x=String(s||'new').toLowerCase(),label={new:'Pending
 function navigate(n){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));$('page-'+n)?.classList.add('active');document.querySelectorAll('.nav').forEach(x=>x.classList.toggle('active',x.dataset.page===n));$('sidebar').classList.remove('open')}
 function toggleSidebar(){$('sidebar').classList.toggle('open')}function openModal(id){$(id).classList.add('open')}function closeModal(id){$(id).classList.remove('open')}
 async function init(){if(!client){$('loginError').textContent='Supabase client পাওয়া যায়নি। config.js পরীক্ষা করুন।';return}try{let {data,error}=await client.auth.getSession();if(error)throw error;if(data.session?.user)await verifyUser(data.session.user)}catch(e){$('loginError').textContent=e.message}}
-async function verifyUser(user){try{let {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();if(error)throw error;if(!data)throw Error('profiles record পাওয়া যায়নি');let role=String(data.role||'').toLowerCase();if(!['owner','manager','admin'].includes(role))throw Error('Admin access নেই');currentUser=user;currentProfile=data;currentRole=role;$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('roleBadge').textContent=roleName(role);applyRolePermissions();await refreshAll()}catch(e){await client.auth.signOut();$('loginError').textContent=e.message;$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden')}}
+async function verifyUser(user){try{let {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();if(error)throw error;if(!data)throw Error('profiles record পাওয়া যায়নি');let role=String(data.role||'').toLowerCase();if(!['owner','manager','admin'].includes(role))throw Error('Admin access নেই');currentUser=user;currentProfile=data;currentRole=role;$('loginScreen').classList.add('hidden');$('app').classList.remove('hidden');$('roleBadge').textContent=roleName(role);applyRolePermissions();await refreshAll();startOrderStatusAutoRefresh()}catch(e){await client.auth.signOut();$('loginError').textContent=e.message;$('loginScreen').classList.remove('hidden');$('app').classList.add('hidden')}}
 $('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginButton').disabled=true;try{let {data,error}=await client.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)throw error;await verifyUser(data.user)}catch(x){$('loginError').textContent=x.message}finally{$('loginButton').disabled=false}});
 async function logout(){await client.auth.signOut();location.reload()}
 function applyRolePermissions(){if(currentRole!=='owner'){['staff','settings'].forEach(n=>document.querySelector(`[data-page="${n}"]`)?.classList.add('hidden'))}if(currentRole==='admin'){['reports','activity'].forEach(n=>document.querySelector(`[data-page="${n}"]`)?.classList.add('hidden'))}}
 async function refreshAll(){let r=await Promise.allSettled([loadProducts(),loadOrders(),loadVariations(),loadSettings()]);r.filter(x=>x.status==='rejected').forEach(x=>console.error(x.reason));renderDashboard();renderCustomers();renderInventory();renderReports();renderSuppliers();if(isOwner()){loadStaff();loadActivity()}}
 async function loadProducts(){let {data,error}=await client.from('products').select('*').order('created_at',{ascending:false});if(error)throw error;products=data||[];renderProducts()}
 async function loadOrders(){let {data,error}=await client.from('orders').select('*').order('created_at',{ascending:false});if(error)throw error;orders=data||[];renderOrders()}
+async function refreshOrderStatuses(){
+ if(orderRefreshBusy || document.visibilityState!=='visible')return;
+ orderRefreshBusy=true;
+ try{
+  await loadOrders();
+  renderDashboard();
+  renderCustomers();
+  renderReports();
+ }catch(e){console.warn('Automatic order status refresh:',e.message)}
+ finally{orderRefreshBusy=false}
+}
+function startOrderStatusAutoRefresh(){
+ if(orderRefreshTimer)clearInterval(orderRefreshTimer);
+ orderRefreshTimer=setInterval(refreshOrderStatuses,15000);
+ document.addEventListener('visibilitychange',()=>{
+  if(document.visibilityState==='visible')refreshOrderStatuses();
+ });
+}
 async function loadVariations(){let {data,error}=await client.from('product_variations').select('*');if(error)throw error;variations=data||[];renderVariations();renderSuppliers()}
 function renderProducts(){let term=($('productSearch')?.value||'').toLowerCase(),cat=$('productCategoryFilter')?.value||'';let list=products.filter(p=>(!cat||p.category===cat)&&(`${p.name} ${p.sku||''}`).toLowerCase().includes(term));$('productsTable').innerHTML=list.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.sku||'—')}</td><td>${esc(p.category||'—')}</td><td>৳${money(p.selling_price)}</td><td>${Number(p.discount_price||0)?'৳'+money(p.discount_price):'—'}</td><td>${Number(p.stock||0)}</td><td>${p.is_active===false?'<span class="badge bad">Hidden</span>':'<span class="badge">Active</span>'}</td><td><div class="actions"><button class="btn blue small" onclick="editProduct('${esc(p.id)}')">Edit</button><button class="btn light small" onclick="duplicateProduct('${esc(p.id)}')">Copy</button><button class="btn red small" onclick="deleteProduct('${esc(p.id)}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="8" class="empty">No products found</td></tr>'}
 function nextProductCode(){let nums=products.map(p=>String(p.sku||'').match(/TKR-(\d+)/i)).filter(Boolean).map(x=>+x[1]);return 'TKR-'+String(Math.max(0,...nums)+1).padStart(3,'0')}
@@ -107,7 +126,7 @@ function orderCostTotal(){return orders.filter(o=>orderStatus(o)!=='cancelled').
 function renderDashboard(){let valid=orders.filter(o=>orderStatus(o)!=='cancelled'),sales=valid.reduce((s,o)=>s+Number(o.total_amount||0),0),low=products.filter(p=>p.low_stock_alert===true&&Number(p.stock||0)<=Number(p.low_stock_threshold??5));$('statRevenue').textContent='৳'+money(sales);$('statOrders').textContent=orders.length;$('statProducts').textContent=products.length;$('statCustomers').textContent=buildCustomers().length;$('statPending').textContent=orders.filter(o=>['new','pending'].includes(orderStatus(o))).length;$('statLowStock').textContent=low.length;$('statDelivered').textContent=orders.filter(o=>orderStatus(o)==='delivered').length;$('statProfit').textContent='৳'+money(sales-orderCostTotal());$('recentOrders').innerHTML=orders.slice(0,7).map(o=>`<tr><td>${esc(o.order_number||o.id)}</td><td>${esc(o.customer_name)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No orders</td></tr>';$('lowStockList').innerHTML=low.map(p=>`<p style="padding:8px;border-bottom:1px solid var(--l)">${esc(p.name)} — <b>${Number(p.stock||0)} left</b></p>`).join('')||'<p class="empty">No low stock alerts</p>'}
 function renderOrders(){let term=($('orderSearch')?.value||'').toLowerCase(),status=$('orderStatusFilter')?.value||'';$('ordersTable').innerHTML=orders.filter(o=>(!status||orderStatus(o)===status)&&`${o.order_number||''} ${o.customer_name||''} ${o.customer_phone||''}`.toLowerCase().includes(term)).map(o=>`<tr><td>${esc(o.order_number||o.id)}<br><small>${String(o.submission_status||'').toLowerCase()==='submitted'?'<span class="badge">Sent to DropBazar</span>':'<span class="badge warn">Not sent</span>'}</small></td><td>${esc(o.customer_name)}</td><td>${esc(o.customer_phone)}</td><td>৳${money(o.total_amount)}</td><td>${statusBadge(orderStatus(o))}</td><td>${dateText(o.created_at)}</td><td><div class="actions"><button class="btn blue small" onclick="viewOrder('${esc(o.id)}')">Details</button><button class="btn small" onclick="sendAndConfirm('${esc(o.id)}')">Send & Confirm</button><button class="btn light small" onclick="editOrder('${esc(o.id)}')">Edit</button><button class="btn red small" onclick="deleteOrder('${esc(o.id)}')">Delete</button></div></td></tr>`).join('')||'<tr><td colspan="7" class="empty">No orders</td></tr>'}
 async function sendAndConfirm(id){
- if(!canManage())return;
+ if(!['owner','manager','admin'].includes(currentRole))return;
  let o=orders.find(x=>String(x.id)===String(id));
  if(!o||sendingOrders.has(String(id)))return;
  if(String(o.submission_status||'').toLowerCase()==='submitted'){notify('Already submitted');return}
